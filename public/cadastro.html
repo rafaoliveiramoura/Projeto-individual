@@ -1,60 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Gymbrothers - Cadastro</title>
+    <!-- Google Fonts: Lato -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
 </head>
-<body>
-    
+<body class="login-body">
+    <main class="page-wrapper">
+        <section class="main-container">
+            <!-- Left Panel: Registration Form -->
+            <div class="panel-left">
+                <div class="panel-content">
+                    <header class="top-bar">
+                        <div class="logo">
+                            <img src="img/logo.png" alt="Gymbrothers Logo" class="logo-img">
+                        </div>
+                    </header>
+
+                    <div class="welcome-section">
+                        <h1>Crie sua conta</h1>
+                        <p class="subtitle">Junte-se à comunidade e comece a transformar seu corpo hoje mesmo</p>
+                    </div>
+
+                    <form id="registerForm" novalidate>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="firstName">Nome</label>
+                                <input type="text" id="firstName" name="nome" placeholder="Seu nome" required>
+                                <span class="error-msg" id="nomeError"></span>
+                            </div>
+                            <div class="input-group">
+                                <label for="lastName">Sobrenome</label>
+                                <input type="text" id="lastName" name="sobrenome" placeholder="Seu sobrenome" required>
+                                <span class="error-msg" id="sobrenomeError"></span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="birthDate">Data de Nascimento</label>
+                            <input type="date" id="birthDate" name="dtnascimento" required>
+                            <span class="error-msg" id="birthDateError"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                            <span class="error-msg" id="emailError"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password">Senha</label>
+                            <input type="password" id="password" name="senha" placeholder="********" required>
+                            <span class="error-msg" id="passwordError"></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="goal">Objetivo Principal</label>
+                            <select id="goal" name="objetivo" class="form-select">
+                                <option value="" disabled selected>Selecione seu objetivo</option>
+                                <option value="hipertrofia">Ganho de Massa (Hipertrofia)</option>
+                                <option value="emagrecimento">Emagrecimento</option>
+                                <option value="condicionamento">Condicionamento Físico</option>
+                                <option value="saude">Saúde e Bem-estar</option>
+                            </select>
+                            <span class="error-msg" id="goalError"></span>
+                        </div>
+
+                        <button type="submit" id="submitRegister" class="register-button">
+                            <span class="btn-text">Finalizar Cadastro</span>
+                            <div class="spinner hidden"></div>
+                        </button>
+                    </form>
+
+                    <div class="auth-footer">
+                        <p>Já possui uma conta? <a href="index.html" class="signup-link">Faça Login</a></p>
+                    </div>
+
+                    <div class="support-section">
+                        <p class="support-text">Precisa de ajuda?</p>
+                        <a href="mailto:suporte@gymbrothers.com" class="support-email">suporte@gymbrothers.com</a>
+                    </div>
+                </div>
+
+                <footer class="panel-footer">
+                    © 2026 Gymbrothers. Todos os direitos reservados.
+                </footer>
+            </div>
+
+            <!-- Right Panel: Photo -->
+            <div class="panel-right">
+                <div class="glass-card">
+                    <div class="circle-icon"></div>
+                    <h2 class="glass-title">O primeiro passo para a mudança é começar.</h2>
+                    <p class="glass-text">Cadastre-se agora e tenha acesso a treinos personalizados e acompanhamento de evolução.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="./script_register.js"></script>
 </body>
 </html>
-<script>
-    function cadastrar(){
-        let nome = nome.input.value
-        let sobrenome = sobrenome.input.value
-        let emailVar = email.input.value
-        let senhaVar = senha.input.value
-        let dtNascVar = dtnasc.input.value
-        let objetivo = nome.input.value
-
-        if (nome == "" || emailVar == "" || senhaVar == "" || dtNascVar == "" ||objetivo == "" ){
-        alert("Por favor preencha os campos")
-        return false
-        }
-        //enviando os dados
-        fetch("http://127.0.0.1:3333/usuarios/cadastrar", {
-            
-            method: "POST",
-            headers:{
-                "Content-Type": "application/json",
-                
-            },
-            body: JSON.stringify({
-                nomeServer: nome,
-                sobrenomeServer: sobrenome,
-                emailServe: emailVar,
-                senhaServe: senhaVar,
-                dtnascServer: dtNascVar,
-                objetivoServer:objetivo
-            })
-        
-        })
-        
-        .then(function(resposta){
-            if (resposta.ok){
-                alert("Cadastro realizado sucesso")
-                setTimeout(() => {
-                    window.location = "../login.html"
-                }, 200)}
-                else{
-                        throw new console.error("Houve um erro ao realizar o cadastro");
-                        
-                }})
-                .catch(function (error){
-                    console.log(`#ERROR ${error}`)
-                    alert(error.menssage)
-                })
-                return false
-    }
-</script>
