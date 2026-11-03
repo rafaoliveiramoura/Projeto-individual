@@ -3,6 +3,7 @@
     --color-bg-dark: #0a0a0a;
     --color-bg-card: #121212;
     --color-primary: #ccff00; /* Neon Green/Yellow */
+    --color-primary-rgb: 204, 255, 0;
     --color-primary-hover: #b3dd00;
     --color-text-main: #ffffff;
     --color-text-muted: #a0a0a0;
@@ -20,6 +21,17 @@
 
     /* Transitions */
     --transition-fast: 200ms ease;
+
+    /* --- Escala Fluida (Tokens de Design) --- */
+    --fs-h1: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    --fs-h2: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+    --fs-body: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
+    --fs-small: clamp(0.75rem, 0.7rem + 0.15vw, 0.875rem);
+
+    --space-container: clamp(1.5rem, 3vw, 2.5rem);
+    --space-gap: clamp(0.75rem, 1.5vh, 1.25rem);
+    --control-h: 48px;
+    --logo-h: clamp(60px, 8vh, 90px);
 }
 
 * {
@@ -366,7 +378,7 @@ body {
 
 /* --- Painel Direito --- */
 .panel-right {
-    background-image: url('assets/721279696609066042.jpg');
+    background-image: url('/img/721279696609066042.jpg');
     background-color: #1a1a1a;
     background-size: cover;
     background-position: center;

@@ -1,0 +1,315 @@
+:root {
+    /* Spacing & Sizing Tokens */
+    --space-app: clamp(1rem, 2vw, 2rem);
+    --space-card: clamp(1rem, 1.5vw, 1.5rem);
+    --space-section: clamp(1.5rem, 3vh, 2.5rem);
+
+    --fs-dashboard-title: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    --fs-dashboard-subtitle: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
+
+    --sidebar-gap: clamp(0.5rem, 1vw, 1rem);
+    --sidebar-w: clamp(11rem, 14vw, 13.5rem);
+    --sidebar-collapsed-width: 4.5rem;
+    --header-height: 80px;
+
+    --chart-height: clamp(300px, 40vh, 450px);
+
+    /* Dashboard specific colors */
+    --color-card-dark: rgba(18, 18, 18, 0.8);
+    --color-card-border: rgba(255, 255, 255, 0.1);
+    --color-card-hover: rgba(204, 255, 0, 0.05);
+}
+
+/* --- Global App Layout --- */
+.app-wrapper {
+    min-height: 100dvh;
+    width: 100%;
+    display: flex;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text-main);
+    font-family: 'Lato', sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+/* Neon Background Effect (Reused from project style) */
+.app-wrapper::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 0% 0%, rgba(204, 255, 0, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 100% 100%, rgba(204, 255, 0, 0.1) 0%, transparent 30%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.app-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0;
+    z-index: 1;
+    position: relative;
+    min-height: 100dvh;
+}
+
+/* --- Sidebar --- */
+.app-sidebar {
+    display: flex;
+    flex-direction: column;
+    width: var(--sidebar-w);
+    height: calc(100dvh - (var(--sidebar-gap) * 2));
+    position: sticky;
+    top: var(--sidebar-gap);
+    margin: var(--sidebar-gap) 0 var(--sidebar-gap) var(--sidebar-gap);
+    background: rgba(18, 18, 18, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-container);
+    border: 1px solid var(--color-card-border);
+    padding: var(--space-card);
+    z-index: 10;
+    transition: width var(--transition-fast);
+    box-sizing: border-box;
+}
+
+.sidebar-logo {
+    margin-bottom: var(--space-section);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.sidebar-logo img {
+    height: 60px;
+    width: auto;
+}
+
+.app-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Hide scrollbar for app-nav but keep functionality */
+.app-nav::-webkit-scrollbar {
+    width: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--color-text-muted);
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: var(--fs-body);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.nav-item svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+}
+
+.nav-item:hover {
+    color: var(--color-text-main);
+    background: var(--color-card-hover);
+}
+
+.nav-item.active {
+    background: rgba(var(--color-primary-rgb), 0.18);
+    color: var(--color-primary);
+    box-shadow: inset 0 0 0 1px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    padding-top: var(--space-card);
+    border-top: 1px solid var(--color-card-border);
+    flex-shrink: 0;
+}
+
+/* --- Main Content Area --- */
+.app-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-section);
+    padding: var(--space-app) clamp(1rem, 2.5vw, 2.5rem);
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Inner content wrapper to limit width for readability on ultra-wide screens */
+.app-content > * {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: 0; /* Aligned to the left, near the sidebar */
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-card);
+}
+
+.header-titles h1 {
+    font-size: var(--fs-dashboard-title);
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.header-titles p {
+    font-size: var(--fs-dashboard-subtitle);
+    color: var(--color-text-muted);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: color var(--transition-fast);
+}
+
+.btn-icon:hover {
+    color: var(--color-primary);
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--color-text-main);
+    cursor: pointer;
+    border: 2px solid var(--color-card-border);
+}
+
+/* --- Base Cards --- */
+.base-card {
+    background: var(--color-card-dark);
+    border: 1px solid var(--color-card-border);
+    border-radius: 16px;
+    padding: var(--space-card);
+    transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.base-card:hover {
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+}
+
+/* --- Responsividade --- */
+
+/* Tablet */
+@media (max-width: 1099px) {
+    .app-container {
+        grid-template-columns: var(--sidebar-collapsed-width) 1fr;
+    }
+    .app-sidebar {
+        width: var(--sidebar-collapsed-width);
+        padding: var(--space-card) 10px;
+        align-items: center;
+    }
+    .nav-item span {
+        display: none;
+    }
+    .nav-item {
+        justify-content: center;
+        padding: 12px;
+    }
+    .sidebar-logo img {
+        height: 40px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+    .app-sidebar {
+        display: none;
+    }
+    .app-content {
+        padding: var(--space-app) 16px var(--space-app) 16px;
+        padding-bottom: 100px; /* Space for bottom nav */
+    }
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background: var(--color-bg-card);
+        border-top: 1px solid var(--color-card-border);
+        justify-content: space-around;
+        align-items: center;
+        z-index: 100;
+        padding: 0 10px;
+    }
+    .bottom-nav .nav-item {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 10px;
+        padding: 8px;
+        justify-content: center;
+        align-items: center;
+    }
+    .bottom-nav .nav-item svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        display: none;
+    }
+}
+
+/* Height based adjustment */
+@media (max-height: 800px) {
+    :root {
+        --space-section: 1rem;
+        --chart-height: 300px;
+    }
+    .sidebar-logo {
+        margin-bottom: 1rem;
+    }
+}
+
+/* accessibility */
+:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

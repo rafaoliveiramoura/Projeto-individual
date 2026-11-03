@@ -48,6 +48,10 @@ function cadastrar(req, res) {
             res.status(500).json(erro.sqlMessage || "Erro interno")
         })
 }
+
+function cadastraquiz (res,req){
+    let peso_atual = req.body 
+}
     function listarusers(req,res){
         res.json(resultado)
 }
@@ -55,5 +59,6 @@ function cadastrar(req, res) {
 module.exports ={
  autenticar,
  cadastrar,
- listarusers
+ listarusers,
+ cadastraquiz
 }
