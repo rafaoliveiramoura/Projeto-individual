@@ -22,12 +22,10 @@
                             <img src="img/logo.png" alt="Gymbrothers Logo" class="logo-img">
                         </div>
                     </header>
-
                     <div class="welcome-section">
                         <h1>Crie sua conta</h1>
                         <p class="subtitle">Junte-se à comunidade e comece a transformar seu corpo hoje mesmo</p>
                     </div>
-
                     <form id="registerForm" novalidate onsubmit="return cadastrar()">
                         <div class="form-row">
                             <div class="input-group">
@@ -41,25 +39,21 @@
                                 <span class="error-msg" id="sobrenomeError"></span>
                             </div>
                         </div>
-
                         <div class="input-group">
                             <label for="birthDate">Data de Nascimento</label>
                             <input type="date" id="birthDate" name="dtnascimento" required>
                             <span class="error-msg" id="birthDateError"></span>
                         </div>
-
                         <div class="input-group">
                             <label for="email">E-mail</label>
                             <input type="email" id="email" name="email" placeholder="seu@email.com" required>
                             <span class="error-msg" id="emailError"></span>
                         </div>
-
                         <div class="input-group">
                             <label for="password">Senha</label>
                             <input type="password" id="password" name="senha" placeholder="********" required>
                             <span class="error-msg" id="passwordError"></span>
                         </div>
-
                         <div class="input-group">
                             <label for="goal">Objetivo Principal</label>
                             <select id="goal" name="objetivo" class="form-select">
@@ -71,28 +65,23 @@
                             </select>
                             <span class="error-msg" id="goalError"></span>
                         </div>
-
                         <button type="submit" id="submitRegister" class="register-button">
                             <span class="btn-text">Finalizar Cadastro</span>
                             <div class="spinner hidden"></div>
                         </button>
                     </form>
-
                     <div class="auth-footer">
-                        <p>Já possui uma conta? <a href="index.html" class="signup-link">Faça Login</a></p>
+                        <p>Já possui uma conta? <a href="login.html" class="signup-link">Faça Login</a></p>
                     </div>
-
                     <div class="support-section">
                         <p class="support-text">Precisa de ajuda?</p>
                         <a href="mailto:suporte@gymbrothers.com" class="support-email">suporte@gymbrothers.com</a>
                     </div>
                 </div>
-
                 <footer class="panel-footer">
                     © 2026 Gymbrothers. Todos os direitos reservados.
                 </footer>
             </div>
-
             <!-- Right Panel: Photo -->
             <div class="panel-right">
                 <div class="glass-card">
@@ -104,66 +93,57 @@
         </section>
     </main>
     <script>
-function cadastrar() {
+    function cadastrar() {
+        const nomeVar = document.getElementById('firstName').value;
+        const sobrenomeVar = document.getElementById('lastName').value;
+        const emailVar = document.getElementById('email').value;
+        const senhaVar = document.getElementById('password').value;
+        const dtnascVar = document.getElementById('birthDate').value;
+        const objVar = document.getElementById('goal').value;
 
-    //Recupere o valor da nova input pelo nome do id
-    var nomeVar = firstName.value;
-    var sobrenomeVar = lastName.value
-    var emailVar = email.value;
-    var senhaVar = password.value;
-    var dtnascVar = birthDate.value;
-    var objVar = goal.value;
+        if (!nomeVar || !sobrenomeVar || !emailVar || !senhaVar || !dtnascVar || !objVar) {
+          alert("Por favor, preencha todos os campos!");
+          return false;
+        }
 
-    // Verificando se há algum campo em branco
-    if (
-      nomeVar == "" ||
-      sobrenomeVar == "" ||
-      emailVar == "" ||
-      senhaVar == "" ||
-      dtnascVar == "" ||
-      objVar == ""
-    ) {
-      alert("Por favor, preencha todos os campos!");
-      return false;
+        fetch("/users/cadastrar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nomeServer: nomeVar,
+            emailServer: emailVar,
+            senhaServer: senhaVar,
+            sobrenomeServer: sobrenomeVar,
+            dtnascServer: dtnascVar,
+            objServer: objVar
+          }),
+        })
+          .then(resposta => {
+            if (resposta.ok) {
+              alert("Cadastro realizado com sucesso! Redirecionando...");
+              setTimeout(() => {
+                window.location = "login.html";
+              }, 2000);
+            } else {
+              return resposta.text().then(text => {
+                throw new Error(text || "Erro ao realizar o cadastro!");
+              });
+            }
+          })
+          .catch(erro => {
+            console.error(`#ERRO: ${erro}`);
+            alert(erro.message);
+          });
+
+        return false;
     }
 
-    // Enviando o valor da nova input
-    fetch("/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nomeServer: nomeVar,
-        emailServer: emailVar,
-        senhaServer: senhaVar,
-        sobrenomeServer: sobrenomeVar,
-        dtnascServer: dtnascVar,
-        objServer: objVar
-      }),
-    })
-      .then(function (resposta) {
-        if (resposta.ok) {
-          alert("Cadastro realizado com sucesso! Redirecionando...");
-          setTimeout(() => {
-            window.location = "login.html";
-          }, 2000);
-        } else {
-          throw new Error("Houve um erro ao tentar realizar o cadastro!");
-        }
-      })
-      .catch(function (erro) {
-        console.log(`#ERRO: ${erro}`);
-        alert(erro.message);
-      });
-
-    return false;
-  }
-
-
-  function sumirMensagem() {
-    cardErro.style.display = "none";
-  }
-</script>
+    function sumirMensagem() {
+        const cardErro = document.getElementById('cardErro');
+        if (cardErro) cardErro.style.display = "none";
+    }
+    </script>
 </body>
 </html>

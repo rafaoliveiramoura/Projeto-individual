@@ -113,7 +113,39 @@
             <a href="perfil.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Perfil</span></a>
         </nav>
     </div>
-    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userData = JSON.parse(localStorage.getItem('gymbrothers_user_data') || '{}');
+            const userName = userData.userName || 'Atleta';
+
+            const avatarEl = document.getElementById('user-avatar');
+            if (avatarEl) {
+                avatarEl.textContent = userName.charAt(0).toUpperCase();
+            }
+
+            const currentPath = window.location.pathname.split('/').pop() || 'dieta.html';
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.getAttribute('href') === currentPath) {
+                    item.classList.add('active');
+                    item.setAttribute('aria-current', 'page');
+                } else {
+                    item.classList.remove('active');
+                    item.removeAttribute('aria-current');
+                }
+            });
+
+            const logoutBtn = document.getElementById('btn-logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (confirm('Deseja realmente sair?')) {
+                        localStorage.clear();
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+        });
+    </script>
     <script src="dieta.js"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const userRoutes = require("./routes/user.routes");
 const userController = require("./controllers/user.controller");
 
 const port = process.env.PORT || 3000;
@@ -20,8 +21,11 @@ app.get('/cadastro', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/cadastro.html"));
 });
 
-// Rota para processar o cadastro
-app.post('/register', userController.cadastrar);
+// Montagem das rotas de usuário
+app.use(userRoutes.expressrouter);
+
+// Rota para processar o cadastro (removida duplicata se existir)
+// app.post('/register', userController.cadastrar);
 
 
 app.listen(port, () => {

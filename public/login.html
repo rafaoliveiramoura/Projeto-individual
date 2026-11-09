@@ -81,15 +81,15 @@
     </main>
     <script>
     function login() {
-        var emailVar = email.value;
-        var senhaVar = password.value;
+        const emailVar = document.getElementById('email').value;
+        const senhaVar = document.getElementById('password').value;
 
         if (emailVar == "" || senhaVar == "") {
             alert("Por favor, preencha todos os campos!");
             return false;
         }
 
-        fetch("/login", {
+        fetch("/users/autenticar", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -101,12 +101,21 @@
         })
         .then(function (resposta) {
             if (resposta.ok) {
-                alert("Login realizado com sucesso! Redirecionando...");
-                setTimeout(() => {
-                    window.location = "quiz.html"; // Redireciona para o quiz ou dashboard
-                }, 2000);
+                return resposta.json().then(user => {
+                    localStorage.setItem('gymbrothers_session', JSON.stringify({
+                        id: user.id,
+                        nome: user.nome,
+                        email: user.email
+                    }));
+                    alert("Login realizado com sucesso! Redirecionando...");
+                    setTimeout(() => {
+                        window.location = "quiz.html";
+                    }, 2000);
+                });
             } else {
-                throw new Error("E-mail ou senha incorretos!");
+                return resposta.text().then(text => {
+                    throw new Error(text || "E-mail ou senha incorretos!");
+                });
             }
         })
         .catch(function (erro) {

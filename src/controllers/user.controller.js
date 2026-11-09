@@ -1,41 +1,39 @@
 
-let usarioModel = require("../models/user.model")
+const usarioModel = require("../models/user.model")
 
 function autenticar(req, res){
-    let email = req.body.emailServe
-    let senha = req.body.senhaServe
+    const email = req.body.emailServer
+    const senha = req.body.senhaServer
 
     if (!email || !senha ){
-        res.status(400).send("Credecias invalidas")
-    } else {
-        usarioModel.autenticar(email, senha)
-        .then (
-            function (resultadoAutenticar){
-                if (resultadoAutenticar.length == 1){
-                    res.json({
-                            id: resultadoAutenticar[0].id,
-                            email:resultadoAutenticar[0].email,
-                            nome:resultadoAutenticar[0].nome,
-                            senha: resultadoAutenticar[0].senha
-
-
-                    })
-            }}
-        ).catch(
-            function (erro){
-                res.status(500).json(erro.sqlMessage)
-            }
-        )
+        return res.status(400).send("Credenciais inválidas")
     }
+
+    usarioModel.autenticar(email, senha)
+        .then (resultadoAutenticar => {
+            if (resultadoAutenticar.length === 1){
+                const user = resultadoAutenticar[0];
+                res.json({
+                    id: user.id,
+                    email: user.email,
+                    nome: user.nome
+                })
+            } else {
+                res.status(401).send("E-mail ou senha incorretos")
+            }
+        })
+        .catch(erro => {
+            res.status(500).json(erro.sqlMessage || "Erro interno no servidor")
+        })
 }
 
 function cadastrar(req, res) {
-    let nome = req.body.nomeServer
-    let sobrenome = req.body.sobrenomeServer
-    let email = req.body.emailServer
-    let senha = req.body.senhaServer
-    let dtnascimento = req.body.dtnascServer
-    let objetivo = req.body.objServer
+    const nome = req.body.nomeServer
+    const sobrenome = req.body.sobrenomeServer
+    const email = req.body.emailServer
+    const senha = req.body.senhaServer
+    const dtnascimento = req.body.dtnascServer
+    const objetivo = req.body.objServer
 
     if (!nome || !sobrenome || !email || !senha || !dtnascimento || !objetivo) {
         return res.status(400).send("Credenciais inválidas")
@@ -44,21 +42,40 @@ function cadastrar(req, res) {
     usarioModel.cadastrar(nome, sobrenome, dtnascimento, email, senha, objetivo)
         .then(resultado => res.json(resultado))
         .catch(erro => {
-            console.log("Houve erro ao realizar o cadastro", erro.sqlMessage || erro)
+            console.error("Erro ao cadastrar:", erro);
             res.status(500).json(erro.sqlMessage || "Erro interno")
         })
 }
 
-function cadastraquiz (res,req){
-    let peso_atual = req.body 
-}
-    function listarusers(req,res){
-        res.json(resultado)
+function cadastraquiz (req, res){
+    const { peso, altura, pesoObjetivo, experiencia, foco, frequencia, userId } = req.body;
+
+    if (!userId) {
+        return res.status(401).send("Sessão expirada. Por favor, faça login novamente.");
+    }
+
+    if (!peso || !altura || !experiencia || !foco || !frequencia) {
+        return res.status(400).send("Por favor, preencha todos os campos obrigatórios.");
+    }
+
+    const nPeso = parseFloat(peso);
+    const nAltura = parseFloat(altura);
+    const nPesoObj = parseFloat(pesoObjetivo);
+
+    if (isNaN(nPeso) || isNaN(nAltura) || isNaN(nPesoObj) || nPeso <= 0 || nAltura <= 0 || nPesoObj <= 0) {
+        return res.status(400).send("Valores de peso e altura devem ser números positivos.");
+    }
+
+    usarioModel.cadastraquiz(nPeso, nAltura, nPesoObj, experiencia, foco, frequencia, userId)
+        .then(resultado => res.json(resultado))
+        .catch(erro => {
+            console.error("Erro ao salvar quiz:", erro);
+            res.status(500).json(erro.sqlMessage || "Erro interno ao salvar perfil");
+        })
 }
 
 module.exports ={
  autenticar,
  cadastrar,
- listarusers,
  cadastraquiz
 }

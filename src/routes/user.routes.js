@@ -1,17 +1,18 @@
 const express = require("express")
 const expressrouter = express.Router()
-const {cadastrar, autenticar} = require("../controllers/user.controller")
+const {cadastrar, autenticar, cadastraquiz} = require("../controllers/user.controller")
 let users = []
 
 expressrouter.post("/users/cadastrar", cadastrar)
 expressrouter.post("/users/autenticar", autenticar)
+expressrouter.post("/quiz", cadastraquiz)
 
 function adduser (user){
-    user.push(user)
+    users.push(user)
 }
 
-expressrouter.get("/users", (res,resp) =>{
-    res.json(users)
+expressrouter.get("/users", (req, resp) =>{
+    resp.json(users)
 })
 
 module.exports = {
