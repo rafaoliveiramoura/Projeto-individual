@@ -74,8 +74,39 @@ function cadastraquiz (req, res){
         })
 }
 
+function dashboard(req, res){
+    let userId = req.params.id
+
+    if (!userId){
+        return res.status(400).send("E necessario o id do usuario")
+    }
+    usarioModel.dashboard(userId)
+        .then (function (resultado){
+            
+            if (resultado.length == 0) {
+                return res.status(404).send("Perfil não encontrado")
+            }
+
+            let dados = {
+                pesoAtual: resultado[0].peso_atual,
+                pesoObjetivo: resultado[0].peso_objetivo
+            }
+
+            res.json(dados)
+
+        }) .catch(function (erro){
+             console.log("Erro ao buscar dashboard", erro.sqlMessage || erro)
+            res.status(500).json(erro.sqlMessage || "Erro interno")
+        })
+
+        
+    }
+
+
+
 module.exports ={
  autenticar,
  cadastrar,
- cadastraquiz
+ cadastraquiz,
+ dashboard
 }

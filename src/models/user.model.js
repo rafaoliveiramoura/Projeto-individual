@@ -12,10 +12,16 @@ function autenticar(email, senha) {
 }
 
 function cadastraquiz (peso, altura, pesoobjetivo, tempotreino, foco, frequencia, userId){
-    // Usamos INSERT ... ON DUPLICATE KEY UPDATE para garantir um perfil por usuário
+
     let sql = `INSERT INTO infopeso (peso_atual, altura, peso_objetivo, tempotreino, frequencia, muscolofoco, fkuser)
                VALUES ("${peso}", '${altura}', '${pesoobjetivo}', '${tempotreino}', '${foco}','${frequencia}', '${userId}')`
                return database.executar(sql)
 }
 
-module.exports = { autenticar, cadastrar, cadastraquiz }
+function dashboard(userId){
+    let sql = `SELECT (peso_atual, peso_objetivo) FROM infopeso WHERE fkuser = ${userId}`
+    return database.executar(sql)
+
+}
+
+module.exports = { autenticar, cadastrar, cadastraquiz, dashboard }
