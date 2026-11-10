@@ -88,10 +88,11 @@ function dashboard(req, res){
             }
 
             let dados = {
-                pesoAtual: resultado[0].peso_atual,
-                pesoObjetivo: resultado[0].peso_objetivo
-            }
-
+            pesoAtual: resultado[0].peso_atual,
+            pesoObjetivo: resultado[0].peso_objetivo,
+            altura: resultado[0].altura
+        }   
+        
             res.json(dados)
 
         }) .catch(function (erro){
