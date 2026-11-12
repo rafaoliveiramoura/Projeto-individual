@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[PREENCHER: seu nome] · Minha história na academia</title>
+    <meta name="description" content="A minha história na academia: de quem começou sem ninguém para orientar dieta e treino a quem criou o parceiro que queria ter tido.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Minha história na academia">
+    <meta property="og:description" content="Projeto individual SPTech: minha história, meus valores e o parceiro que eu queria ter tido.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="img/logo.png">
+    <script>document.documentElement.classList.add('js');</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <div id="topo"></div>
+
+    <nav class="landing-nav" id="mainNav" aria-label="Principal">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo"><img src="img/logo.png" alt="GYMBROTHERS" width="120" height="34"></a>
+            <button class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+                <svg class="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+            </button>
+            <div class="nav-menu" id="navMenu">
+                <a href="index.html" class="nav-link">Início</a>
+                <a href="#sobre" class="nav-link">Sobre mim</a>
+                <a href="#historia" class="nav-link">Minha história</a>
+                <a href="#evolucao" class="nav-link">Evolução</a>
+                <a href="cadastro.html" class="nav-btn-primary">Cadastrar</a>
+            </div>
+        </div>
+        <div class="nav-progress" aria-hidden="true"></div>
+    </nav>
+
+    <main id="conteudo">
+        <!-- ============ HERO ============ -->
+        <section class="hero" aria-labelledby="hero-titulo">
+            <div class="hero-content reveal">
+                <span class="pill">Projeto individual · SPTech · 2026</span>
+                <h1 id="hero-titulo">Minha jornada na <span class="text-primary">academia</span></h1>
+                <p class="hero-sub">Eu comecei sem ninguém para me orientar. Criei o parceiro que eu queria ter tido.</p>
+                <p class="hero-author">Por <mark class="ph">[PREENCHER: seu nome]</mark></p>
+                <div class="hero-btns">
+                    <a href="#historia" class="btn-primary">Ler minha história</a>
+                    <a href="index.html#parceiro" class="btn-secondary">Conhecer o parceiro</a>
+                </div>
+            </div>
+            <figure class="photo hero-photo reveal">
+                <img src="img/eu-hero.jpg" alt="[PREENCHER: descreva a foto, ex.: eu treinando]" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
+                <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: sua foto em img/eu-hero.jpg]</mark></figcaption>
+            </figure>
+        </section>
+
+        <!-- ============ SOBRE MIM ============ -->
+        <section id="sobre" class="section" data-spy="sobre" aria-labelledby="sobre-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">Sobre mim</span>
+                <h2 id="sobre-titulo">Quem sou eu</h2>
+            </div>
+            <div class="about-grid">
+                <div class="about-text reveal">
+                    <p><mark class="ph">[PREENCHER: quem você é: nome, idade, curso na SPTech, de onde é]</mark></p>
+                    <p><mark class="ph">[PREENCHER: como a academia entrou na sua vida e o que ela significa hoje]</mark></p>
+                    <p><mark class="ph">[PREENCHER: como é a sua rotina de treino no dia a dia e por que você escolheu este tema]</mark></p>
+                </div>
+                <div class="stats reveal">
+                    <div class="card stat"><strong><mark class="ph">[PREENCHER]</mark></strong><span>tempo de treino</span></div>
+                    <div class="card stat"><strong><mark class="ph">[PREENCHER]</mark></strong><span>treinos por semana</span></div>
+                    <div class="card stat"><strong><mark class="ph">[PREENCHER]</mark></strong><span>minha meta atual</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ MINHA HISTÓRIA (linha da vida) ============ -->
+        <section id="historia" class="section" data-spy="historia" aria-labelledby="historia-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">Linha da vida</span>
+                <h2 id="historia-titulo">Minha história</h2>
+                <p>Como eu cheguei até aqui, passo a passo.</p>
+            </div>
+            <ol class="timeline">
+                <li class="tl-item reveal">
+                    <span class="tl-dot" aria-hidden="true"></span>
+                    <div class="card">
+                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <h3>Onde tudo começou</h3>
+                        <p><mark class="ph">[PREENCHER: quando e por que o interesse pela academia despertou]</mark></p>
+                    </div>
+                </li>
+                <li class="tl-item reveal">
+                    <span class="tl-dot" aria-hidden="true"></span>
+                    <div class="card">
+                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <h3>Sem ninguém para me orientar</h3>
+                        <p><mark class="ph">[PREENCHER: como foi começar sem ajuda com dieta e treino, o que você sentiu]</mark></p>
+                    </div>
+                </li>
+                <li class="tl-item reveal">
+                    <span class="tl-dot" aria-hidden="true"></span>
+                    <div class="card">
+                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <h3>A virada</h3>
+                        <p><mark class="ph">[PREENCHER: o momento em que as coisas mudaram]</mark></p>
+                    </div>
+                </li>
+                <li class="tl-item reveal">
+                    <span class="tl-dot" aria-hidden="true"></span>
+                    <div class="card">
+                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <h3>O que funcionou comigo</h3>
+                        <p><mark class="ph">[PREENCHER: o treino e a dieta que deram resultado]</mark></p>
+                    </div>
+                </li>
+                <li class="tl-item reveal">
+                    <span class="tl-dot" aria-hidden="true"></span>
+                    <div class="card">
+                        <span class="tl-when">Hoje</span>
+                        <h3>Onde estou agora</h3>
+                        <p><mark class="ph">[PREENCHER: onde você está agora e para onde quer ir]</mark></p>
+                    </div>
+                </li>
+                <!-- Para colocar uma foto em um marco, adicione dentro do <div class="card">:
+                     <figure class="photo photo--wide"><img src="img/marco-1.jpg" alt="Descreva a foto" onerror="this.parentElement.classList.add('photo--missing')"><figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto]</mark></figcaption></figure> -->
+            </ol>
+        </section>
+
+        <!-- ============ A DOR ============ -->
+        <section id="dor" class="section" data-spy="historia" aria-labelledby="dor-titulo">
+            <div class="pain card reveal">
+                <span class="eyebrow">O que eu mais precisava</span>
+                <h2 id="dor-titulo" class="sr-only">O que eu mais precisava</h2>
+                <blockquote>Quando comecei a treinar, eu não tinha ninguém para me auxiliar com dieta e treino. E era exatamente isso que eu mais queria.</blockquote>
+                <p class="pain-detail"><mark class="ph">[PREENCHER: um momento real em que você sentiu essa falta, o que fazia sem saber ou o erro que cometeu]</mark></p>
+                <p class="pain-sub">Foi daí que nasceu este projeto.</p>
+            </div>
+        </section>
+
+        <!-- ============ VALORES ============ -->
+        <section id="valores" class="section" data-spy="historia" aria-labelledby="valores-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">Valores</span>
+                <h2 id="valores-titulo">O que me move</h2>
+            </div>
+            <div class="grid-4">
+                <div class="card reveal"><h3>Ajudar quem está começando</h3><p>Eu sei como é começar sem ninguém. Quero que outra pessoa não passe por isso sozinha.</p></div>
+                <div class="card reveal"><h3><mark class="ph">[PREENCHER: valor 2]</mark></h3><p><mark class="ph">[PREENCHER: como esse valor aparece no projeto]</mark></p></div>
+                <div class="card reveal"><h3><mark class="ph">[PREENCHER: valor 3]</mark></h3><p><mark class="ph">[PREENCHER: como esse valor aparece no projeto]</mark></p></div>
+                <div class="card reveal"><h3><mark class="ph">[PREENCHER: valor 4, opcional]</mark></h3><p><mark class="ph">[PREENCHER: como esse valor aparece no projeto]</mark></p></div>
+            </div>
+        </section>
+
+        <!-- ============ DIFICULDADE E SUPERAÇÃO ============ -->
+        <section id="desafios" class="section" data-spy="historia" aria-labelledby="desafios-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">Dificuldade e superação</span>
+                <h2 id="desafios-titulo">O que foi difícil, o que eu venci</h2>
+            </div>
+            <div class="duo">
+                <div class="card reveal">
+                    <span class="eyebrow">A maior dificuldade</span>
+                    <h3>O que mais pesou</h3>
+                    <p><mark class="ph">[PREENCHER: a maior dificuldade, na academia ou no desenvolvimento do projeto]</mark></p>
+                    <strong class="highlight"><mark class="ph">[PREENCHER: destaque em uma frase curta]</mark></strong>
+                </div>
+                <div class="card reveal">
+                    <span class="eyebrow">A maior superação</span>
+                    <h3>O que eu venci</h3>
+                    <p><mark class="ph">[PREENCHER: a maior superação até agora]</mark></p>
+                    <strong class="highlight"><mark class="ph">[PREENCHER: destaque em uma frase curta]</mark></strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ EVOLUÇÃO ============ -->
+        <section id="evolucao" class="section" data-spy="evolucao" aria-labelledby="evolucao-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">Evolução</span>
+                <h2 id="evolucao-titulo">Do começo até hoje</h2>
+            </div>
+            <div class="compare reveal">
+                <div class="compare-item">
+                    <figure class="photo">
+                        <img src="img/antes.jpg" alt="Eu antes de começar" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
+                        <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/antes.jpg]</mark></figcaption>
+                        <span class="photo-tag">Antes</span>
+                    </figure>
+                    <p class="photo-meta"><mark class="ph">[PREENCHER: peso e tempo de treino de antes]</mark></p>
+                </div>
+                <div class="compare-item">
+                    <figure class="photo">
+                        <img src="img/hoje.jpg" alt="Eu hoje" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
+                        <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/hoje.jpg]</mark></figcaption>
+                        <span class="photo-tag">Hoje</span>
+                    </figure>
+                    <p class="photo-meta"><mark class="ph">[PREENCHER: peso e tempo de treino de hoje]</mark></p>
+                </div>
+            </div>
+            <div class="card evo-card reveal">
+                <h3>Meu peso ao longo do tempo</h3>
+                <div id="evoChart" class="evo-chart" hidden></div>
+                <p id="evoEmpty" class="evo-empty"><mark class="ph">[PREENCHER: preencha MINHA_EVOLUCAO no topo do landing.js]</mark></p>
+            </div>
+            <div class="duo">
+                <div class="card reveal">
+                    <span class="badge">Em breve</span>
+                    <h3>O treino que eu segui</h3>
+                    <p><mark class="ph">[PREENCHER: resumo do treino: divisão, dias por semana]</mark></p>
+                    <p class="muted">Foi isso que funcionou comigo e é o ponto de partida do parceiro.</p>
+                    <!-- Quando a página estiver pronta: <a href="treinos.html" class="btn-secondary">Ver completo</a> -->
+                </div>
+                <div class="card reveal">
+                    <span class="badge">Em breve</span>
+                    <h3>A dieta que eu segui</h3>
+                    <p><mark class="ph">[PREENCHER: resumo da dieta: tipo, refeições]</mark></p>
+                    <p class="muted">Foi isso que funcionou comigo e é o ponto de partida do parceiro.</p>
+                    <!-- Quando a página estiver pronta: <a href="dieta.html" class="btn-secondary">Ver completo</a> -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ GRATIDÃO ============ -->
+        <section id="gratidao" class="section" aria-labelledby="gratidao-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">Gratidão</span>
+                <h2 id="gratidao-titulo">Quem esteve comigo</h2>
+            </div>
+            <div class="grid-3">
+                <div class="card reveal"><h3><mark class="ph">[PREENCHER: pessoa 1]</mark></h3><p><mark class="ph">[PREENCHER: por que você agradece]</mark></p></div>
+                <div class="card reveal"><h3><mark class="ph">[PREENCHER: pessoa 2]</mark></h3><p><mark class="ph">[PREENCHER: por que você agradece]</mark></p></div>
+                <div class="card reveal"><h3><mark class="ph">[PREENCHER: pessoa 3, opcional]</mark></h3><p><mark class="ph">[PREENCHER: por que você agradece]</mark></p></div>
+            </div>
+            <p class="thanks reveal"><mark class="ph">[PREENCHER: parágrafo final de agradecimento]</mark></p>
+        </section>
+
+        <!-- ============ O QUE NASCEU DISSO ============ -->
+        <section id="parceiro-link" class="section" aria-labelledby="parceiro-titulo">
+            <div class="card nasceu reveal">
+                <span class="eyebrow">O que nasceu disso</span>
+                <h2 id="parceiro-titulo">O parceiro que eu queria ter tido</h2>
+                <p>Tudo isso me trouxe até aqui: a vontade de que ninguém precise começar sozinho como eu comecei. Por isso criei um sistema que caminha junto com quem está começando.</p>
+                <div class="hero-btns center">
+                    <a href="index.html#parceiro" class="btn-primary">Conhecer o parceiro</a>
+                    <a href="cadastro.html" class="btn-secondary">Fazer parte</a>
+                </div>
+            </div>
+        </section>
+
+       
+        <section class="section closing" aria-labelledby="fechamento-titulo">
+            <div class="card reveal">
+                <h2 id="fechamento-titulo"><mark class="ph">[PREENCHER: frase final da apresentação]</mark></h2>
+                <a href="cadastro.html" class="btn-primary">Fazer parte</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <img src="img/logo.png" alt="GYMBROTHERS" class="footer-logo" width="120" height="34" loading="lazy">
+                <p><mark class="ph">[PREENCHER: seu nome]</mark></p>
+                <p>Projeto individual · SPTech · 2026</p>
+            </div>
+            <div class="footer-links">
+                <strong>Navegação</strong>
+                <a href="index.html">Início</a>
+                <a href="#sobre">Sobre mim</a>
+                <a href="#historia">Minha história</a>
+                <a href="#evolucao">Evolução</a>
+                <a href="cadastro.html">Cadastrar</a>
+                <a href="login.html">Login</a>
+            </div>
+            <div class="footer-links">
+                <strong>Contato</strong>
+                <a href="mailto:contato@exemplo.com"><mark class="ph">[PREENCHER: seu e-mail]</mark></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+const MINHA_EVOLUCAO = [];
+const MINHA_EVOLUCAO_UNIDADE = 'kg';
+
+document.addEventListener('DOMContentLoaded', function () {
+    const nav = document.getElementById('mainNav');
+    const toggle = document.querySelector('.nav-toggle');
+    const menu = document.getElementById('navMenu');
+    const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Scroll: navbar + barra de progresso ---------- */
+    let ticking = false;
+    function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+            const y = window.scrollY || 0;
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const p = max > 0 ? Math.min(1, y / max) : 0;
+            nav.classList.toggle('scrolled', y > 10);
+            nav.style.setProperty('--p', p.toFixed(4));
+            ticking = false;
+        });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    /* ---------- Menu mobile ---------- */
+    function setMenu(aberto, devolverFoco) {
+        menu.classList.toggle('open', aberto);
+        nav.classList.toggle('menu-open', aberto);
+        document.body.classList.toggle('menu-open', aberto);
+        toggle.setAttribute('aria-expanded', String(aberto));
+        toggle.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+        if (!aberto && devolverFoco) toggle.focus();
+    }
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMenu(!menu.classList.contains('open'));
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { setMenu(false); });
+    });
+    const logo = document.querySelector('.nav-logo');
+    if (logo) logo.addEventListener('click', function () { setMenu(false); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && menu.classList.contains('open')) setMenu(false, true);
+    });
+    document.addEventListener('click', function (e) {
+        if (menu.classList.contains('open') && !nav.contains(e.target)) setMenu(false);
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 900) setMenu(false); });
+
+    /* ---------- Reveal ao rolar (cascata por irmãos) ---------- */
+    const reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !reduzir) {
+        const io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                    en.target.classList.add('active');
+                    io.unobserve(en.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function (el) {
+            const irmaos = Array.prototype.filter.call(el.parentNode.children, function (n) {
+                return n.classList.contains('reveal');
+            });
+            el.style.setProperty('--i', Math.min(irmaos.indexOf(el), 5));
+            io.observe(el);
+        });
+    } else {
+        reveals.forEach(function (el) { el.classList.add('active'); });
+    }
+
+    /* ---------- Scrollspy ---------- */
+    const links = {};
+    menu.querySelectorAll('a.nav-link').forEach(function (a) {
+        const h = a.getAttribute('href');
+        if (h && h.charAt(0) === '#') links[h.slice(1)] = a;
+    });
+    const secoes = document.querySelectorAll('section[data-spy]');
+    if ('IntersectionObserver' in window && secoes.length) {
+        const visiveis = new Set();
+        const spy = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+                if (en.isIntersecting) visiveis.add(en.target); else visiveis.delete(en.target);
+            });
+            let atual = null;
+            secoes.forEach(function (s) { if (visiveis.has(s)) atual = s; });
+            Object.keys(links).forEach(function (k) {
+                const on = atual && atual.dataset.spy === k;
+                links[k].classList.toggle('active', !!on);
+                if (on) links[k].setAttribute('aria-current', 'true');
+                else links[k].removeAttribute('aria-current');
+            });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        secoes.forEach(function (s) { spy.observe(s); });
+    }
+
+    /* ---------- Gráfico de evolução (SVG) ---------- */
+    desenharEvolucao();
+});
+
+function desenharEvolucao() {
+    const box = document.getElementById('evoChart');
+    const vazio = document.getElementById('evoEmpty');
+    if (!box) return;
+    const dados = MINHA_EVOLUCAO.filter(function (d) { return d && typeof d.valor === 'number'; });
+    if (dados.length < 2) {
+        if (vazio) vazio.hidden = false;
+        box.hidden = true;
+        return;
+    }
+    if (vazio) vazio.hidden = true;
+    box.hidden = false;
+
+    const W = 600, H = 280, L = 52, R = 36, T = 28, B = 40;
+    const vals = dados.map(function (d) { return d.valor; });
+    let min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+    if (min === max) { min -= 1; max += 1; }
+    const pad = (max - min) * 0.15;
+    min -= pad; max += pad;
+    const x = function (i) { return L + (i * (W - L - R)) / (dados.length - 1); };
+    const y = function (v) { return T + (1 - (v - min) / (max - min)) * (H - T - B); };
+    const NS = 'http://www.w3.org/2000/svg';
+    const el = function (tag, attrs, texto) {
+        const n = document.createElementNS(NS, tag);
+        Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+        if (texto !== undefined) n.textContent = texto;
+        return n;
+    };
+    const fmt = function (v) { return String(v).replace('.', ','); };
+
+    const svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', class: 'evo-svg' });
+    svg.setAttribute('aria-label', 'Gráfico da minha evolução de ' + fmt(dados[0].valor) + ' a ' +
+        fmt(dados[dados.length - 1].valor) + ' ' + MINHA_EVOLUCAO_UNIDADE);
+
+    for (let g = 0; g <= 3; g++) {
+        const v = min + ((max - min) * g) / 3;
+        svg.appendChild(el('line', { x1: L, x2: W - R, y1: y(v), y2: y(v), class: 'evo-grid' }));
+        svg.appendChild(el('text', { x: L - 8, y: y(v) + 4, class: 'evo-ylabel', 'text-anchor': 'end' }, v.toFixed(0)));
+    }
+    const d = dados.map(function (p, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(p.valor).toFixed(1); }).join(' ');
+    svg.appendChild(el('path', { d: d, class: 'evo-line', pathLength: 1, fill: 'none' }));
+    dados.forEach(function (p, i) {
+        svg.appendChild(el('circle', { cx: x(i), cy: y(p.valor), r: 5, class: 'evo-dot' }));
+        // primeiro e último rótulos alinhados para dentro, para não cortar nem colidir com o eixo Y
+        const ancora = i === 0 ? 'start' : (i === dados.length - 1 ? 'end' : 'middle');
+        const dx = i === 0 ? 4 : (i === dados.length - 1 ? -4 : 0);
+        svg.appendChild(el('text', { x: x(i) + dx, y: y(p.valor) - 12, class: 'evo-val', 'text-anchor': ancora },
+            fmt(p.valor) + MINHA_EVOLUCAO_UNIDADE));
+        svg.appendChild(el('text', { x: x(i) + dx, y: H - 14, class: 'evo-xlabel', 'text-anchor': ancora }, p.rotulo || ''));
+    });
+    box.innerHTML = '';
+    box.appendChild(svg);
+}
+    </script>
+</body>
+</html>

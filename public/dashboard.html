@@ -11,6 +11,66 @@
     <link rel="stylesheet" href="app-layout.css">
     <link rel="stylesheet" href="dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* KPIs: Peso x Meta (larga) e Previsão para a meta */
+        .metrics-grid {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        .weight-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 20px;
+            margin-top: 12px;
+        }
+
+        .stat-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-hint {
+            font-size: var(--fs-small);
+            color: var(--color-text-muted);
+        }
+
+        .stat-highlight .metric-value {
+            color: var(--color-primary);
+        }
+
+        .rate-card .metric-value-wrapper {
+            margin-top: 12px;
+        }
+
+        /* Dois gráficos lado a lado */
+        .bottom-row {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .imc-summary {
+            margin-top: 12px;
+            font-size: var(--fs-small);
+            color: var(--color-text-muted);
+            line-height: 1.5;
+        }
+
+        .imc-summary strong {
+            color: var(--color-text-main);
+        }
+
+        @media (max-width: 1099px) {
+            .bottom-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="app-wrapper">
@@ -36,7 +96,7 @@
                         <span>Dieta</span>
                     </a>
                     <a href="evolucao.html" class="nav-item">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
                         <span>Evolução</span>
                     </a>
                     <a href="perfil.html" class="nav-item">
@@ -71,63 +131,70 @@
                 </header>
 
                 <section class="metrics-grid">
+                    <!-- KPI 1: Peso atual x Meta x Quanto falta -->
                     <div class="base-card metric-card">
-                        <span class="metric-label">Peso Atual</span>
-                        <div class="metric-value-wrapper">
-                            <span class="metric-value" id="metric-weight-current">--</span>
-                            <span class="metric-unit">kg</span>
-                        </div>
-                        <div class="metric-trend">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                        <span class="metric-label">Peso e Meta</span>
+                        <div class="weight-stats">
+                            <div class="stat-block">
+                                <span class="stat-hint">Peso atual</span>
+                                <div class="metric-value-wrapper">
+                                    <span class="metric-value" id="metric-weight-current">--</span>
+                                    <span class="metric-unit">kg</span>
+                                </div>
+                            </div>
+                            <div class="stat-block">
+                                <span class="stat-hint">Meta</span>
+                                <div class="metric-value-wrapper">
+                                    <span class="metric-value" id="metric-weight-goal">--</span>
+                                    <span class="metric-unit">kg</span>
+                                </div>
+                            </div>
+                            <div class="stat-block stat-highlight">
+                                <span class="stat-hint">Falta para a meta</span>
+                                <div class="metric-value-wrapper">
+                                    <span class="metric-value" id="metric-remaining">--</span>
+                                </div>
+                                <span class="stat-hint" id="metric-remaining-detail"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="base-card metric-card">
-                        <span class="metric-label">Meta de Peso</span>
+
+                    <!-- KPI 2: Previsão para a meta -->
+                    <div class="base-card metric-card rate-card">
+                        <span class="metric-label">Previsão para a Meta</span>
                         <div class="metric-value-wrapper">
-                            <span class="metric-value" id="metric-weight-goal">--</span>
-                            <span class="metric-unit">kg</span>
+                            <span class="metric-value" id="metric-rate">--</span>
+                            <span class="metric-unit" id="metric-rate-unit"></span>
                         </div>
-                        <div class="metric-trend">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        </div>
-                    </div>
-                    <div class="base-card metric-card">
-                        <span class="metric-label">Treinos da Semana</span>
-                        <div class="metric-value-wrapper">
-                            <span class="metric-value" id="metric-workouts">3 / 4</span>
-                        </div>
-                    </div>
-                    <div class="base-card metric-card">
-                        <span class="metric-label">Seu Progresso</span>
-                        <div class="metric-value-wrapper">
-                            <span class="metric-value" id="metric-progress">+12%</span>
-                        </div>
-                        <div class="metric-trend">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                        </div>
+                        <span class="stat-hint" id="metric-rate-hint">Estimativa com base no ritmo escolhido</span>
                     </div>
                 </section>
 
                 <section class="bottom-row">
+                    <!-- Gráfico 1: Projeção até a meta -->
                     <div class="base-card chart-card">
                         <div class="chart-header">
-                            <span class="chart-title">Sua evolução de peso</span>
-                            <select class="chart-select" id="chart-period">
-                                <option value="4w">Últimas 4 semanas</option>
-                                <option value="8w">Últimas 8 semanas</option>
-                                <option value="3m">Últimos 3 meses</option>
+                            <span class="chart-title">Projeção até a meta (estimativa)</span>
+                            <select class="chart-select" id="chart-period" aria-label="Ritmo da projeção">
+                                <option value="0.25">Ritmo leve (0,25 kg/sem)</option>
+                                <option value="0.5" selected>Ritmo moderado (0,5 kg/sem)</option>
+                                <option value="0.75">Ritmo acelerado (0,75 kg/sem)</option>
                             </select>
                         </div>
                         <div class="chart-container">
                             <canvas id="weightChart"></canvas>
                         </div>
                     </div>
-                    <div class="base-card trophy-card">
-                        <div class="trophy-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 10v4a5 5 0 0 0 10 0v-4"></path><path d="M14 10v4a5 5 0 0 0 10 0v-4"></path><path d="M12 15v7"></path><path d="M9 22h6"></path></svg>
+
+                    <!-- Gráfico 2: IMC -->
+                    <div class="base-card chart-card">
+                        <div class="chart-header">
+                            <span class="chart-title">Seu IMC: hoje x na meta</span>
                         </div>
-                        <h2 class="trophy-title">Você está indo bem!</h2>
-                        <p class="trophy-text">Continue com disciplina para alcançar seus objetivos.</p>
+                        <div class="chart-container">
+                            <canvas id="imcChart"></canvas>
+                        </div>
+                        <p class="imc-summary" id="imc-summary"></p>
                     </div>
                 </section>
             </main>
@@ -157,42 +224,246 @@
             </a>
         </nav>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('gymbrothers_user_data') || '{}');
-            const userName = userData.userName || 'Atleta';
-
-            const welcomeEl = document.getElementById('welcome-user');
-            if (welcomeEl) welcomeEl.textContent = `Olá, ${userName}!`;
-
-            const avatarEl = document.getElementById('user-avatar');
-            if (avatarEl) {
-                avatarEl.textContent = userName.charAt(0).toUpperCase();
+            // Sessão gravada no login
+            let sessao = null;
+            try {
+                sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null');
+            } catch (e) {
+                sessao = null;
             }
 
+            // Sem sessão: volta para o login
+            if (!sessao || !sessao.id) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Saudação e avatar
+            const userName = sessao.nome || 'Atleta';
+            document.getElementById('welcome-user').textContent = `Olá, ${userName}!`;
+            document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
+
+            // Item ativo da navegação
             const currentPath = window.location.pathname.split('/').pop() || 'dashboard.html';
             document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.getAttribute('href') === currentPath) {
-                    item.classList.add('active');
-                    item.setAttribute('aria-current', 'page');
-                } else {
-                    item.classList.remove('active');
-                    item.removeAttribute('aria-current');
+                const ativo = item.getAttribute('href') === currentPath;
+                item.classList.toggle('active', ativo);
+                if (ativo) item.setAttribute('aria-current', 'page');
+                else item.removeAttribute('aria-current');
+            });
+
+            // Logout
+            document.getElementById('btn-logout').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Deseja realmente sair?')) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
                 }
             });
 
-            const logoutBtn = document.getElementById('btn-logout');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (confirm('Deseja realmente sair?')) {
-                        localStorage.clear();
-                        window.location.href = 'login.html';
-                    }
-                });
+            // Estilo padrão dos gráficos (tema escuro)
+            Chart.defaults.color = '#a0a0a0';
+            Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+            Chart.defaults.font.family = "'Lato', sans-serif";
+
+            // Formatação pt-BR
+            const fmt = (n, casas = 1) => Number(n).toLocaleString('pt-BR', {
+                minimumFractionDigits: casas,
+                maximumFractionDigits: casas
+            });
+
+            // ---------- KPI: peso atual, meta e quanto falta ----------
+            function preencherPesoMeta(atual, meta) {
+                document.getElementById('metric-weight-current').textContent = fmt(atual);
+                document.getElementById('metric-weight-goal').textContent = fmt(meta);
+
+                const diff = atual - meta;
+                const remaining = document.getElementById('metric-remaining');
+                const detail = document.getElementById('metric-remaining-detail');
+
+                if (Math.abs(diff) < 0.05) {
+                    remaining.textContent = '0%';
+                    detail.textContent = 'Meta atingida! 🎉';
+                    return;
+                }
+
+                // Percentual calculado sobre o peso atual
+                const pct = (Math.abs(diff) / atual) * 100;
+                remaining.textContent = `${fmt(pct)}%`;
+                detail.textContent = diff > 0
+                    ? `${fmt(diff)} kg para perder`
+                    : `${fmt(-diff)} kg para ganhar`;
             }
+
+            // ---------- Gráfico 1: projeção até a meta ----------
+            let graficoProjecao = null;
+
+            function desenharProjecao(atual, meta, ritmo) {
+                const diff = meta - atual;
+                if (graficoProjecao) graficoProjecao.destroy();
+
+                if (Math.abs(diff) < 0.05) {
+                    document.getElementById('metric-rate').textContent = '0';
+                    document.getElementById('metric-rate-unit').textContent = 'semanas';
+                    document.getElementById('metric-rate-hint').textContent = 'Você já está na meta!';
+                    return;
+                }
+
+                const semanas = Math.ceil(Math.abs(diff) / ritmo);
+                const labels = [];
+                const valores = [];
+                for (let s = 0; s <= semanas; s++) {
+                    labels.push(s === 0 ? 'Hoje' : `Sem ${s}`);
+                    const passo = Math.min(s * ritmo, Math.abs(diff));
+                    valores.push(Number((atual + Math.sign(diff) * passo).toFixed(1)));
+                }
+
+                graficoProjecao = new Chart(document.getElementById('weightChart'), {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [
+                            {
+                                label: 'Projeção (kg)',
+                                data: valores,
+                                borderColor: '#ccff00',
+                                backgroundColor: 'rgba(204,255,0,0.1)',
+                                tension: 0.2,
+                                fill: true,
+                                pointRadius: 2
+                            },
+                            {
+                                label: 'Meta',
+                                data: labels.map(() => meta),
+                                borderColor: 'rgba(255,255,255,0.4)',
+                                borderDash: [6, 6],
+                                pointRadius: 0
+                            }
+                        ]
+                    },
+                    options: { maintainAspectRatio: false }
+                });
+
+                // KPI da direita: previsão
+                const dataMeta = new Date(Date.now() + semanas * 7 * 86400000)
+                    .toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                document.getElementById('metric-rate').textContent = `~${semanas}`;
+                document.getElementById('metric-rate-unit').textContent = 'semanas';
+                document.getElementById('metric-rate-hint').textContent =
+                    `Meta estimada em ${dataMeta} (${fmt(ritmo, 2)} kg/sem)`;
+            }
+
+            // ---------- Gráfico 2: IMC ----------
+            let graficoImc = null;
+
+            // Faixas de IMC desenhadas como fundo do gráfico
+            const faixasImc = {
+                id: 'faixasImc',
+                beforeDatasetsDraw(chart) {
+                    const { ctx, chartArea, scales } = chart;
+                    if (!chartArea) return;
+                    const y = scales.y;
+                    const faixas = [
+                        [0, 18.5, 'rgba(80,160,255,0.15)'],
+                        [18.5, 25, 'rgba(80,200,120,0.15)'],
+                        [25, 30, 'rgba(255,200,0,0.15)'],
+                        [30, 100, 'rgba(255,80,80,0.15)']
+                    ];
+                    ctx.save();
+                    faixas.forEach(([ini, fim, cor]) => {
+                        const topo = y.getPixelForValue(Math.min(fim, y.max));
+                        const base = y.getPixelForValue(Math.max(ini, y.min));
+                        if (base <= topo) return;
+                        ctx.fillStyle = cor;
+                        ctx.fillRect(chartArea.left, topo, chartArea.right - chartArea.left, base - topo);
+                    });
+                    ctx.restore();
+                }
+            };
+
+            function classificarImc(imc) {
+                if (imc < 18.5) return 'abaixo do peso';
+                if (imc < 25) return 'peso normal';
+                if (imc < 30) return 'sobrepeso';
+                return 'obesidade';
+            }
+
+            function desenharImc(atual, meta, alturaCm) {
+                const resumo = document.getElementById('imc-summary');
+                if (graficoImc) graficoImc.destroy();
+
+                if (!alturaCm || alturaCm <= 0) {
+                    resumo.textContent = 'Altura não encontrada. Refaça o quiz para ver seu IMC.';
+                    return;
+                }
+
+                const m = alturaCm / 100;
+                const imcAtual = atual / (m * m);
+                const imcMeta = meta / (m * m);
+
+                const yMin = Math.min(15, Math.floor(Math.min(imcAtual, imcMeta) - 3));
+                const yMax = Math.max(40, Math.ceil(Math.max(imcAtual, imcMeta) + 3));
+
+                graficoImc = new Chart(document.getElementById('imcChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['IMC atual', 'IMC na meta'],
+                        datasets: [{
+                            data: [Number(imcAtual.toFixed(1)), Number(imcMeta.toFixed(1))],
+                            backgroundColor: ['#ccff00', 'rgba(255,255,255,0.75)'],
+                            borderRadius: 8,
+                            maxBarThickness: 90
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { min: yMin, max: yMax } }
+                    },
+                    plugins: [faixasImc]
+                });
+
+                resumo.innerHTML =
+                    `Hoje: <strong>${fmt(imcAtual)}</strong> (${classificarImc(imcAtual)}) &rarr; ` +
+                    `na meta: <strong>${fmt(imcMeta)}</strong> (${classificarImc(imcMeta)}). ` +
+                    `Faixas: azul abaixo de 18,5 · verde até 24,9 · amarelo até 29,9 · vermelho a partir de 30. ` +
+                    `O IMC não separa músculo de gordura.`;
+            }
+
+            // ---------- Dados do banco ----------
+            fetch(`/users/${sessao.id}/dashboard`)
+                .then(function (resposta) {
+                    if (resposta.status === 404) {
+                        // Ainda não respondeu o quiz
+                        window.location.href = 'quiz.html';
+                        return null;
+                    }
+                    if (!resposta.ok) throw new Error('Erro ao buscar dados');
+                    return resposta.json();
+                })
+                .then(function (dados) {
+                    if (!dados) return;
+
+                    const atual = Number(dados.pesoAtual);
+                    const meta = Number(dados.pesoObjetivo);
+                    const altura = Number(dados.altura);
+                    const select = document.getElementById('chart-period');
+
+                    preencherPesoMeta(atual, meta);
+                    desenharProjecao(atual, meta, Number(select.value));
+                    desenharImc(atual, meta, altura);
+
+                    select.addEventListener('change', () => {
+                        desenharProjecao(atual, meta, Number(select.value));
+                    });
+                })
+                .catch(function (erro) {
+                    console.log(`#ERRO: ${erro}`);
+                });
         });
     </script>
-    <script src="dashboard.js"></script>
 </body>
 </html>

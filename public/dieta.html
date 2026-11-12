@@ -9,12 +9,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="app-layout.css">
-    <link rel="stylesheet" href="dieta.css">
+    <link rel="stylesheet" href="cadastrarex.css">
 </head>
-<body class="page-dieta">
+<body>
     <div class="app-wrapper">
         <div class="app-container">
-            <!-- Sidebar -->
             <aside class="app-sidebar">
                 <div class="sidebar-logo">
                     <a href="dashboard.html"><img src="img/logo.png" alt="GYMBROTHERS Logo"></a>
@@ -33,7 +32,7 @@
                         <span>Dieta</span>
                     </a>
                     <a href="evolucao.html" class="nav-item">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
                         <span>Evolução</span>
                     </a>
                     <a href="perfil.html" class="nav-item">
@@ -56,55 +55,34 @@
             <main class="app-content">
                 <header class="app-header">
                     <div class="header-titles">
-                        <h1>Minhas Dietas</h1>
-                        <p>Planos alimentares personalizados para seu objetivo.</p>
+                        <h1>Dieta</h1>
+                        <p>A minha dieta de referência e a sua, refeição por refeição.</p>
                     </div>
                     <div class="header-actions">
-                        <button class="btn-icon" aria-label="Notificações"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button>
-                        <div class="user-avatar" id="user-avatar">A</div>
+                        <div class="user-avatar" id="user-avatar" aria-label="Perfil do Usuário">A</div>
                     </div>
                 </header>
 
-                <section class="diet-plans-grid" role="radiogroup" aria-label="Objetivo da dieta">
-                    <!-- Plan 1: Emagrecer -->
-                    <div class="diet-plan-card" role="radio" aria-checked="false" tabindex="0" data-plan="emagrecer">
-                        <div class="diet-plan-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-                        </div>
-                        <h2 class="diet-plan-title">Emagrecer</h2>
-                        <p class="diet-plan-desc">Déficit calórico saudável para perder peso.</p>
-                        <button class="btn-view-plan">Ver Plano</button>
+                <section class="ex-grid ex-grid--iguais">
+                    <div class="base-card ex-card">
+                        <h2>Dieta do autor</h2>
+                        <p>O que eu como hoje e que serve de ponto de partida para você.</p>
+                        <div id="lista-autor"></div>
                     </div>
-
-                    <!-- Plan 2: Manter -->
-                    <div class="diet-plan-card" role="radio" aria-checked="false" tabindex="0" data-plan="manter">
-                        <div class="diet-plan-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12M6 12h12M6 17h12M4 7v10M20 7v10"></path></svg>
+                    <div class="base-card ex-card ex-card--destaque">
+                        <div class="ex-card-head">
+                            <div>
+                                <h2>Minha dieta</h2>
+                                <p>Os alimentos que você consome.</p>
+                            </div>
+                            <a href="cadastraralimento.html" class="btn-novo">+ Cadastrar alimento</a>
                         </div>
-                        <h2 class="diet-plan-title">Manter o Peso</h2>
-                        <p class="diet-plan-desc">Equilíbrio perfeito entre nutrição e energia.</p>
-                        <button class="btn-view-plan">Ver Plano</button>
-                    </div>
-
-                    <!-- Plan 3: Ganhar Massa -->
-                    <div class="diet-plan-card" role="radio" aria-checked="false" tabindex="0" data-plan="ganhar-massa">
-                        <div class="diet-plan-icon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
-                        </div>
-                        <h2 class="diet-plan-title">Ganhar Massa</h2>
-                        <p class="diet-plan-desc">Mais calorias e proteínas para ganhar músculo.</p>
-                        <button class="btn-view-plan">Ver Plano</button>
+                        <div id="lista-meus" aria-live="polite"><p class="ex-empty">Carregando...</p></div>
                     </div>
                 </section>
-
-                <footer class="diet-tip-bar">
-                    <div class="tip-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2v1M5.8 2a10 10 0 0 0-4.6 8.6V15a7 7 0 0 0 7.6 7h4a7 7 0 0 0 7.6-7V10.6A10 10 0 0 0 18.2 2H5.8z"></path></svg>
-                    </div>
-                    <p class="tip-text"><span class="tip-highlight">Dica:</span> mantenha-se hidratado e siga o plano para melhores resultados!</p>
-                </footer>
             </main>
         </div>
+
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span>Início</span></a>
             <a href="treinos.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 12h12M6 8h12M6 16h12"></path></svg><span>Treinos</span></a>
@@ -113,39 +91,113 @@
             <a href="perfil.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Perfil</span></a>
         </nav>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('gymbrothers_user_data') || '{}');
-            const userName = userData.userName || 'Atleta';
-
-            const avatarEl = document.getElementById('user-avatar');
-            if (avatarEl) {
-                avatarEl.textContent = userName.charAt(0).toUpperCase();
+            // Sessão gravada no login
+            let sessao = null;
+            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
+            if (!sessao || !sessao.id) {
+                window.location.href = 'login.html';
+                return;
             }
 
-            const currentPath = window.location.pathname.split('/').pop() || 'dieta.html';
-            document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.getAttribute('href') === currentPath) {
-                    item.classList.add('active');
-                    item.setAttribute('aria-current', 'page');
-                } else {
-                    item.classList.remove('active');
-                    item.removeAttribute('aria-current');
+            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
+            document.getElementById('btn-logout').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Deseja realmente sair?')) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
                 }
             });
 
-            const logoutBtn = document.getElementById('btn-logout');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (confirm('Deseja realmente sair?')) {
-                        localStorage.clear();
-                        window.location.href = 'login.html';
-                    }
-                });
+            // ===== MINHA DIETA (fixa no site, não vem do banco) =====
+            // Para mudar, edite aqui. Unidades: g, ml, unidade, fatia, copo, colher, xícara, porção
+            const DIETA_DO_AUTOR = [
+                { refeicao: 'Manhã',      alimento: 'Pão de forma',      peso: 2,   unidade: 'fatia' },
+                { refeicao: 'Manhã',      alimento: 'Ovo',               peso: 2,   unidade: 'unidade' },
+                { refeicao: 'Manhã',      alimento: 'Café',              peso: 1,   unidade: 'copo' },
+                { refeicao: 'Almoço',     alimento: 'Arroz',             peso: 150, unidade: 'g' },
+                { refeicao: 'Almoço',     alimento: 'Frango ou carne',   peso: 200, unidade: 'g' },
+                { refeicao: 'Pré-treino', alimento: 'Tapioca com ovo',   peso: 1,   unidade: 'unidade' },
+                { refeicao: 'Janta',      alimento: 'Arroz',             peso: 150, unidade: 'g' },
+                { refeicao: 'Janta',      alimento: 'Frango ou carne',   peso: 200, unidade: 'g' }
+            ];
+
+            const ORDEM = ['Manhã', 'Almoço', 'Lanche', 'Pré-treino', 'Pós-treino', 'Janta', 'Ceia'];
+            const PLURAL = { 'unidade': 'unidades', 'fatia': 'fatias', 'copo': 'copos', 'colher': 'colheres', 'xícara': 'xícaras', 'porção': 'porções' };
+
+            function formatarQtd(q, u) {
+                const n = Number(q);
+                const txt = n.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+                if (u === 'g' || u === 'ml') return txt + ' ' + u;
+                return txt + ' ' + (n === 1 ? u : (PLURAL[u] || u));
             }
+
+            // textContent (nunca innerHTML): o nome digitado pelo usuário não vira HTML
+            function criarItem(al) {
+                const li = document.createElement('li');
+                li.className = 'ex-item';
+                const nome = document.createElement('div');
+                nome.className = 'ex-name';
+                nome.textContent = al.alimento;
+                const qtd = document.createElement('div');
+                qtd.className = 'ex-load';
+                qtd.textContent = formatarQtd(al.peso, al.unidade);
+                li.appendChild(nome);
+                li.appendChild(qtd);
+                return li;
+            }
+
+            // Agrupa por refeição, na ordem do dia
+            function agruparPorRefeicao(lista) {
+                const mapa = new Map();
+                lista.forEach(al => {
+                    if (!mapa.has(al.refeicao)) mapa.set(al.refeicao, []);
+                    mapa.get(al.refeicao).push(al);
+                });
+                const pos = (r) => { const i = ORDEM.indexOf(r); return i === -1 ? ORDEM.length : i; };
+                return [...mapa.entries()].sort((a, b) => pos(a[0]) - pos(b[0]));
+            }
+
+            function aviso(box, txt) {
+                const p = document.createElement('p');
+                p.className = 'ex-empty';
+                p.textContent = txt;
+                box.replaceChildren(p);
+            }
+
+            function desenhar(box, lista, vazio) {
+                if (!lista.length) { aviso(box, vazio); return; }
+                const frag = document.createDocumentFragment();
+                agruparPorRefeicao(lista).forEach(([refeicao, itens]) => {
+                    const h = document.createElement('h3');
+                    h.className = 'ex-group-title';
+                    h.textContent = refeicao;
+                    const ul = document.createElement('ul');
+                    ul.className = 'ex-list';
+                    itens.forEach(al => ul.appendChild(criarItem(al)));
+                    frag.appendChild(h);
+                    frag.appendChild(ul);
+                });
+                box.replaceChildren(frag);
+            }
+
+            // Só a dieta do usuário vem do banco
+            function carregarMinhaDieta() {
+                const box = document.getElementById('lista-meus');
+                fetch('/users/' + sessao.id + '/alimentos')
+                    .then(r => { if (!r.ok) throw new Error('Erro ao buscar dados'); return r.json(); })
+                    .then(lista => desenhar(box, lista, 'Você ainda não cadastrou nenhum alimento. Clique em “+ Cadastrar alimento”.'))
+                    .catch(erro => {
+                        console.log('#ERRO: ' + erro);
+                        aviso(box, 'Não foi possível carregar agora.');
+                    });
+            }
+
+            desenhar(document.getElementById('lista-autor'), DIETA_DO_AUTOR, '');
+            carregarMinhaDieta();
         });
     </script>
-    <script src="dieta.js"></script>
 </body>
 </html>

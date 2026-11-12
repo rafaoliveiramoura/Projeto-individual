@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="app-layout.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="cadastrarex.css">
 </head>
 <body>
     <div class="app-wrapper">
@@ -31,7 +33,7 @@
                         <span>Dieta</span>
                     </a>
                     <a href="evolucao.html" class="nav-item">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
                         <span>Evolução</span>
                     </a>
                     <a href="perfil.html" class="nav-item">
@@ -61,10 +63,22 @@
                         <div class="user-avatar" id="user-avatar">A</div>
                     </div>
                 </header>
-                <section class="base-card" style="text-align: center; padding: 60px 20px;">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" style="margin-bottom: 20px;"><path d="M6 12h12M6 8h12M6 16h12"></path></svg>
-                    <h2>Seus treinos aparecerão aqui.</h2>
-                    <p style="color: var(--color-text-muted);">Estamos preparando sua rotina personalizada. <!-- TODO: Integration with training API --></p>
+                <section class="ex-grid ex-grid--iguais">
+                    <div class="base-card ex-card">
+                        <h2>Treino do autor</h2>
+                        <p>O que eu faço e que serve de ponto de partida para você.</p>
+                        <div id="lista-autor" aria-live="polite"><p class="ex-empty">Carregando...</p></div>
+                    </div>
+                    <div class="base-card ex-card ex-card--destaque">
+                        <div class="ex-card-head">
+                            <div>
+                                <h2>Meu treino</h2>
+                                <p>Os exercícios que você registrou.</p>
+                            </div>
+                            <a href="cadastrarex.html" class="btn-novo">+ Cadastrar exercício</a>
+                        </div>
+                        <div id="lista-meus" aria-live="polite"><p class="ex-empty">Carregando...</p></div>
+                    </div>
                 </section>
             </main>
         </div>
@@ -78,13 +92,15 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('gymbrothers_user_data') || '{}');
-            const userName = userData.userName || 'Atleta';
-
-            const avatarEl = document.getElementById('user-avatar');
-            if (avatarEl) {
-                avatarEl.textContent = userName.charAt(0).toUpperCase();
+            // Sessão gravada no login
+            let sessao = null;
+            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
+            if (!sessao || !sessao.id) {
+                window.location.href = 'login.html';
+                return;
             }
+
+            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
 
             const currentPath = window.location.pathname.split('/').pop() || 'treinos.html';
             document.querySelectorAll('.nav-item').forEach(item => {
@@ -97,16 +113,66 @@
                 }
             });
 
-            const logoutBtn = document.getElementById('btn-logout');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    if (confirm('Deseja realmente sair?')) {
-                        localStorage.clear();
-                        window.location.href = 'login.html';
-                    }
-                });
+            document.getElementById('btn-logout').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Deseja realmente sair?')) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            const fmtKg = (n) => Number(n).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
+
+            // textContent (nunca innerHTML): o nome digitado pelo usuário não vira HTML
+            function criarItem(reg) {
+                const li = document.createElement('li');
+                li.className = 'ex-item';
+
+                const esq = document.createElement('div');
+                const nome = document.createElement('div');
+                nome.className = 'ex-name';
+                nome.textContent = reg.nome;
+                const meta = document.createElement('div');
+                meta.className = 'ex-meta';
+                const data = reg.data_registro ? new Date(reg.data_registro).toLocaleDateString('pt-BR') : '';
+                meta.textContent = reg.series + ' séries x ' + reg.repeticoes + ' repetições' + (data ? ' · ' + data : '');
+                esq.appendChild(nome);
+                esq.appendChild(meta);
+
+                const carga = document.createElement('div');
+                carga.className = 'ex-load';
+                carga.textContent = fmtKg(reg.carga) + ' kg';
+
+                li.appendChild(esq);
+                li.appendChild(carga);
+                return li;
             }
+
+            function preencher(idLista, url, vazio) {
+                const box = document.getElementById(idLista);
+                const aviso = (txt) => {
+                    const p = document.createElement('p');
+                    p.className = 'ex-empty';
+                    p.textContent = txt;
+                    box.replaceChildren(p);
+                };
+                fetch(url)
+                    .then(r => { if (!r.ok) throw new Error('Erro ao buscar dados'); return r.json(); })
+                    .then(lista => {
+                        if (!lista.length) { aviso(vazio); return; }
+                        const ul = document.createElement('ul');
+                        ul.className = 'ex-list';
+                        lista.forEach(reg => ul.appendChild(criarItem(reg)));
+                        box.replaceChildren(ul);
+                    })
+                    .catch(erro => {
+                        console.log('#ERRO: ' + erro);
+                        aviso('Não foi possível carregar agora.');
+                    });
+            }
+
+            preencher('lista-autor', '/autor/registros', 'O treino do autor ainda não foi cadastrado.');
+            preencher('lista-meus', '/users/' + sessao.id + '/registros', 'Você ainda não cadastrou nenhum exercício. Clique em “+ Cadastrar exercício”.');
         });
     </script>
 </body>

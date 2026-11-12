@@ -1,0 +1,37 @@
+/* Página de exercícios (cadastrarex.html). Usa as variáveis do style.css e as classes do app-layout.css */
+.ex-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 20px; align-items: start; }
+.ex-card { padding: 24px; }
+.ex-card h2 { font-size: var(--fs-h2); margin-bottom: 4px; }
+.ex-card > p { color: var(--color-text-muted); font-size: var(--fs-small); margin-bottom: 16px; }
+#exForm { display: flex; flex-direction: column; gap: 14px; }
+#exForm .register-button { margin-top: 6px; }
+.form-feedback { min-height: 20px; font-size: var(--fs-small); }
+.form-feedback.ok { color: var(--color-primary); }
+.form-feedback.erro { color: var(--color-error); }
+
+.ex-group-title { margin: 18px 0 10px; font-size: var(--fs-small); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--color-primary); }
+.ex-group-title:first-of-type { margin-top: 0; }
+.ex-list { list-style: none; display: grid; gap: 10px; }
+.ex-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); border-radius: 12px; }
+.ex-name { font-weight: 700; }
+.ex-meta { color: var(--color-text-muted); font-size: var(--fs-small); margin-top: 2px; }
+.ex-load { color: var(--color-primary); font-weight: 800; white-space: nowrap; }
+.ex-empty { color: var(--color-text-muted); padding: 8px 0; }
+
+@media (max-width: 1099px) { .ex-grid { grid-template-columns: 1fr; } }
+
+/* ===== Ligação Treinos <-> Cadastrar exercício ===== */
+[hidden] { display: none !important; }
+.ex-grid--iguais { grid-template-columns: 1fr 1fr; }
+.ex-form-wrap { max-width: 560px; }
+.ex-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.ex-card-head h2 { margin-bottom: 4px; }
+.ex-card-head p { color: var(--color-text-muted); font-size: var(--fs-small); margin: 0; }
+.btn-novo { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; border-radius: 999px; background: var(--color-primary); color: #000; font-weight: 800; font-size: var(--fs-small); text-decoration: none; transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.btn-novo:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(var(--color-primary-rgb), .35); }
+.link-voltar { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-text-muted); text-decoration: none; font-weight: 600; font-size: var(--fs-small); transition: color var(--transition-fast); }
+.link-voltar:hover { color: var(--color-primary); }
+.btn-novo:focus-visible, .link-voltar:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.ex-card--destaque { border-color: rgba(var(--color-primary-rgb), .35); }
+
+@media (max-width: 1099px) { .ex-grid--iguais { grid-template-columns: 1fr; } }

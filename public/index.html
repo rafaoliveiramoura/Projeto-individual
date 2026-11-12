@@ -3,173 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GYMBROTHERS - Evolução Física de Alta Performance</title>
+    <title>GYMBROTHERS · O parceiro de treino que eu não tive</title>
+    <meta name="description" content="Eu comecei na academia sem ninguém para me orientar em dieta e treino. O GYMBROTHERS é o amigo de treino que eu queria ter tido.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="GYMBROTHERS · O parceiro de treino que eu não tive">
+    <meta property="og:description" content="Um sistema que caminha junto com quem está começando, criado a partir da minha própria história.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="img/logo.png">
+    <script>document.documentElement.classList.add('js');</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-    <nav class="landing-nav" id="mainNav">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <div id="topo"></div>
+
+    <nav class="landing-nav" id="mainNav" aria-label="Principal">
         <div class="nav-container">
-            <a href="#" class="nav-logo">
-                <img src="img/logo.png" alt="GYMBROTHERS Logo">
-            </a>
-
-            <button class="nav-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <a href="#topo" class="nav-logo"><img src="img/logo.png" alt="GYMBROTHERS" width="120" height="34"></a>
+            <button class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+                <svg class="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
             </button>
-
             <div class="nav-menu" id="navMenu">
-                <a href="#dashboard" class="nav-link">Dashboard</a>
-                <a href="#sobre" class="nav-link">Sobre</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="historia.html" class="nav-link">Sobre</a>
                 <a href="cadastro.html" class="nav-btn-primary">Cadastrar</a>
             </div>
         </div>
+        <div class="nav-progress" aria-hidden="true"></div>
     </nav>
 
-    <main>
-        <!-- HERO SECTION -->
-        <section class="hero">
+    <main id="conteudo">
+        <!-- ============ HERO ============ -->
+        <section class="hero" aria-labelledby="hero-titulo">
             <div class="hero-content reveal">
-                <h1>Evolua com a precisão de um <span class="text-primary">profissional</span></h1>
-                <p>Tudo o que você precisa para monitorar seus treinos, dieta e evolução física em um só lugar. Consistência gera resultado.</p>
+                <span class="pill">Projeto individual · SPTech · 2026</span>
+                <h1 id="hero-titulo">O parceiro de treino que <span class="text-primary">eu não tive</span></h1>
+                <p class="hero-sub">Quando comecei na academia, não tinha ninguém para me orientar em dieta e treino. Este site é o amigo que eu queria ter encontrado.</p>
                 <div class="hero-btns">
-                    <a href="cadastro.html" class="btn-primary">Começar agora</a>
+                    <a href="historia.html" class="btn-primary">Conhecer minha história</a>
+                    <a href="#proposito" class="btn-secondary">Por que ele existe</a>
+                </div>
+            </div>
+
+            <div class="contrast reveal" role="group" aria-label="Como foi o começo e o que eu criei">
+                <div class="contrast-col contrast-before">
+                    <span class="contrast-tag">Quando eu comecei</span>
+                    <ul>
+                        <li>Ninguém para me orientar na dieta</li>
+                        <li>Ninguém para me orientar no treino</li>
+                    </ul>
+                </div>
+                <div class="contrast-arrow" aria-hidden="true">↓</div>
+                <div class="contrast-col contrast-after">
+                    <span class="contrast-tag">O parceiro que criei</span>
+                    <ul>
+                        <li>Uma dieta e um treino que funcionaram comigo</li>
+                        <li>Um painel com o seu peso e a sua meta</li>
+                        <li>Espaço para montar o seu próprio plano</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PROPÓSITO ============ -->
+        <section id="proposito" class="section" aria-labelledby="proposito-titulo">
+            <div class="pain card reveal">
+                <span class="eyebrow">Por que este site existe</span>
+                <h2 id="proposito-titulo" class="sr-only">Por que este site existe</h2>
+                <blockquote>Quando comecei a treinar, eu não tinha ninguém para me auxiliar com dieta e treino. E era exatamente isso que eu mais queria.</blockquote>
+                <p class="pain-detail">Eu sei como é começar sem ninguém ao lado. Por isso, em vez de só contar essa história, decidi transformá-la no que eu precisei naquele momento: um parceiro de treino.</p>
+                <p class="pain-sub">Foi daí que nasceu o GYMBROTHERS.</p>
+            </div>
+        </section>
+
+        <!-- ============ O PARCEIRO ============ -->
+        <section id="parceiro" class="section" aria-labelledby="parceiro-titulo">
+            <div class="section-header reveal">
+                <span class="eyebrow">O parceiro</span>
+                <h2 id="parceiro-titulo">O que um parceiro de treino faz</h2>
+                <p>Ele não promete milagre. Ele caminha junto com você, do primeiro treino ao primeiro resultado.</p>
+            </div>
+            <div class="partner">
+                <ol class="steps">
+                    <li class="card reveal"><span class="step-n" aria-hidden="true">1</span><h3>Quer te conhecer</h3><p>Seis perguntas sobre você: peso, altura, tempo de treino, frequência, meta e foco muscular.</p></li>
+                    <li class="card reveal"><span class="step-n" aria-hidden="true">2</span><h3>Mostra onde você está</h3><p>O seu painel: peso atual, meta, quanto falta, projeção até a meta e IMC. Só informações suas.</p></li>
+                    <li class="card reveal"><span class="badge">Em breve</span><span class="step-n" aria-hidden="true">3</span><h3>Mostra o que funcionou comigo</h3><p>O treino e a dieta que eu segui, como ponto de partida para você.</p></li>
+                    <li class="card reveal"><span class="badge">Em breve</span><span class="step-n" aria-hidden="true">4</span><h3>Deixa você montar o seu</h3><p>Seu próprio treino e sua própria dieta, guardados na sua conta.</p></li>
+                </ol>
+                <div class="partner-side reveal">
+                    <div class="panel" aria-hidden="true">
+                        <div class="panel-row"><span>Peso atual</span><strong>--</strong></div>
+                        <div class="panel-row"><span>Meta</span><strong>--</strong></div>
+                        <div class="panel-row"><span>Previsão</span><strong>--</strong></div>
+                        <svg class="panel-chart" viewBox="0 0 300 90" fill="none">
+                            <line x1="0" y1="20" x2="300" y2="20" class="pc-grid"/>
+                            <line x1="0" y1="50" x2="300" y2="50" class="pc-grid"/>
+                            <line x1="0" y1="80" x2="300" y2="80" class="pc-grid"/>
+                            <path d="M6 18 C60 24 110 34 160 46 S250 66 294 72" class="pc-line"/>
+                        </svg>
+                    </div>
+                    <p class="panel-caption">É assim que o seu painel aparece depois das perguntas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ QUEM FEZ ============ -->
+        <section id="quem" class="section" aria-labelledby="quem-titulo">
+            <div class="teaser card reveal">
+                <figure class="photo teaser-photo">
+                    <img src="img/eu-hero.jpg" alt="[PREENCHER: descreva a foto, ex.: eu treinando]" width="800" height="1000" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
+                    <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: sua foto em img/eu-hero.jpg]</mark></figcaption>
+                </figure>
+                <div class="teaser-text">
+                    <span class="eyebrow">Feito por quem passou por isso</span>
+                    <h2 id="quem-titulo">Esta é a minha história</h2>
+                    <p>Cada parte deste site nasceu de algo que eu senti falta quando comecei. Se você quer saber como cheguei até aqui, o que foi difícil e o que funcionou, a história completa está em outra página.</p>
+                    <div class="hero-btns">
+                        <a href="historia.html" class="btn-primary">Ler minha história</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ CONVITE ============ -->
+        <section class="section closing" aria-labelledby="convite-titulo">
+            <div class="card reveal">
+                <h2 id="convite-titulo">Você não precisa começar sozinho.</h2>
+                <p class="closing-sub">Responda às perguntas e comece a acompanhar a sua jornada.</p>
+                <div class="hero-btns center">
+                    <a href="cadastro.html" class="btn-primary">Fazer parte</a>
                     <a href="login.html" class="btn-secondary">Já tenho conta</a>
                 </div>
-            </div>
-
-            <div class="hero-visual reveal">
-                <div class="mockup-container">
-                    <div class="mockup-grid">
-                        <div class="mock-card">
-                            <span class="mock-label">Peso Atual</span>
-                            <span class="mock-value">82.5 <small>kg</small></span>
-                            <div class="mock-trend">↗</div>
-                        </div>
-                        <div class="mock-card">
-                            <span class="mock-label">Meta de Peso</span>
-                            <span class="mock-value">78.0 <small>kg</small></span>
-                            <div class="mock-trend">↘</div>
-                        </div>
-                        <div class="mock-card">
-                            <span class="mock-label">Treinos/Semana</span>
-                            <span class="mock-value">4 / 5</span>
-                        </div>
-                        <div class="mock-card">
-                            <span class="mock-label">Progresso</span>
-                            <span class="mock-value">+12%</span>
-                            <div class="mock-trend">↗</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SOBRE SECTION -->
-        <section id="sobre" class="sobre">
-            <div class="section-header reveal">
-                <h2>Sobre o GYMBROTHERS</h2>
-                <p>A ferramenta definitiva para atletas que buscam a melhor versão de si mesmos.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </div>
-                    <h3>Treinos Personalizados</h3>
-                    <p>Organize sua rotina de treinos e foque nos grupos musculares que realmente importam para o seu objetivo.</p>
-                </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
-                    </div>
-                    <h3>Planos de Dieta</h3>
-                    <p>Seja para emagrecer, manter o peso ou ganhar massa, controle sua alimentação com precisão.</p>
-                </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-                    </div>
-                    <h3>Evolução de Peso</h3>
-                    <p>Acompanhe sua oscilação de peso com gráficos intuitivos e veja sua consistência se transformar em resultado.</p>
-                </div>
-                <div class="feature-card reveal">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    </div>
-                    <h3>Perfil de Objetivos</h3>
-                    <p>Defina suas metas claras e tenha um dashboard que reflete exatamente onde você está e para onde vai.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- COMO FUNCIONA SECTION -->
-        <section class="how-it-works">
-            <div class="section-header reveal">
-                <h2>Como Funciona</h2>
-                <p>Três passos simples para assumir o controle da sua evolução.</p>
-            </div>
-
-            <div class="steps-container">
-                <div class="step reveal">
-                    <div class="step-number">1</div>
-                    <h3>Crie sua conta</h3>
-                    <p>Faça um cadastro rápido e entre para a nossa comunidade de atletas.</p>
-                </div>
-                <div class="step reveal">
-                    <div class="step-number">2</div>
-                    <h3>Responda o Quiz</h3>
-                    <p>Seis etapas rápidas sobre seu peso, altura, frequência e foco muscular.</p>
-                </div>
-                <div class="step reveal">
-                    <div class="step-number">3</div>
-                    <h3>Acompanhe tudo</h3>
-                    <p>Use o dashboard para monitorar sua evolução e ajustar sua rota.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- DASHBOARD PREVIEW SECTION -->
-        <section id="dashboard" class="dashboard-preview">
-            <div class="preview-content reveal">
-                <div class="preview-text">
-                    <h2>Seu progresso em <span class="text-primary">tempo real</span></h2>
-                    <p>Um painel intuitivo que resume sua jornada. Visualize métricas cruciais e a curva de evolução do seu peso sem distrações.</p>
-                    <a href="login.html" class="btn-primary">Acessar meu dashboard</a>
-                </div>
-                <div class="preview-visual">
-                    <div class="preview-card">
-                        <div class="preview-header">
-                            <span>Evolução de Peso</span>
-                            <span class="preview-date">Nov 2026</span>
-                        </div>
-                        <div class="preview-chart">
-                            <svg viewBox="0 0 400 200" class="chart-svg">
-                                <path d="M0,150 Q50,140 100,120 T200,100 T300,80 T400,60" stroke="var(--color-primary)" stroke-width="4" fill="none" />
-                                <circle cx="400" cy="60" r="6" fill="var(--color-primary)" />
-                                <line x1="0" y1="180" x2="400" y2="180" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
-                                <line x1="0" y1="0" x2="0" y2="180" stroke="rgba(255,255,255,0.2)" stroke-width="2" />
-                            </svg>
-                        </div>
-                        <div class="preview-metrics">
-                            <div class="p-metric"><span>Atual:</span> <strong>82kg</strong></div>
-                            <div class="p-metric"><span>Meta:</span> <strong>78kg</strong></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA FINAL -->
-        <section class="cta-final">
-            <div class="cta-card reveal">
-                <h2>Pronto para elevar seu nível?</h2>
-                <p>Não deixe sua evolução ao acaso. Comece a medir, ajustar e vencer hoje mesmo.</p>
-                <a href="cadastro.html" class="btn-primary">Criar minha conta</a>
             </div>
         </section>
     </main>
@@ -177,21 +147,96 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <img src="img/logo.png" alt="GYMBROTHERS Logo" class="footer-logo">
-                <p>© 2026 Gymbrothers. Todos os direitos reservados.</p>
+                <img src="img/logo.png" alt="GYMBROTHERS" class="footer-logo" width="120" height="34" loading="lazy">
+                <p>Projeto individual · SPTech · 2026</p>
             </div>
             <div class="footer-links">
-                <a href="#dashboard">Dashboard</a>
-                <a href="#sobre">Sobre</a>
+                <strong>Navegação</strong>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="historia.html">Sobre</a>
                 <a href="cadastro.html">Cadastrar</a>
                 <a href="login.html">Login</a>
             </div>
-            <div class="footer-contact">
-                <a href="mailto:suporte@gymbrothers.com">suporte@gymbrothers.com</a>
+            <div class="footer-links">
+                <strong>Contato</strong>
+                <a href="mailto:contato@exemplo.com"><mark class="ph">[PREENCHER: seu e-mail]</mark></a>
             </div>
         </div>
     </footer>
 
-    <script src="landing.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const nav = document.getElementById('mainNav');
+    const toggle = document.querySelector('.nav-toggle');
+    const menu = document.getElementById('navMenu');
+    const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Scroll: navbar + barra de progresso ---------- */
+    let ticking = false;
+    function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+            const y = window.scrollY || 0;
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const p = max > 0 ? Math.min(1, y / max) : 0;
+            nav.classList.toggle('scrolled', y > 10);
+            nav.style.setProperty('--p', p.toFixed(4));
+            ticking = false;
+        });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    /* ---------- Menu mobile ---------- */
+    function setMenu(aberto, devolverFoco) {
+        menu.classList.toggle('open', aberto);
+        nav.classList.toggle('menu-open', aberto);
+        document.body.classList.toggle('menu-open', aberto);
+        toggle.setAttribute('aria-expanded', String(aberto));
+        toggle.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+        if (!aberto && devolverFoco) toggle.focus();
+    }
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setMenu(!menu.classList.contains('open'));
+    });
+    menu.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { setMenu(false); });
+    });
+    const logo = document.querySelector('.nav-logo');
+    if (logo) logo.addEventListener('click', function () { setMenu(false); });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && menu.classList.contains('open')) setMenu(false, true);
+    });
+    document.addEventListener('click', function (e) {
+        if (menu.classList.contains('open') && !nav.contains(e.target)) setMenu(false);
+    });
+    window.addEventListener('resize', function () { if (window.innerWidth >= 900) setMenu(false); });
+
+    /* ---------- Reveal ao rolar (cascata por irmãos) ---------- */
+    const reveals = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window && !reduzir) {
+        const io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+                if (en.isIntersecting) {
+                    en.target.classList.add('active');
+                    io.unobserve(en.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function (el) {
+            const irmaos = Array.prototype.filter.call(el.parentNode.children, function (n) {
+                return n.classList.contains('reveal');
+            });
+            el.style.setProperty('--i', Math.min(irmaos.indexOf(el), 5));
+            io.observe(el);
+        });
+    } else {
+        reveals.forEach(function (el) { el.classList.add('active'); });
+    }
+});
+    </script>
 </body>
 </html>

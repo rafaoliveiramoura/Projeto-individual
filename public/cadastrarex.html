@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gymbrothers - Cadastrar exercício</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="app-layout.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="cadastrarex.css">
+</head>
+<body>
+    <div class="app-wrapper">
+        <div class="app-container">
+            <aside class="app-sidebar">
+                <div class="sidebar-logo">
+                    <a href="dashboard.html">
+                        <img src="img/logo.png" alt="GYMBROTHERS Logo">
+                    </a>
+                </div>
+                <nav class="app-nav">
+                    <a href="dashboard.html" class="nav-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                        <span>Início</span>
+                    </a>
+                    <a href="treinos.html" class="nav-item active" aria-current="page">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12M6 12h12M6 17h12M4 7v10M20 7v10"></path></svg>
+                        <span>Treinos</span>
+                    </a>
+                    <a href="dieta.html" class="nav-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path><path d="M7 11v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6"></path><line x1="14" y1="15" x2="21" y2="15"></line><line x1="14" y1="18" x2="21" y2="18"></line><line x1="14" y1="21" x2="21" y2="21"></line></svg>
+                        <span>Dieta</span>
+                    </a>
+                    <a href="evolucao.html" class="nav-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
+                        <span>Evolução</span>
+                    </a>
+                    <a href="perfil.html" class="nav-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span>Perfil</span>
+                    </a>
+                    <a href="configuracoes.html" class="nav-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.64 9l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        <span>Configurações</span>
+                    </a>
+                </nav>
+                <div class="sidebar-footer">
+                    <a href="#" class="nav-item" id="btn-logout">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                        <span>Sair</span>
+                    </a>
+                </div>
+            </aside>
+
+            <main class="app-content">
+                <header class="app-header">
+                    <div class="header-titles">
+                        <h1>Cadastrar exercício</h1>
+                        <p>Registre a carga, as séries e as repetições do seu treino 💪</p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="treinos.html" class="link-voltar">&larr; Voltar para Treinos</a>
+                        <div class="user-avatar" id="user-avatar" aria-label="Perfil do Usuário">A</div>
+                    </div>
+                </header>
+
+                <section class="ex-form-wrap">
+                    <div class="base-card ex-card">
+                        <h2>Novo registro</h2>
+                        <p>A data é registrada automaticamente.</p>
+                        <form id="exForm" novalidate>
+                            <div class="input-group">
+                                <label for="sel_ex">Exercício</label>
+                                <select id="sel_ex" class="form-select">
+                                    <option value="">Carregando...</option>
+                                </select>
+                            </div>
+                            <div class="input-group" id="grp_novo" hidden>
+                                <label for="ipt_novo">Nome do novo exercício</label>
+                                <input type="text" id="ipt_novo" maxlength="100" placeholder="Ex.: Remada curvada" autocomplete="off">
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="ipt_carga">Carga (kg)</label>
+                                    <input type="number" id="ipt_carga" min="0" max="999" step="0.5" inputmode="decimal" placeholder="60">
+                                </div>
+                                <div class="input-group">
+                                    <label for="ipt_series">Séries</label>
+                                    <input type="number" id="ipt_series" min="1" max="20" step="1" inputmode="numeric" placeholder="4">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="ipt_repeticoes">Repetições por série</label>
+                                <input type="number" id="ipt_repeticoes" min="1" max="100" step="1" inputmode="numeric" placeholder="10">
+                            </div>
+                            <p class="form-feedback" id="feedback" role="status" aria-live="polite"></p>
+                            <button type="submit" class="register-button" id="btnSalvar">Salvar exercício</button>
+                        </form>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Início</span>
+            </a>
+            <a href="treinos.html" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M6 12h12M6 8h12M6 16h12"></path></svg>
+                <span>Treinos</span>
+            </a>
+            <a href="dieta.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"></path></svg>
+                <span>Dieta</span>
+            </a>
+            <a href="evolucao.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9-3-9h-4"></path></svg>
+                <span>Evolução</span>
+            </a>
+            <a href="perfil.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Sessão gravada no login (cada endereço do navegador tem a sua; veja a observação sobre localhost)
+            let sessao = null;
+            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
+            if (!sessao || !sessao.id) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
+            document.getElementById('btn-logout').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Deseja realmente sair?')) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                }
+            });
+
+            const sel = document.getElementById('sel_ex');
+            const grpNovo = document.getElementById('grp_novo');
+            const iptNovo = document.getElementById('ipt_novo');
+            const feedback = document.getElementById('feedback');
+            const btn = document.getElementById('btnSalvar');
+            const NOVO = '__novo__';
+
+            function mostrar(msg, tipo) {
+                feedback.textContent = msg;
+                feedback.className = 'form-feedback ' + (tipo || '');
+            }
+
+            // O servidor responde o motivo em texto (ou como string JSON)
+            async function lerErro(resposta, padrao) {
+                try {
+                    const txt = (await resposta.text()).replace(/^"|"$/g, '');
+                    return txt || padrao;
+                } catch (e) { return padrao; }
+            }
+
+            function montarOpcoes(lista) {
+                sel.replaceChildren();
+                const add = (valor, texto) => {
+                    const o = document.createElement('option');
+                    o.value = valor; o.textContent = texto; sel.appendChild(o);
+                };
+                add('', 'Selecione um exercício');
+                lista.forEach(ex => add(String(ex.idexercicio), ex.nome));
+                add(NOVO, '+ Outro exercício (criar novo)');
+            }
+
+            fetch('/exercicios')
+                .then(r => { if (!r.ok) throw new Error('Erro ao buscar exercícios'); return r.json(); })
+                .then(montarOpcoes)
+                .catch(erro => {
+                    console.log('#ERRO: ' + erro);
+                    montarOpcoes([]);
+                    mostrar('Não foi possível carregar a lista. Você ainda pode criar um exercício novo.', 'erro');
+                });
+
+            sel.addEventListener('change', () => {
+                const novo = sel.value === NOVO;
+                grpNovo.hidden = !novo;
+                if (novo) iptNovo.focus();
+            });
+
+            // Cria o nome (se for novo) e devolve o id do exercício
+            async function obterIdExercicio() {
+                if (sel.value !== NOVO) return Number(sel.value);
+                const resposta = await fetch('/exercicios', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome: iptNovo.value.trim() })
+                });
+                if (!resposta.ok) throw new Error(await lerErro(resposta, 'Erro ao criar o exercício'));
+                return (await resposta.json()).id;
+            }
+
+            document.getElementById('exForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                mostrar('');
+
+                const carga = document.getElementById('ipt_carga').value;
+                const series = document.getElementById('ipt_series').value;
+                const repeticoes = document.getElementById('ipt_repeticoes').value;
+
+                if (!sel.value) { mostrar('Escolha um exercício.', 'erro'); return; }
+                if (sel.value === NOVO && !iptNovo.value.trim()) { mostrar('Digite o nome do novo exercício.', 'erro'); return; }
+                if (carga === '' || series === '' || repeticoes === '') { mostrar('Preencha carga, séries e repetições.', 'erro'); return; }
+
+                btn.disabled = true;
+                try {
+                    const exercicioId = await obterIdExercicio();
+                    const resposta = await fetch('/registros', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: sessao.id,
+                            fkexercicio: exercicioId,
+                            carga: Number(carga),
+                            series: Number(series),
+                            repeticoes: Number(repeticoes)
+                        })
+                    });
+                    if (!resposta.ok) throw new Error(await lerErro(resposta, 'Erro ao salvar o exercício'));
+
+                    mostrar('Exercício salvo! Voltando para Treinos...', 'ok');
+                    setTimeout(() => { window.location.href = 'treinos.html'; }, 900);
+                } catch (erro) {
+                    mostrar(erro.message || 'Erro ao salvar o exercício', 'erro');
+                    btn.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

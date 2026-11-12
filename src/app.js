@@ -4,6 +4,9 @@ const cors = require("cors");
 const path = require("path");
 const userRoutes = require("./routes/user.routes");
 const userController = require("./controllers/user.controller");
+const exRoutes = require("./routes/ex.routes")
+const dietaRoutes = require("./routes/dieta.routes")
+
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -23,6 +26,9 @@ app.get('/cadastro', (req, res) => {
 
 // Montagem das rotas de usuário
 app.use(userRoutes.expressrouter);
+app.use("/", exRoutes.expressrouter)
+app.use("/", dietaRoutes.expressrouter)
+
 
 // Rota para processar o cadastro (removida duplicata se existir)
 // app.post('/register', userController.cadastrar);
