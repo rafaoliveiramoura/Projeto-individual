@@ -1,0 +1,32 @@
+/* Página de academias (academias.html). Usa as variáveis do style.css e as classes do app-layout.css / cadastrarex.css */
+.ac-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }
+.ac-mapcard { padding: 12px; }
+#mapa { height: 520px; border-radius: 12px; background: #111; z-index: 0; }
+.ac-detalhe { min-width: 0; }
+
+.ac-card { margin-bottom: 8px; }
+.ac-foto { width: 100%; max-height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 14px; display: block; }
+.ac-nome { font-size: var(--fs-h2); margin-bottom: 2px; overflow-wrap: anywhere; }
+.ac-bairro, .ac-periodo { color: var(--color-text-muted); font-size: var(--fs-small); margin: 0 0 6px; }
+.ac-nota { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+.ac-nota strong { color: var(--color-primary); }
+.ac-desc { line-height: 1.6; margin: 10px 0 0; overflow-wrap: anywhere; }
+
+.ac-stars { position: relative; display: inline-block; font-size: 20px; line-height: 1; letter-spacing: 2px; }
+.ac-stars-base { color: rgba(255,255,255,.18); }
+.ac-stars-fill { position: absolute; left: 0; top: 0; overflow: hidden; white-space: nowrap; color: var(--color-primary); }
+
+.ac-item { width: 100%; font: inherit; color: inherit; text-align: left; cursor: pointer; transition: border-color var(--transition-fast), transform var(--transition-fast); }
+.ac-item:hover, .ac-item[aria-pressed="true"] { border-color: rgba(var(--color-primary-rgb), .5); }
+.ac-item:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+.ac-pin { background: none; border: 0; }
+.ac-pin span { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--color-primary); color: #000; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,.5); }
+.ac-pin b { transform: rotate(45deg); font-weight: 800; }
+.ac-pin--ativo span { outline: 3px solid #fff; }
+.leaflet-container { font-family: inherit; }
+
+@media (max-width: 1099px) {
+    .ac-grid { grid-template-columns: 1fr; }
+    #mapa { height: 360px; }
+}
