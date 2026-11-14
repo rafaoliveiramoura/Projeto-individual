@@ -143,6 +143,8 @@
             const foco = userData.focus;
             const frequencia = userData.frequency;
             const userId = session.id;
+            // IMC = peso / (altura em metros)²  (a altura do quiz está em cm)
+            const imc = Number((Number(weightCurrent) / Math.pow(Number(height) / 100, 2)).toFixed(1))
 
             return fetch("/quiz", {
                 method: "POST",
@@ -156,14 +158,22 @@
                     experiencia: tempoDeTreino,
                     foco: foco,
                     frequencia: frequencia,
+                    imc: imc,
                     userId: userId
                 })
             })
-            .then(resposta => {
+            .then(async resposta => {
+                // lê como texto: se o servidor responder texto puro (e não JSON), não quebra
+                const texto = await resposta.text();
+                console.log("POST /quiz ->", resposta.status, texto);
                 if (!resposta.ok) {
-                    throw new Error(resposta.statusText || "Erro ao salvar dados");
+                    // rota não ligada no servidor devolve uma página HTML ("Cannot POST /quiz")
+                    if (texto.trim().startsWith("<")) {
+                        throw new Error("a rota /quiz não foi encontrada no servidor (status " + resposta.status + ")");
+                    }
+                    throw new Error(texto.replace(/^"|"$/g, "") || resposta.statusText || "Erro ao salvar dados");
                 }
-                return resposta.json();
+                try { return JSON.parse(texto); } catch (e) { return {}; }
             });
         }
 
@@ -206,14 +216,14 @@
 
             if (currentStep === 1) {
                 const val = document.getElementById('weight-current').value;
-                if (!val || val <= 0) {
-                    if (errorEl) errorEl.textContent = "Informe um peso válido maior que 0.";
+                if (!val || val < 20 || val > 400) {
+                    if (errorEl) errorEl.textContent = "Informe um peso válido, entre 20 e 400 kg.";
                     return false;
                 }
             } else if (currentStep === 2) {
                 const val = document.getElementById('height').value;
-                if (!val || val <= 0) {
-                    if (errorEl) errorEl.textContent = "Informe uma altura válida maior que 0.";
+                if (!val || val < 100 || val > 250) {
+                    if (errorEl) errorEl.textContent = "Informe a altura em centímetros (ex.: 175).";
                     return false;
                 }
             } else if (currentStep === 3) {
@@ -228,8 +238,8 @@
                 }
             } else if (currentStep === 5) {
                 const val = document.getElementById('weight-goal').value;
-                if (!val || val <= 0) {
-                    if (errorEl) errorEl.textContent = "Informe um peso objetivo válido maior que 0.";
+                if (!val || val < 20 || val > 400) {
+                    if (errorEl) errorEl.textContent = "Informe um peso objetivo válido, entre 20 e 400 kg.";
                     return false;
                 }
             } else if (currentStep === 6) {
@@ -258,7 +268,17 @@
             }
         }
 
+        let salvando = false;
+
         async function finishQuiz() {
+            if (salvando) return;            // evita enviar o quiz duas vezes (duplicaria no banco)
+            salvando = true;
+            const btn = document.getElementById('btn-next');
+            const errorEl = document.getElementById('error-6');
+            if (errorEl) errorEl.textContent = "";
+            btn.disabled = true;
+            btn.textContent = 'Salvando...';
+
             try {
                 await guardarinfo();
 
@@ -275,9 +295,15 @@
                 document.querySelectorAll('.quiz-step').forEach(s => s.classList.remove('active'));
                 document.getElementById('quiz-content').classList.add('hidden');
                 document.getElementById('screen-success').classList.add('active');
+
+                // vai para o dashboard sozinho (o botão continua disponível)
+                setTimeout(goToDashboard, 2500);
             } catch (erro) {
-                const errorEl = document.getElementById(`error-6`);
+                console.log('#ERRO: ' + erro);
                 if (errorEl) errorEl.textContent = "Erro ao salvar seus dados: " + erro.message;
+                salvando = false;
+                btn.disabled = false;
+                btn.textContent = 'Concluir';
             }
         }
 

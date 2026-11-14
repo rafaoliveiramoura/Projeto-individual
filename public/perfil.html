@@ -9,6 +9,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="app-layout.css">
+<style>
+    .pp-card { padding: 24px; max-width: 600px; margin-top: 20px; }
+    .pp-card h2 { font-size: var(--fs-h2); margin: 0 0 4px; }
+    .pp-card > p { color: var(--color-text-muted); font-size: var(--fs-small); margin: 0 0 16px; }
+    .pp-atual { font-size: var(--fs-small); color: var(--color-text-muted); margin-bottom: 14px; }
+    .pp-atual strong { color: var(--color-primary); font-size: 1.4em; }
+    .pp-form { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .pp-form label { flex-basis: 100%; font-size: var(--fs-small); color: var(--color-text-muted); }
+    .pp-form input { flex: 1 1 140px; min-width: 0; min-height: 44px; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color: var(--color-text-main); font: inherit; }
+    .pp-form input:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .pp-btn { min-height: 44px; padding: 10px 22px; border: 0; border-radius: 999px; background: var(--color-primary); color: #000; font: inherit; font-weight: 800; cursor: pointer; }
+    .pp-btn:disabled { opacity: .6; cursor: wait; }
+    .pp-btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+    .pp-msg { flex-basis: 100%; min-height: 20px; font-size: var(--fs-small); }
+    .pp-msg.ok { color: var(--color-primary); }
+    .pp-msg.erro { color: var(--color-error, #ff5050); }
+    .pp-msg a { color: inherit; font-weight: 800; }
+    .pp-hist { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 8px; }
+    .pp-hist li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); font-size: var(--fs-small); }
+    .pp-hist .pp-delta { font-weight: 800; white-space: nowrap; }
+    .pp-hist .pp-delta.desce { color: var(--color-primary); }
+    .pp-titulo-hist { margin: 20px 0 0; font-size: var(--fs-small); font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--color-primary); }
+</style>
 </head>
 <body>
     <div class="app-wrapper">
@@ -30,8 +53,12 @@
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"></path><path d="M7 11v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6"></path><line x1="14" y1="15" x2="21" y2="15"></line><line x1="14" y1="18" x2="21" y2="18"></line><line x1="14" y1="21" x2="21" y2="21"></line></svg>
                         <span>Dieta</span>
                     </a>
+                    <a href="academias.html" class="nav-item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        <span>Academias</span>
+                    </a>
                     <a href="evolucao.html" class="nav-item">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg></svg>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
                         <span>Evolução</span>
                     </a>
                     <a href="perfil.html" class="nav-item active" aria-current="page">
@@ -89,12 +116,27 @@
                         </div>
                     </div>
                 </section>
+
+                <section class="base-card pp-card" aria-labelledby="pp-titulo">
+    <h2 id="pp-titulo">Atualizar meu peso</h2>
+    <p>Pesou de novo? Atualize aqui e o gráfico de evolução do dashboard mostra a mudança.</p>
+    <div class="pp-atual" id="pp-atual"></div>
+    <form class="pp-form" id="pp-form" novalidate>
+        <label for="pp-peso">Novo peso (kg)</label>
+        <input type="text" id="pp-peso" inputmode="decimal" maxlength="6" placeholder="Ex.: 78" autocomplete="off">
+        <button type="submit" class="pp-btn" id="pp-btn">Atualizar peso</button>
+        <span class="pp-msg" id="pp-msg" role="status" aria-live="polite"></span>
+    </form>
+    <h3 class="pp-titulo-hist">Minhas atualizações</h3>
+    <ul class="pp-hist" id="pp-hist"></ul>
+</section>
             </main>
         </div>
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg><span>Início</span></a>
             <a href="treinos.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 12h12M6 8h12M6 16h12"></path></svg><span>Treinos</span></a>
             <a href="dieta.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"></path></svg><span>Dieta</span></a>
+            <a href="academias.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Academias</span></a>
             <a href="evolucao.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9-3-9h-4"></path></svg><span>Evolução</span></a>
             <a href="perfil.html" class="nav-item active"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Perfil</span></a>
         </nav>
@@ -109,6 +151,112 @@
             document.getElementById('prof-exp').textContent = userData.experience || '--';
             document.getElementById('prof-freq').textContent = userData.frequency || '--';
             document.getElementById('prof-focus').textContent = userData.focus || '--';
+        });
+    </script>
+    <script>
+        // Peso: o ponto inicial é o do quiz; cada atualização vira uma pesagem em registro_peso
+        document.addEventListener('DOMContentLoaded', function () {
+            let sessao = null;
+            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
+            if (!sessao || !sessao.id) return;   // sem sessão: o app.js / login cuidam disso
+
+            const el = (id) => document.getElementById(id);
+            const fmt = (n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+            const msg = (txt, tipo) => { const m = el('pp-msg'); m.className = 'pp-msg ' + (tipo || ''); m.textContent = txt; return m; };
+
+            let pesoInicial = null;
+
+            function desenhar(pesagens) {
+                const atual = pesagens.length ? pesagens[pesagens.length - 1].peso : pesoInicial;
+                const box = el('pp-atual');
+                box.replaceChildren();
+                if (atual !== null) {
+                    const s = document.createElement('strong');
+                    s.textContent = fmt(atual) + ' kg';
+                    box.append('Peso atual: ', s);
+                    el('prof-weight').textContent = fmt(atual) + ' kg';   // card de dados lá em cima
+                }
+
+                const ul = el('pp-hist');
+                ul.replaceChildren();
+                if (!pesagens.length) {
+                    const li = document.createElement('li');
+                    li.textContent = 'Você ainda não atualizou o peso.';
+                    ul.appendChild(li);
+                    return;
+                }
+                // mais recente primeiro; variação em relação à pesagem anterior (ou ao peso do quiz)
+                for (let i = pesagens.length - 1; i >= 0; i--) {
+                    const antes = i === 0 ? pesoInicial : pesagens[i - 1].peso;
+                    const li = document.createElement('li');
+                    const esq = document.createElement('span');
+                    esq.textContent = pesagens[i].data.toLocaleDateString('pt-BR') + ' · ' + fmt(pesagens[i].peso) + ' kg';
+                    li.appendChild(esq);
+                    if (antes !== null) {
+                        const d = pesagens[i].peso - antes;
+                        const dd = document.createElement('span');
+                        dd.className = 'pp-delta' + (d < 0 ? ' desce' : '');
+                        dd.textContent = Math.abs(d) < 0.05 ? 'igual' : (d < 0 ? '↓ ' : '↑ ') + fmt(Math.abs(d)) + ' kg';
+                        li.appendChild(dd);
+                    }
+                    ul.appendChild(li);
+                }
+            }
+
+            function buscar() {
+                return fetch('/users/' + sessao.id + '/pesos')
+                    .then(r => { if (!r.ok) throw new Error('pesagens ' + r.status); return r.json(); })
+                    .then(lista => lista.map(p => ({ peso: Number(p.peso), data: new Date(p.dt_registro) })));
+            }
+
+            // Dados do quiz vindos do banco: peso inicial, meta e altura
+            fetch('/users/' + sessao.id + '/dashboard')
+                .then(r => r.ok ? r.json() : null)
+                .then(function (d) {
+                    if (d) {
+                        pesoInicial = Number(d.pesoAtual);
+                        const alt = Number(d.altura);
+                        if (alt > 0) el('prof-height').textContent = Math.round(alt > 3 ? alt : alt * 100) + ' cm';
+                        if (Number(d.pesoObjetivo) > 0) el('prof-goal').textContent = fmt(d.pesoObjetivo) + ' kg';
+                    }
+                    return buscar();
+                })
+                .then(desenhar)
+                .catch(function (e) { console.log('#ERRO: ' + e); msg('Não foi possível carregar suas atualizações agora.', 'erro'); });
+
+            el('pp-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                const peso = Number(String(el('pp-peso').value).replace(',', '.'));
+                if (isNaN(peso) || peso < 20 || peso > 400) { msg('Informe um peso válido, entre 20 e 400 kg.', 'erro'); return; }
+                const btn = el('pp-btn');
+                btn.disabled = true;
+                msg('Salvando...');
+                fetch('/pesos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: sessao.id, peso: peso })
+                })
+                    .then(function (r) {
+                        if (!r.ok) {
+                            // rota não ligada no servidor devolve uma página HTML de erro
+                            if ((r.headers.get('content-type') || '').includes('text/html')) throw new Error('A rota /pesos não está ligada no servidor (veja o app.js).');
+                            return r.text().then(t => { throw new Error(t.replace(/^"|"$/g, '') || 'Erro ao salvar'); });
+                        }
+                        return r.json();
+                    })
+                    .then(buscar)
+                    .then(function (pesagens) {
+                        desenhar(pesagens);
+                        el('pp-peso').value = '';
+                        const m = msg('Peso atualizado! ', 'ok');
+                        const a = document.createElement('a');
+                        a.href = 'dashboard.html';
+                        a.textContent = 'Ver no dashboard';
+                        m.appendChild(a);
+                    })
+                    .catch(function (erro) { console.log('#ERRO: ' + erro); msg(erro.message || 'Não foi possível salvar agora.', 'erro'); })
+                    .then(function () { btn.disabled = false; });
+            });
         });
     </script>
 </body>

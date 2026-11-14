@@ -1,4 +1,3 @@
-
 const usarioModel = require("../models/user.model")
 
 function autenticar(req, res){
@@ -65,8 +64,19 @@ function cadastraquiz (req, res){
     if (isNaN(nPeso) || isNaN(nAltura) || isNaN(nPesoObj) || nPeso <= 0 || nAltura <= 0 || nPesoObj <= 0) {
         return res.status(400).send("Valores de peso e altura devem ser números positivos.");
     }
+    if (nAltura < 100 || nAltura > 250) {
+        return res.status(400).send("Informe a altura em centímetros (ex.: 175).");
+    }
 
-    usarioModel.cadastraquiz(nPeso, nAltura, nPesoObj, experiencia, foco, frequencia, userId)
+    // O IMC é calculado aqui no servidor (peso / altura em metros²), sem confiar no valor vindo do navegador
+    const nImc = Number((nPeso / Math.pow(nAltura / 100, 2)).toFixed(1));
+    if (!isFinite(nImc) || nImc <= 0) {
+        return res.status(400).send("Não foi possível calcular o IMC com esses valores.");
+    }
+
+    // ATENÇÃO: a ordem precisa ser a mesma da função cadastraquiz do model
+    // (peso, altura, pesoobjetivo, tempotreino, foco, frequencia, imc, userId)
+    usarioModel.cadastraquiz(nPeso, nAltura, nPesoObj, experiencia, foco, frequencia, nImc, userId)
         .then(resultado => res.json(resultado))
         .catch(erro => {
             console.error("Erro ao salvar quiz:", erro);

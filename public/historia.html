@@ -17,6 +17,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="landing.css">
+    <style>
+        /* Fotos da linha do tempo: aparecem inteiras, no formato original (selfie em pé, paisagem deitada), sem cortar */
+        .timeline .photo--natural { aspect-ratio: auto; margin-top: 16px; background: #0d0d0d; }
+        .timeline .photo--natural img { width: 100%; height: auto; max-height: 640px; object-fit: contain; }
+        /* enquanto a foto não existe, a caixa de aviso precisa de altura */
+        .timeline .photo--natural.photo--missing { aspect-ratio: 4 / 3; }
+    </style>
 </head>
 <body>
     <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -47,14 +54,14 @@
                 <span class="pill">Projeto individual · SPTech · 2026</span>
                 <h1 id="hero-titulo">Minha jornada na <span class="text-primary">academia</span></h1>
                 <p class="hero-sub">Eu comecei sem ninguém para me orientar. Criei o parceiro que eu queria ter tido.</p>
-                <p class="hero-author">Por <mark class="ph">[PREENCHER: seu nome]</mark></p>
+                <p class="hero-author">Por <mark class="ph">Rafael Oliveira     </mark></p>
                 <div class="hero-btns">
                     <a href="#historia" class="btn-primary">Ler minha história</a>
                     <a href="index.html#parceiro" class="btn-secondary">Conhecer o parceiro</a>
                 </div>
             </div>
             <figure class="photo hero-photo reveal">
-                <img src="img/eu-hero.jpg" alt="[PREENCHER: descreva a foto, ex.: eu treinando]" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
+                <img src="img/WhatsApp Image 2026-11-14 at 13.07.26 (2).jpeg" alt="[PREENCHER: descreva a foto, ex.: eu treinando]" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
                 <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: sua foto em img/eu-hero.jpg]</mark></figcaption>
             </figure>
         </section>
@@ -67,14 +74,14 @@
             </div>
             <div class="about-grid">
                 <div class="about-text reveal">
-                    <p><mark class="ph">[PREENCHER: quem você é: nome, idade, curso na SPTech, de onde é]</mark></p>
-                    <p><mark class="ph">[PREENCHER: como a academia entrou na sua vida e o que ela significa hoje]</mark></p>
-                    <p><mark class="ph">[PREENCHER: como é a sua rotina de treino no dia a dia e por que você escolheu este tema]</mark></p>
+                    <p><mark class="ph">Eu sou um ex obeso: Rafael, 20 anos, curso na SPTech, sou de sapopemba/ZL</mark></p>
+                    <p><mark class="ph">A academia entrou na  minha vida em 2022 na parte mais dificil da  minha vida</mark></p>
+                    <p><mark class="ph">Atualmente eu treino todos os dias, faça treinos intesos e uma dieta regrada, a academia  me salvou do bullying</mark></p>
                 </div>
                 <div class="stats reveal">
-                    <div class="card stat"><strong><mark class="ph">[PREENCHER]</mark></strong><span>tempo de treino</span></div>
-                    <div class="card stat"><strong><mark class="ph">[PREENCHER]</mark></strong><span>treinos por semana</span></div>
-                    <div class="card stat"><strong><mark class="ph">[PREENCHER]</mark></strong><span>minha meta atual</span></div>
+                    <div class="card stat"><strong><mark class="ph">3 Anos</mark></strong><span>tempo de treino</span></div>
+                    <div class="card stat"><strong><mark class="ph">5x</mark></strong><span>treinos por semana</span></div>
+                    <div class="card stat"><strong><mark class="ph">75Kg</mark></strong><span>minha meta atual</span></div>
                 </div>
             </div>
         </section>
@@ -90,9 +97,13 @@
                 <li class="tl-item reveal">
                     <span class="tl-dot" aria-hidden="true"></span>
                     <div class="card">
-                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <span class="tl-when"><mark class="ph">17 anos</mark></span>
                         <h3>Onde tudo começou</h3>
-                        <p><mark class="ph">[PREENCHER: quando e por que o interesse pela academia despertou]</mark></p>
+                        <p><mark class="ph">Sempre sofri bullying e foi dai que  veio a  minha motivação para começar a treinar </mark></p>
+                        <figure class="photo photo--natural">
+                            <img src="img/WhatsApp Image 2026-11-14 at 13.07.24.jpeg" alt="Foto do momento: Onde tudo começou" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
+                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-1.jpg]</mark></figcaption>
+                        </figure>
                     </div>
                 </li>
                 <li class="tl-item reveal">
@@ -101,6 +112,10 @@
                         <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
                         <h3>Sem ninguém para me orientar</h3>
                         <p><mark class="ph">[PREENCHER: como foi começar sem ajuda com dieta e treino, o que você sentiu]</mark></p>
+                        <figure class="photo photo--natural">
+                            <img src="img/WhatsApp Image 2026-11-14 at 13.07.25.jpeg" alt="Foto do momento: Sem ninguém para me orientar" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
+                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-2.jpg]</mark></figcaption>
+                        </figure>
                     </div>
                 </li>
                 <li class="tl-item reveal">
@@ -109,6 +124,11 @@
                         <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
                         <h3>A virada</h3>
                         <p><mark class="ph">[PREENCHER: o momento em que as coisas mudaram]</mark></p>
+                        <figure class="photo photo--natural">
+                            <video src=""></video>
+                            <video src="img/WhatsApp Video 2026-11-14 at 13.07.28.mp4" alt="Foto do momento: A virada" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')"> </video>
+                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-3.jpg]</mark></figcaption>
+                        </figure>
                     </div>
                 </li>
                 <li class="tl-item reveal">
@@ -117,6 +137,10 @@
                         <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
                         <h3>O que funcionou comigo</h3>
                         <p><mark class="ph">[PREENCHER: o treino e a dieta que deram resultado]</mark></p>
+                        <figure class="photo photo--natural">
+                            <img src="img/WhatsApp Image 2026-11-14 at 13.07.28.jpeg" alt="Foto do momento: O que funcionou comigo" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
+                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-4.jpg]</mark></figcaption>
+                        </figure>
                     </div>
                 </li>
                 <li class="tl-item reveal">
@@ -125,10 +149,14 @@
                         <span class="tl-when">Hoje</span>
                         <h3>Onde estou agora</h3>
                         <p><mark class="ph">[PREENCHER: onde você está agora e para onde quer ir]</mark></p>
+                        <figure class="photo photo--natural">
+                            <img src="img/WhatsApp Image 2026-11-14 at 13.07.27 (2).jpeg" alt="Foto do momento: Onde estou agora" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
+                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-5.jpg]</mark></figcaption>
+                        </figure>
                     </div>
                 </li>
                 <!-- Para colocar uma foto em um marco, adicione dentro do <div class="card">:
-                     <figure class="photo photo--wide"><img src="img/marco-1.jpg" alt="Descreva a foto" onerror="this.parentElement.classList.add('photo--missing')"><figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto]</mark></figcaption></figure> -->
+                     <figure class="photo photo--natural"><img src="img/marco-1.jpg" alt="Descreva a foto" onerror="this.parentElement.classList.add('photo--missing')"><figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto]</mark></figcaption></figure> -->
             </ol>
         </section>
 

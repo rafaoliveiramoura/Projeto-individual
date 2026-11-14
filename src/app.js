@@ -6,6 +6,8 @@ const userRoutes = require("./routes/user.routes");
 const userController = require("./controllers/user.controller");
 const exRoutes = require("./routes/ex.routes")
 const dietaRoutes = require("./routes/dieta.routes")
+const pesoRoutes = require("./routes/peso.routes")
+
 
 
 const port = process.env.PORT || 3000;
@@ -28,6 +30,7 @@ app.get('/cadastro', (req, res) => {
 app.use(userRoutes.expressrouter);
 app.use("/", exRoutes.expressrouter)
 app.use("/", dietaRoutes.expressrouter)
+app.use("/", pesoRoutes.expressrouter)
 
 
 // Rota para processar o cadastro (removida duplicata se existir)

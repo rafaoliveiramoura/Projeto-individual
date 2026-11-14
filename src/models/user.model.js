@@ -11,14 +11,15 @@ function autenticar(email, senha) {
     return database.executar(sql, [email, senha])
 }
 
-function cadastraquiz(peso, altura, pesoobjetivo, tempotreino, foco, frequencia, userId) {
-    let sql = `INSERT INTO infopeso (peso_atual, altura, peso_objetivo, tempotreino, frequencia, muscolofoco, fkuser)
-               VALUES (?, ?, ?, ?, ?, ?, ?)`
-    return database.executar(sql, [peso, altura, pesoobjetivo, tempotreino, frequencia, foco, userId])
+function cadastraquiz(peso, altura, pesoobjetivo, tempotreino, foco, frequencia, imc, userId) {
+    let sql = `INSERT INTO infopeso (peso_atual, altura, peso_objetivo, tempotreino, frequencia, muscolofoco, imc, fkuser)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    return database.executar(sql, [peso, altura, pesoobjetivo, tempotreino, frequencia, foco, imc, userId])
 }
 
 function dashboard(userId) {
-    let sql = `SELECT peso_atual, peso_objetivo, frequencia FROM infopeso WHERE fkuser = ? LIMIT 1`
+    // altura é necessária para o IMC do dashboard
+    let sql = `SELECT peso_atual, peso_objetivo, altura, frequencia FROM infopeso WHERE fkuser = ? LIMIT 1`
     return database.executar(sql, [userId])
 }
 

@@ -14,8 +14,20 @@
     <style>
         /* KPIs: Peso x Meta (larga) e Previsão para a meta */
         .metrics-grid {
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr;
         }
+
+        .chart-note { font-size: var(--fs-small); color: var(--color-text-muted); }
+        .stat-delta { font-weight: 700; }
+        .stat-delta.bom { color: var(--color-primary); }
+
+        .imc-card .metric-value-wrapper { margin-top: 12px; }
+        .imc-class { font-weight: 800; text-transform: capitalize; }
+        .imc-class.azul { color: #50a0ff; }
+        .imc-class.verde { color: #50c878; }
+        .imc-class.amarelo { color: #ffc800; }
+        .imc-class.vermelho { color: #ff5050; }
+
 
         .weight-stats {
             display: grid;
@@ -45,7 +57,7 @@
 
         /* Dois gráficos lado a lado */
         .bottom-row {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.4fr 1fr;
         }
 
         .imc-summary {
@@ -63,6 +75,13 @@
             .bottom-row {
                 grid-template-columns: 1fr;
             }
+        }
+
+        @media (max-width: 1099px) {
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .metrics-grid > .metric-card:first-child { grid-column: 1 / -1; }
         }
 
         @media (max-width: 767px) {
@@ -145,6 +164,7 @@
                                     <span class="metric-value" id="metric-weight-current">--</span>
                                     <span class="metric-unit">kg</span>
                                 </div>
+                                <span class="stat-hint" id="metric-weight-delta"></span>
                             </div>
                             <div class="stat-block">
                                 <span class="stat-hint">Meta</span>
@@ -170,7 +190,17 @@
                             <span class="metric-value" id="metric-rate">--</span>
                             <span class="metric-unit" id="metric-rate-unit"></span>
                         </div>
-                        <span class="stat-hint" id="metric-rate-hint">Estimativa com base no ritmo escolhido</span>
+                        <span class="stat-hint" id="metric-rate-hint">Estimativa com base no seu ritmo real</span>
+                    </div>
+
+                    <!-- KPI 3: IMC -->
+                    <div class="base-card metric-card imc-card">
+                        <span class="metric-label">Seu IMC</span>
+                        <div class="metric-value-wrapper">
+                            <span class="metric-value" id="metric-imc">--</span>
+                        </div>
+                        <span class="stat-hint"><span class="imc-class" id="metric-imc-class"></span></span>
+                        <span class="stat-hint" id="metric-imc-hint"></span>
                     </div>
                 </section>
 
@@ -178,12 +208,8 @@
                     <!-- Gráfico 1: Projeção até a meta -->
                     <div class="base-card chart-card">
                         <div class="chart-header">
-                            <span class="chart-title">Projeção até a meta (estimativa)</span>
-                            <select class="chart-select" id="chart-period" aria-label="Ritmo da projeção">
-                                <option value="0.25">Ritmo leve (0,25 kg/sem)</option>
-                                <option value="0.5" selected>Ritmo moderado (0,5 kg/sem)</option>
-                                <option value="0.75">Ritmo acelerado (0,75 kg/sem)</option>
-                            </select>
+                            <span class="chart-title">Minha evolução</span>
+                            <span class="chart-note" id="evo-note"></span>
                         </div>
                         <div class="chart-container">
                             <canvas id="weightChart"></canvas>
@@ -193,7 +219,7 @@
                     <!-- Gráfico 2: IMC -->
                     <div class="base-card chart-card">
                         <div class="chart-header">
-                            <span class="chart-title">Seu IMC: hoje x na meta</span>
+                            <span class="chart-title">Seu IMC: início, hoje e na meta</span>
                         </div>
                         <div class="chart-container">
                             <canvas id="imcChart"></canvas>
@@ -280,88 +306,211 @@
                 maximumFractionDigits: casas
             });
 
-            // ---------- KPI: peso atual, meta e quanto falta ----------
+            // ---------- Utilidades ----------
+            const el = (id) => document.getElementById(id);
+            const fmtData = (d) => d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+
+            // Altura pode estar guardada em cm (175) ou em metros (1,75)
+            function alturaEmMetros(a) {
+                a = Number(a);
+                if (!a || a <= 0) return null;
+                return a > 3 ? a / 100 : a;
+            }
+
+            const calcImc = (kg, m) => kg / (m * m);
+
+            function classificarImc(imc) {
+                if (imc < 18.5) return { txt: 'abaixo do peso', cor: 'azul' };
+                if (imc < 25) return { txt: 'peso normal', cor: 'verde' };
+                if (imc < 30) return { txt: 'sobrepeso', cor: 'amarelo' };
+                if (imc < 35) return { txt: 'obesidade grau I', cor: 'vermelho' };
+                if (imc < 40) return { txt: 'obesidade grau II', cor: 'vermelho' };
+                return { txt: 'obesidade grau III', cor: 'vermelho' };
+            }
+
+            // Estado da tela: peso do quiz (início), meta, altura e pesagens registradas
+            const estado = { inicio: 0, meta: 0, altura: null, pesagens: [] };
+
+            // Linha do tempo real: "Início" (quiz) + cada pesagem registrada
+            function pontosReais() {
+                const pts = [{ rotulo: 'Início', peso: estado.inicio }];
+                estado.pesagens.forEach(p => pts.push({ rotulo: fmtData(p.data), peso: p.peso, data: p.data }));
+                return pts;
+            }
+
+            // ---------- KPI: peso atual, meta, quanto falta e variação ----------
             function preencherPesoMeta(atual, meta) {
-                document.getElementById('metric-weight-current').textContent = fmt(atual);
-                document.getElementById('metric-weight-goal').textContent = fmt(meta);
+                el('metric-weight-current').textContent = fmt(atual);
+                el('metric-weight-goal').textContent = fmt(meta);
+
+                const delta = atual - estado.inicio;
+                const dEl = el('metric-weight-delta');
+                dEl.className = 'stat-hint stat-delta';
+                if (!estado.pesagens.length) {
+                    dEl.textContent = 'Atualize seu peso no Perfil para ver a evolução';
+                    dEl.classList.remove('stat-delta');
+                } else if (Math.abs(delta) < 0.05) {
+                    dEl.textContent = 'Igual ao peso do início';
+                } else {
+                    dEl.textContent = `${delta < 0 ? '↓' : '↑'} ${fmt(Math.abs(delta))} kg desde o início`;
+                    // verde quando está indo na direção da meta
+                    if ((meta - estado.inicio) * delta > 0) dEl.classList.add('bom');
+                }
 
                 const diff = atual - meta;
-                const remaining = document.getElementById('metric-remaining');
-                const detail = document.getElementById('metric-remaining-detail');
-
+                const remaining = el('metric-remaining');
+                const detail = el('metric-remaining-detail');
                 if (Math.abs(diff) < 0.05) {
                     remaining.textContent = '0%';
                     detail.textContent = 'Meta atingida! 🎉';
                     return;
                 }
-
-                // Percentual calculado sobre o peso atual
                 const pct = (Math.abs(diff) / atual) * 100;
                 remaining.textContent = `${fmt(pct)}%`;
-                detail.textContent = diff > 0
-                    ? `${fmt(diff)} kg para perder`
-                    : `${fmt(-diff)} kg para ganhar`;
+                detail.textContent = diff > 0 ? `${fmt(diff)} kg para perder` : `${fmt(-diff)} kg para ganhar`;
             }
 
-            // ---------- Gráfico 1: projeção até a meta ----------
-            let graficoProjecao = null;
-
-            function desenharProjecao(atual, meta, ritmo) {
-                const diff = meta - atual;
-                if (graficoProjecao) graficoProjecao.destroy();
-
-                if (Math.abs(diff) < 0.05) {
-                    document.getElementById('metric-rate').textContent = '0';
-                    document.getElementById('metric-rate-unit').textContent = 'semanas';
-                    document.getElementById('metric-rate-hint').textContent = 'Você já está na meta!';
+            // ---------- KPI: IMC ----------
+            function preencherImcKpi(atual, meta) {
+                const m = alturaEmMetros(estado.altura);
+                const v = el('metric-imc'), c = el('metric-imc-class'), hint = el('metric-imc-hint');
+                if (!m) {
+                    v.textContent = '--';
+                    c.textContent = '';
+                    hint.textContent = 'Altura não encontrada. Refaça o quiz.';
                     return;
                 }
+                const imc = calcImc(atual, m), imcMeta = calcImc(meta, m);
+                const cl = classificarImc(imc);
+                v.textContent = fmt(imc);
+                c.textContent = cl.txt;
+                c.className = 'imc-class ' + cl.cor;
+                hint.textContent = `Na meta: ${fmt(imcMeta)} (${classificarImc(imcMeta).txt})`;
+            }
 
-                const semanas = Math.ceil(Math.abs(diff) / ritmo);
-                const labels = [];
-                const valores = [];
-                for (let s = 0; s <= semanas; s++) {
-                    labels.push(s === 0 ? 'Hoje' : `Sem ${s}`);
-                    const passo = Math.min(s * ritmo, Math.abs(diff));
-                    valores.push(Number((atual + Math.sign(diff) * passo).toFixed(1)));
+            // ---------- Ritmo real (kg por semana), só com as atualizações do usuário ----------
+            function ritmoReal(meta) {
+                const ps = estado.pesagens;
+                if (ps.length < 2) return null;
+                const prim = ps[0], ult = ps[ps.length - 1];
+                const semanas = (ult.data - prim.data) / (7 * 86400000);
+                if (semanas < 1) return null;
+                const kgSem = (prim.peso - ult.peso) / semanas;       // positivo = está perdendo
+                const ritmo = meta < ult.peso ? kgSem : -kgSem;       // positivo = indo para a meta
+                return ritmo >= 0.05 ? ritmo : null;
+            }
+
+            // KPI de previsão: só aparece quando existe ritmo real (nada de chute)
+            function preencherPrevisao(atual, meta) {
+                const diff = Math.abs(meta - atual);
+                if (diff < 0.05) {
+                    el('metric-rate').textContent = '0';
+                    el('metric-rate-unit').textContent = 'semanas';
+                    el('metric-rate-hint').textContent = 'Você já está na meta!';
+                    return;
                 }
+                const r = ritmoReal(meta);
+                if (!r) {
+                    el('metric-rate').textContent = '--';
+                    el('metric-rate-unit').textContent = '';
+                    el('metric-rate-hint').textContent = 'Atualize seu peso no Perfil ao longo das semanas para ver a previsão.';
+                    return;
+                }
+                const semanas = Math.ceil(diff / r);
+                const dataMeta = new Date(Date.now() + semanas * 7 * 86400000)
+                    .toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                el('metric-rate').textContent = `~${semanas}`;
+                el('metric-rate-unit').textContent = 'semanas';
+                el('metric-rate-hint').textContent = `Meta estimada em ${dataMeta}, no seu ritmo real (${fmt(r, 2)} kg/sem)`;
+            }
 
-                graficoProjecao = new Chart(document.getElementById('weightChart'), {
+            // ---------- Gráfico 1: evolução (só pesos reais + meta) ----------
+            let graficoEvolucao = null;
+
+            // Escreve o valor em cima de cada ponto (poucos pontos: todos; muitos: só primeiro e último)
+            const valoresNosPontos = {
+                id: 'valoresNosPontos',
+                afterDatasetsDraw(chart) {
+                    const meta = chart.getDatasetMeta(0);
+                    const dados = chart.data.datasets[0].data;
+                    const { ctx } = chart;
+                    ctx.save();
+                    ctx.font = "700 12px 'Lato', sans-serif";
+                    ctx.fillStyle = '#ccff00';
+                    ctx.textAlign = 'center';
+                    meta.data.forEach((ponto, i) => {
+                        if (dados.length > 12 && i !== 0 && i !== dados.length - 1) return;
+                        ctx.fillText(fmt(dados[i]), ponto.x, ponto.y - 10);
+                    });
+                    ctx.restore();
+                }
+            };
+
+            function desenharEvolucao() {
+                const pts = pontosReais();
+                const meta = estado.meta;
+                if (graficoEvolucao) graficoEvolucao.destroy();
+
+                el('evo-note').textContent = estado.pesagens.length
+                    ? ''
+                    : 'Atualize seu peso no Perfil para ver sua evolução.';
+
+                const valores = pts.map(p => p.peso);
+                graficoEvolucao = new Chart(el('weightChart'), {
                     type: 'line',
                     data: {
-                        labels,
+                        labels: pts.map(p => p.rotulo),
                         datasets: [
                             {
-                                label: 'Projeção (kg)',
+                                label: 'Meu peso (kg)',
                                 data: valores,
                                 borderColor: '#ccff00',
                                 backgroundColor: 'rgba(204,255,0,0.1)',
-                                tension: 0.2,
-                                fill: true,
-                                pointRadius: 2
+                                pointBackgroundColor: '#ccff00',
+                                pointRadius: 5,
+                                pointHoverRadius: 7,
+                                tension: 0,           // segmentos retos: o gráfico só muda quando o peso muda
+                                fill: true
                             },
                             {
-                                label: 'Meta',
-                                data: labels.map(() => meta),
-                                borderColor: 'rgba(255,255,255,0.4)',
+                                label: 'Meta (kg)',
+                                data: pts.map(() => meta),
+                                borderColor: 'rgba(255,255,255,0.5)',
                                 borderDash: [6, 6],
                                 pointRadius: 0
                             }
                         ]
                     },
-                    options: { maintainAspectRatio: false }
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: { padding: { top: 18 } },
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label(ctx) {
+                                        if (ctx.datasetIndex === 1) return `Meta: ${fmt(ctx.parsed.y)} kg`;
+                                        const i = ctx.dataIndex;
+                                        let txt = `Peso: ${fmt(ctx.parsed.y)} kg`;
+                                        if (i > 0) {
+                                            const d = valores[i] - valores[i - 1];
+                                            if (Math.abs(d) >= 0.05) txt += ` (${d < 0 ? '−' : '+'}${fmt(Math.abs(d))} kg)`;
+                                        }
+                                        return txt;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: { grace: '15%', ticks: { callback: v => fmt(v, 0) } },
+                            x: { ticks: { maxRotation: 45, autoSkip: true, maxTicksLimit: 12 } }
+                        }
+                    },
+                    plugins: [valoresNosPontos]
                 });
-
-                // KPI da direita: previsão
-                const dataMeta = new Date(Date.now() + semanas * 7 * 86400000)
-                    .toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
-                document.getElementById('metric-rate').textContent = `~${semanas}`;
-                document.getElementById('metric-rate-unit').textContent = 'semanas';
-                document.getElementById('metric-rate-hint').textContent =
-                    `Meta estimada em ${dataMeta} (${fmt(ritmo, 2)} kg/sem)`;
             }
 
-            // ---------- Gráfico 2: IMC ----------
+            // ---------- Gráfico 2: IMC (início, hoje e meta) ----------
             let graficoImc = null;
 
             // Faixas de IMC desenhadas como fundo do gráfico
@@ -389,36 +538,40 @@
                 }
             };
 
-            function classificarImc(imc) {
-                if (imc < 18.5) return 'abaixo do peso';
-                if (imc < 25) return 'peso normal';
-                if (imc < 30) return 'sobrepeso';
-                return 'obesidade';
-            }
-
-            function desenharImc(atual, meta, alturaCm) {
-                const resumo = document.getElementById('imc-summary');
+            function desenharImc() {
+                const resumo = el('imc-summary');
                 if (graficoImc) graficoImc.destroy();
 
-                if (!alturaCm || alturaCm <= 0) {
+                const m = alturaEmMetros(estado.altura);
+                if (!m) {
                     resumo.textContent = 'Altura não encontrada. Refaça o quiz para ver seu IMC.';
                     return;
                 }
 
-                const m = alturaCm / 100;
-                const imcAtual = atual / (m * m);
-                const imcMeta = meta / (m * m);
+                const pts = pontosReais();
+                const atual = pts[pts.length - 1].peso;
+                const imcInicio = calcImc(estado.inicio, m);
+                const imcAtual = calcImc(atual, m);
+                const imcMeta = calcImc(estado.meta, m);
 
-                const yMin = Math.min(15, Math.floor(Math.min(imcAtual, imcMeta) - 3));
-                const yMax = Math.max(40, Math.ceil(Math.max(imcAtual, imcMeta) + 3));
+                // Com pesagens: início, hoje e meta. Sem pesagens: hoje e meta.
+                const temEvolucao = estado.pesagens.length > 0;
+                const labels = temEvolucao ? ['IMC no início', 'IMC hoje', 'IMC na meta'] : ['IMC hoje', 'IMC na meta'];
+                const valores = temEvolucao ? [imcInicio, imcAtual, imcMeta] : [imcAtual, imcMeta];
+                const cores = temEvolucao
+                    ? ['rgba(255,255,255,0.45)', '#ccff00', 'rgba(255,255,255,0.75)']
+                    : ['#ccff00', 'rgba(255,255,255,0.75)'];
 
-                graficoImc = new Chart(document.getElementById('imcChart'), {
+                const yMin = Math.min(15, Math.floor(Math.min(...valores) - 3));
+                const yMax = Math.max(40, Math.ceil(Math.max(...valores) + 3));
+
+                graficoImc = new Chart(el('imcChart'), {
                     type: 'bar',
                     data: {
-                        labels: ['IMC atual', 'IMC na meta'],
+                        labels,
                         datasets: [{
-                            data: [Number(imcAtual.toFixed(1)), Number(imcMeta.toFixed(1))],
-                            backgroundColor: ['#ccff00', 'rgba(255,255,255,0.75)'],
+                            data: valores.map(v => Number(v.toFixed(1))),
+                            backgroundColor: cores,
                             borderRadius: 8,
                             maxBarThickness: 90
                         }]
@@ -431,14 +584,40 @@
                     plugins: [faixasImc]
                 });
 
-                resumo.innerHTML =
-                    `Hoje: <strong>${fmt(imcAtual)}</strong> (${classificarImc(imcAtual)}) &rarr; ` +
-                    `na meta: <strong>${fmt(imcMeta)}</strong> (${classificarImc(imcMeta)}). ` +
-                    `Faixas: azul abaixo de 18,5 · verde até 24,9 · amarelo até 29,9 · vermelho a partir de 30. ` +
-                    `O IMC não separa músculo de gordura.`;
+                // textContent + elementos: sem innerHTML
+                const forte = (t) => { const s = document.createElement('strong'); s.textContent = t; return s; };
+                resumo.replaceChildren(
+                    'IMC = peso ÷ (altura × altura). Hoje: ', forte(fmt(imcAtual)), ` (${classificarImc(imcAtual).txt}) → na meta: `,
+                    forte(fmt(imcMeta)), ` (${classificarImc(imcMeta).txt}). ` +
+                    'Faixas: azul abaixo de 18,5 · verde até 24,9 · amarelo até 29,9 · vermelho a partir de 30. ' +
+                    'O IMC não separa músculo de gordura.'
+                );
+            }
+
+            // ---------- Redesenha tudo com o estado atual ----------
+            function atualizarTela() {
+                const pts = pontosReais();
+                const atual = pts[pts.length - 1].peso;
+                preencherPesoMeta(atual, estado.meta);
+                preencherPrevisao(atual, estado.meta);
+                preencherImcKpi(atual, estado.meta);
+                desenharEvolucao();
+                desenharImc();
             }
 
             // ---------- Dados do banco ----------
+            function buscarPesagens() {
+                return fetch(`/users/${sessao.id}/pesos`)
+                    .then(r => { if (!r.ok) throw new Error('pesagens ' + r.status); return r.json(); })
+                    .then(lista => lista
+                        .map(p => ({ peso: Number(p.peso), data: new Date(p.dt_registro) }))
+                        .filter(p => isFinite(p.peso) && !isNaN(p.data)))
+                    .catch(erro => {
+                        console.log(`#ERRO: ${erro}`);
+                        return [];
+                    });
+            }
+
             fetch(`/users/${sessao.id}/dashboard`)
                 .then(function (resposta) {
                     if (resposta.status === 404) {
@@ -450,19 +629,13 @@
                     return resposta.json();
                 })
                 .then(function (dados) {
-                    if (!dados) return;
-
-                    const atual = Number(dados.pesoAtual);
-                    const meta = Number(dados.pesoObjetivo);
-                    const altura = Number(dados.altura);
-                    const select = document.getElementById('chart-period');
-
-                    preencherPesoMeta(atual, meta);
-                    desenharProjecao(atual, meta, Number(select.value));
-                    desenharImc(atual, meta, altura);
-
-                    select.addEventListener('change', () => {
-                        desenharProjecao(atual, meta, Number(select.value));
+                    if (!dados) return null;
+                    estado.inicio = Number(dados.pesoAtual);
+                    estado.meta = Number(dados.pesoObjetivo);
+                    estado.altura = Number(dados.altura);
+                    return buscarPesagens().then(function (pesagens) {
+                        estado.pesagens = pesagens;
+                        atualizarTela();
                     });
                 })
                 .catch(function (erro) {
