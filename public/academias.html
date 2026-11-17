@@ -37,17 +37,9 @@
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                         <span>Academias</span>
                     </a>
-                    <a href="evolucao.html" class="nav-item">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path></svg>
-                        <span>Evolução</span>
-                    </a>
                     <a href="perfil.html" class="nav-item">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span>Perfil</span>
-                    </a>
-                    <a href="configuracoes.html" class="nav-item">
-                        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.64 9l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33 1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82 1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                        <span>Configurações</span>
                     </a>
                 </nav>
                 <div class="sidebar-footer">
@@ -62,22 +54,18 @@
                 <header class="app-header">
                     <div class="header-titles">
                         <h1>Academias</h1>
-                        <p>As academias que eu já treinei, com a minha nota e o que achei de cada uma.</p>
+                        <p>As academias que eu já treinei, com a minha avaliação e o que achei de cada uma.</p>
                     </div>
                     <div class="header-actions">
                         <div class="user-avatar" id="user-avatar" aria-label="Perfil do Usuário">A</div>
                     </div>
                 </header>
 
-                <section class="ac-grid">
-                    <div class="base-card ex-card ac-mapcard">
-                        <div id="mapa" role="region" aria-label="Mapa das academias"></div>
-                    </div>
-                    <div class="base-card ex-card ex-card--destaque ac-detalhe" aria-live="polite">
-                        <div id="detalhe"></div>
-                        <h3 class="ex-group-title">Todas as academias</h3>
-                        <ul class="ex-list" id="lista-ac"></ul>
-                    </div>
+                <section class="ac-cards" id="ac-cards" aria-label="Academias que eu já treinei"></section>
+
+                <section class="base-card ex-card ac-mapcard" aria-labelledby="ac-mapa-titulo">
+                    <h2 id="ac-mapa-titulo" class="ac-mapa-titulo">Onde ficam</h2>
+                    <div id="mapa" role="region" aria-label="Mapa das academias"></div>
                 </section>
             </main>
         </div>
@@ -87,7 +75,6 @@
             <a href="treinos.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M6 12h12M6 8h12M6 16h12"></path></svg><span>Treinos</span></a>
             <a href="dieta.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"></path></svg><span>Dieta</span></a>
             <a href="academias.html" class="nav-item active"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>Academias</span></a>
-            <a href="evolucao.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9-3-9h-4"></path></svg><span>Evolução</span></a>
             <a href="perfil.html" class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Perfil</span></a>
         </nav>
     </div>
@@ -99,22 +86,28 @@
         // nota: de 0 a 5 (pode ser 4.5). foto: arquivo dentro de public/img/academias/ (opcional).
         const ACADEMIAS = [
             {
-                nome: '[EXEMPLO] Academia 1 - troque pelos seus dados',
-                bairro: 'Consolação, São Paulo',
-                lat: -23.5558, lng: -46.6624,
-                nota: 4.5,
-                periodo: 'Treinei aqui de 2023 a 2024',
-                descricao: 'Escreva aqui o que você achou: estrutura, equipamentos, limpeza, lotação, preço, atendimento.',
-                foto: 'img/academias/academia1.jpg'
+                nome: 'Academia Golfinhos',
+                bairro: 'Av. Arquiteto Vilanova Artigas, 373 · Conj. Hab. Teotônio Vilela, São Paulo',
+                lat: -23.6150, lng: -46.4990,   // APROXIMADA: confirme no Google Maps (botão direito no local)
+                nota: 3.5,
+                descricao: 'Ela é boa para iniciar, mas depois que você evolui a carga, ela não atende mais a necessidade.',
+                foto: 'img/academias/golfinhos.jpg'
             },
             {
-                nome: '[EXEMPLO] Academia 2 - troque pelos seus dados',
-                bairro: 'Pinheiros, São Paulo',
-                lat: -23.5672, lng: -46.6931,
-                nota: 3,
-                periodo: 'Treinei aqui por 3 meses',
-                descricao: 'Escreva aqui a sua avaliação honesta, com pontos bons e ruins.',
-                foto: 'img/academias/academia2.jpg'
+                nome: 'Smart Fit Sapopemba',
+                bairro: 'Av. Sapopemba, 8671 · Jardim Adutora, São Paulo',
+                lat: -23.5987, lng: -46.5174,
+                nota: 4,
+                descricao: 'Ela é muito boa de maquinário, mas é muito lotada.',
+                foto: 'img/academias/smartfit-sapopemba.jpg'
+            },
+            {
+                nome: 'Panobianco Carapicuíba',
+                bairro: 'Av. Inocêncio Seráfico, 1420 · Vila Silva Ribeiro, Carapicuíba',
+                lat: -23.5290, lng: -46.8390,   // APROXIMADA: confirme no Google Maps (botão direito no local)
+                nota: 5,
+                descricao: 'Maquinário incrível. É a melhor academia que eu já treinei: a recepção é incrível e as pessoas de lá também.',
+                foto: 'img/academias/panobianco-carapicuiba.jpg'
             }
         ];
 
@@ -135,70 +128,82 @@
                 const box = el('span', 'ac-stars');
                 box.setAttribute('role', 'img');
                 box.setAttribute('aria-label', 'Nota ' + fmtNota(nota) + ' de 5');
-                const base = el('span', 'ac-stars-base', '★★★★★');
                 const cheio = el('span', 'ac-stars-fill', '★★★★★');
                 cheio.style.width = Math.max(0, Math.min(5, nota)) / 5 * 100 + '%';
-                box.appendChild(base); box.appendChild(cheio);
+                box.append(el('span', 'ac-stars-base', '★★★★★'), cheio);
                 return box;
             }
 
-            const mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-23.5505, -46.6333], 11);
+            // ---------- Mapa ----------
+            const mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-23.5505, -46.6333], 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
             }).addTo(mapa);
 
+            const cartoes = [];
             const marcadores = [];
-            const itens = [];
-            const detalhe = document.getElementById('detalhe');
-            const lista = document.getElementById('lista-ac');
 
-            function mostrar(i, moverMapa) {
-                const a = ACADEMIAS[i];
-                const card = el('div', 'ac-card');
+            function destacar(i) {
+                cartoes.forEach((c, k) => c.classList.toggle('ac-card--ativo', k === i));
+                marcadores.forEach((m, k) => { const e = m.getElement(); if (e) e.classList.toggle('ac-pin--ativo', k === i); });
+            }
+
+            // ---------- Cartões lado a lado ----------
+            const area = document.getElementById('ac-cards');
+            if (!ACADEMIAS.length) area.appendChild(el('p', 'ex-empty', 'Nenhuma academia cadastrada ainda.'));
+
+            ACADEMIAS.forEach(function (a, i) {
+                const card = el('article', 'base-card ac-card');
+
+                const moldura = el('div', 'ac-foto-box');
                 if (a.foto) {
                     const img = el('img', 'ac-foto');
                     img.src = a.foto;
                     img.alt = 'Foto da academia ' + a.nome;
                     img.loading = 'lazy';
-                    img.addEventListener('error', function () { img.remove(); });
-                    card.appendChild(img);
+                    img.addEventListener('error', function () { moldura.classList.add('ac-foto-box--vazia'); img.remove(); });
+                    moldura.appendChild(img);
+                } else {
+                    moldura.classList.add('ac-foto-box--vazia');
                 }
-                card.appendChild(el('h2', 'ac-nome', a.nome));
-                if (a.bairro) card.appendChild(el('p', 'ac-bairro', a.bairro));
+                moldura.appendChild(el('span', 'ac-num', String(i + 1)));
+                card.appendChild(moldura);
+
+                const corpo = el('div', 'ac-corpo');
+                corpo.appendChild(el('h2', 'ac-nome', a.nome));
+                if (a.bairro) corpo.appendChild(el('p', 'ac-bairro', a.bairro));
+
+                corpo.appendChild(el('p', 'ac-rotulo', 'Minha avaliação'));
                 const linha = el('div', 'ac-nota');
                 linha.appendChild(estrelas(a.nota));
                 linha.appendChild(el('strong', null, fmtNota(a.nota) + ' / 5'));
-                card.appendChild(linha);
-                if (a.periodo) card.appendChild(el('p', 'ac-periodo', a.periodo));
-                card.appendChild(el('p', 'ac-desc', a.descricao));
-                detalhe.replaceChildren(card);
+                corpo.appendChild(linha);
 
-                marcadores.forEach((m, k) => m.getElement() && m.getElement().classList.toggle('ac-pin--ativo', k === i));
-                itens.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i)));
-                if (moverMapa) mapa.flyTo([a.lat, a.lng], Math.max(mapa.getZoom(), 14), { duration: .6 });
-            }
+                corpo.appendChild(el('p', 'ac-rotulo', 'O que eu achei'));
+                corpo.appendChild(el('p', 'ac-desc', a.descricao));
 
-            if (!ACADEMIAS.length) {
-                detalhe.replaceChildren(el('p', 'ex-empty', 'Nenhuma academia cadastrada ainda.'));
-            }
+                const btn = el('button', 'ac-btn-mapa', 'Ver no mapa');
+                btn.type = 'button';
+                btn.addEventListener('click', function () {
+                    document.getElementById('mapa').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    mapa.flyTo([a.lat, a.lng], 15, { duration: .8 });
+                    destacar(i);
+                });
+                corpo.appendChild(btn);
 
-            ACADEMIAS.forEach(function (a, i) {
+                card.appendChild(corpo);
+                area.appendChild(card);
+                cartoes.push(card);
+
+                // pino numerado no mapa; clicar nele destaca o cartão
                 const icon = L.divIcon({ className: 'ac-pin', html: '<span><b>' + (i + 1) + '</b></span>', iconSize: [34, 34], iconAnchor: [17, 34] });
                 const m = L.marker([a.lat, a.lng], { icon: icon, title: a.nome, alt: a.nome }).addTo(mapa);
-                m.on('click', function () { mostrar(i, false); });
+                m.on('click', function () {
+                    destacar(i);
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
                 marcadores.push(m);
-
-                const li = el('li');
-                const b = el('button', 'ex-item ac-item');
-                b.type = 'button';
-                const esq = el('div');
-                esq.appendChild(el('div', 'ex-name', (i + 1) + '. ' + a.nome));
-                if (a.bairro) esq.appendChild(el('div', 'ex-meta', a.bairro));
-                b.appendChild(esq);
-                b.appendChild(el('div', 'ex-load', '★ ' + fmtNota(a.nota)));
-                b.addEventListener('click', function () { mostrar(i, true); });
-                li.appendChild(b); lista.appendChild(li); itens.push(b);
             });
 
             if (ACADEMIAS.length > 1) {
@@ -206,12 +211,10 @@
             } else if (ACADEMIAS.length === 1) {
                 mapa.setView([ACADEMIAS[0].lat, ACADEMIAS[0].lng], 14);
             }
-            if (ACADEMIAS.length) mostrar(0, false);
 
-            // o mapa só ganha tamanho depois do layout
             setTimeout(function () { mapa.invalidateSize(); }, 150);
             window.addEventListener('resize', function () { mapa.invalidateSize(); });
-            // rolagem da página não deve dar zoom sem querer: ativa só depois de clicar no mapa
+            // rolar a página não dá zoom sem querer: ativa só depois de clicar no mapa
             mapa.on('click', function () { mapa.scrollWheelZoom.enable(); });
             mapa.on('mouseout', function () { mapa.scrollWheelZoom.disable(); });
         });

@@ -21,8 +21,11 @@
         /* Fotos da linha do tempo: aparecem inteiras, no formato original (selfie em pé, paisagem deitada), sem cortar */
         .timeline .photo--natural { aspect-ratio: auto; margin-top: 16px; background: #0d0d0d; }
         .timeline .photo--natural img { width: 100%; height: auto; max-height: 640px; object-fit: contain; }
-        /* enquanto a foto não existe, a caixa de aviso precisa de altura */
+        /* vídeo no mesmo estilo das fotos: inteiro, sem cortar */
+        .timeline .photo--natural video { display: block; width: 100%; height: auto; max-height: 640px; background: #000; }
+        /* enquanto a foto/vídeo não existe, a caixa de aviso precisa de altura */
         .timeline .photo--natural.photo--missing { aspect-ratio: 4 / 3; }
+        .timeline .photo--natural.photo--missing video { display: none; }
     </style>
 </head>
 <body>
@@ -54,7 +57,7 @@
                 <span class="pill">Projeto individual · SPTech · 2026</span>
                 <h1 id="hero-titulo">Minha jornada na <span class="text-primary">academia</span></h1>
                 <p class="hero-sub">Eu comecei sem ninguém para me orientar. Criei o parceiro que eu queria ter tido.</p>
-                <p class="hero-author">Por <mark class="ph">Rafael Oliveira     </mark></p>
+                <p class="hero-author">Por Rafael Oliveira</p>
                 <div class="hero-btns">
                     <a href="#historia" class="btn-primary">Ler minha história</a>
                     <a href="index.html#parceiro" class="btn-secondary">Conhecer o parceiro</a>
@@ -74,14 +77,14 @@
             </div>
             <div class="about-grid">
                 <div class="about-text reveal">
-                    <p><mark class="ph">Eu sou um ex obeso: Rafael, 20 anos, curso na SPTech, sou de sapopemba/ZL</mark></p>
-                    <p><mark class="ph">A academia entrou na  minha vida em 2022 na parte mais dificil da  minha vida</mark></p>
-                    <p><mark class="ph">Atualmente eu treino todos os dias, faça treinos intesos e uma dieta regrada, a academia  me salvou do bullying</mark></p>
+                    <p>Eu sou um ex obeso: Rafael, 20 anos, curso na SPTech, sou de sapopemba/ZL</p>
+                    <p>A academia entrou na  minha vida em 2022 na parte mais dificil da  minha vida</p>
+                    <p>Atualmente eu treino todos os dias, faça treinos intesos e uma dieta regrada, a academia  me salvou do bullying</p>
                 </div>
                 <div class="stats reveal">
-                    <div class="card stat"><strong><mark class="ph">3 Anos</mark></strong><span>tempo de treino</span></div>
-                    <div class="card stat"><strong><mark class="ph">5x</mark></strong><span>treinos por semana</span></div>
-                    <div class="card stat"><strong><mark class="ph">75Kg</mark></strong><span>minha meta atual</span></div>
+                    <div class="card stat"><strong>3 Anos</strong><span>tempo de treino</span></div>
+                    <div class="card stat"><strong>5x</strong><span>treinos por semana</span></div>
+                    <div class="card stat"><strong>75Kg</strong><span>minha meta atual</span></div>
                 </div>
             </div>
         </section>
@@ -97,9 +100,9 @@
                 <li class="tl-item reveal">
                     <span class="tl-dot" aria-hidden="true"></span>
                     <div class="card">
-                        <span class="tl-when"><mark class="ph">17 anos</mark></span>
+                        <span class="tl-when">17 anos</span>
                         <h3>Onde tudo começou</h3>
-                        <p><mark class="ph">Sempre sofri bullying e foi dai que  veio a  minha motivação para começar a treinar </mark></p>
+                        <p>Sempre sofri bullying e foi dai que  veio a  minha motivação para começar a treinar</p>
                         <figure class="photo photo--natural">
                             <img src="img/WhatsApp Image 2026-11-14 at 13.07.24.jpeg" alt="Foto do momento: Onde tudo começou" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
                             <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-1.jpg]</mark></figcaption>
@@ -109,9 +112,9 @@
                 <li class="tl-item reveal">
                     <span class="tl-dot" aria-hidden="true"></span>
                     <div class="card">
-                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <span class="tl-when"><mark class="ph">17 - 18 anos</mark></span>
                         <h3>Sem ninguém para me orientar</h3>
-                        <p><mark class="ph">[PREENCHER: como foi começar sem ajuda com dieta e treino, o que você sentiu]</mark></p>
+                        <p><mark class="ph">Foi muito ruim começar sem um treino e dieta para seguir</mark></p>
                         <figure class="photo photo--natural">
                             <img src="img/WhatsApp Image 2026-11-14 at 13.07.25.jpeg" alt="Foto do momento: Sem ninguém para me orientar" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
                             <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-2.jpg]</mark></figcaption>
@@ -121,22 +124,23 @@
                 <li class="tl-item reveal">
                     <span class="tl-dot" aria-hidden="true"></span>
                     <div class="card">
-                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <span class="tl-when"><mark class="ph">18 - 19 anos </mark></span>
                         <h3>A virada</h3>
-                        <p><mark class="ph">[PREENCHER: o momento em que as coisas mudaram]</mark></p>
+                        <p><mark class="ph">Foi quando eu descobri o melhor metodo de treino para mim</mark></p>
                         <figure class="photo photo--natural">
-                            <video src=""></video>
-                            <video src="img/WhatsApp Video 2026-11-14 at 13.07.28.mp4" alt="Foto do momento: A virada" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')"> </video>
-                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-3.jpg]</mark></figcaption>
+                            <video src="img/WhatsApp Video 2026-11-14 at 13.07.28.mp4" controls playsinline preload="metadata" aria-label="Vídeo do momento: A virada" onerror="this.parentElement.classList.add('photo--missing')">
+                                Seu navegador não consegue reproduzir este vídeo.
+                            </video>
+                            <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: vídeo da virada]</mark></figcaption>
                         </figure>
                     </div>
                 </li>
                 <li class="tl-item reveal">
                     <span class="tl-dot" aria-hidden="true"></span>
                     <div class="card">
-                        <span class="tl-when"><mark class="ph">[PREENCHER: ano ou idade]</mark></span>
+                        <span class="tl-when"><mark class="ph">20 anos </mark></span>
                         <h3>O que funcionou comigo</h3>
-                        <p><mark class="ph">[PREENCHER: o treino e a dieta que deram resultado]</mark></p>
+                        <p><mark class="ph">Achar uma dieta e treino que se encaixou comigo</mark></p>
                         <figure class="photo photo--natural">
                             <img src="img/WhatsApp Image 2026-11-14 at 13.07.28.jpeg" alt="Foto do momento: O que funcionou comigo" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
                             <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-4.jpg]</mark></figcaption>
@@ -148,7 +152,7 @@
                     <div class="card">
                         <span class="tl-when">Hoje</span>
                         <h3>Onde estou agora</h3>
-                        <p><mark class="ph">[PREENCHER: onde você está agora e para onde quer ir]</mark></p>
+                        <p><mark class="ph">Agora eu estou onde sempre quis estar pretendo manter uma vida com foco em performace </mark></p>
                         <figure class="photo photo--natural">
                             <img src="img/WhatsApp Image 2026-11-14 at 13.07.27 (2).jpeg" alt="Foto do momento: Onde estou agora" width="800" height="450" loading="lazy" onerror="this.parentElement.classList.add('photo--missing')">
                             <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/marco-5.jpg]</mark></figcaption>
@@ -166,7 +170,9 @@
                 <span class="eyebrow">O que eu mais precisava</span>
                 <h2 id="dor-titulo" class="sr-only">O que eu mais precisava</h2>
                 <blockquote>Quando comecei a treinar, eu não tinha ninguém para me auxiliar com dieta e treino. E era exatamente isso que eu mais queria.</blockquote>
-                <p class="pain-detail"><mark class="ph">[PREENCHER: um momento real em que você sentiu essa falta, o que fazia sem saber ou o erro que cometeu]</mark></p>
+                <p class="pain-detail"><mark class="ph">
+                    Senti muita falta de uma dieta especializada para mim
+                </mark></p>
                 <p class="pain-sub">Foi daí que nasceu este projeto.</p>
             </div>
         </section>
@@ -179,9 +185,9 @@
             </div>
             <div class="grid-4">
                 <div class="card reveal"><h3>Ajudar quem está começando</h3><p>Eu sei como é começar sem ninguém. Quero que outra pessoa não passe por isso sozinha.</p></div>
-                <div class="card reveal"><h3><mark class="ph">[PREENCHER: valor 2]</mark></h3><p><mark class="ph">[PREENCHER: como esse valor aparece no projeto]</mark></p></div>
-                <div class="card reveal"><h3><mark class="ph">[PREENCHER: valor 3]</mark></h3><p><mark class="ph">[PREENCHER: como esse valor aparece no projeto]</mark></p></div>
-                <div class="card reveal"><h3><mark class="ph">[PREENCHER: valor 4, opcional]</mark></h3><p><mark class="ph">[PREENCHER: como esse valor aparece no projeto]</mark></p></div>
+                <div class="card reveal"><h3>Começar do jeito certo</h3><p>Começar do jeito certo e que vai encurtar a sua trajetoria até a vitoria</p></div>
+                <div class="card reveal"><h3>Ponto de Partida</h3><p>Ter um ponto certo de onde começar, facilitar a sua evolução</p></div>
+                <div class="card reveal"><h3>Referência</h3><p>Você vai ter uma referência por onde começar e uma pessoa que já passou por todas as fases</p></div>
             </div>
         </section>
 
@@ -195,14 +201,14 @@
                 <div class="card reveal">
                     <span class="eyebrow">A maior dificuldade</span>
                     <h3>O que mais pesou</h3>
-                    <p><mark class="ph">[PREENCHER: a maior dificuldade, na academia ou no desenvolvimento do projeto]</mark></p>
-                    <strong class="highlight"><mark class="ph">[PREENCHER: destaque em uma frase curta]</mark></strong>
+                    <p>Foi vencer as dificuldades que o sobrepeso me trouxe o bullying e passar por isso foi a fase mais dificil para mim</p>
+                    <strong class="highlight">O que diseram para mim "Você sempre vai ser gordo"</strong>
                 </div>
                 <div class="card reveal">
                     <span class="eyebrow">A maior superação</span>
                     <h3>O que eu venci</h3>
-                    <p><mark class="ph">[PREENCHER: a maior superação até agora]</mark></p>
-                    <strong class="highlight"><mark class="ph">[PREENCHER: destaque em uma frase curta]</mark></strong>
+                    <p>A maior vitoria para mim foi ter perdido +30Kg em um ano</p>
+                    <strong class="highlight">"Eu consigo tudo independe da minha fase atual"</strong>
                 </div>
             </div>
         </section>
@@ -216,38 +222,38 @@
             <div class="compare reveal">
                 <div class="compare-item">
                     <figure class="photo">
-                        <img src="img/antes.jpg" alt="Eu antes de começar" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
+                        <img src="img/WhatsApp Image 2026-11-14 at 13.07.24 (2).jpeg" alt="Eu antes de começar" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
                         <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/antes.jpg]</mark></figcaption>
                         <span class="photo-tag">Antes</span>
                     </figure>
-                    <p class="photo-meta"><mark class="ph">[PREENCHER: peso e tempo de treino de antes]</mark></p>
+                    <p class="photo-meta">128Kg - Treinava sem orientação nenhuma</p>
                 </div>
                 <div class="compare-item">
                     <figure class="photo">
-                        <img src="img/hoje.jpg" alt="Eu hoje" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
+                        <img src="img/WhatsApp Image 2026-11-14 at 13.07.27.jpeg" alt="Eu hoje" width="800" height="1000" onerror="this.parentElement.classList.add('photo--missing')">
                         <figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto img/hoje.jpg]</mark></figcaption>
                         <span class="photo-tag">Hoje</span>
                     </figure>
-                    <p class="photo-meta"><mark class="ph">[PREENCHER: peso e tempo de treino de hoje]</mark></p>
+                    <p class="photo-meta">78Kg - Treino mais objetivo e com orientações</p>
                 </div>
             </div>
             <div class="card evo-card reveal">
                 <h3>Meu peso ao longo do tempo</h3>
                 <div id="evoChart" class="evo-chart" hidden></div>
-                <p id="evoEmpty" class="evo-empty"><mark class="ph">[PREENCHER: preencha MINHA_EVOLUCAO no topo do landing.js]</mark></p>
+                <p id="evoEmpty" class="evo-empty">128Kg - 78Kg</p>
             </div>
             <div class="duo">
                 <div class="card reveal">
                     <span class="badge">Em breve</span>
                     <h3>O treino que eu segui</h3>
-                    <p><mark class="ph">[PREENCHER: resumo do treino: divisão, dias por semana]</mark></p>
+                    <p>A metodologia que eu usei foi Upper e Lower</p>
                     <p class="muted">Foi isso que funcionou comigo e é o ponto de partida do parceiro.</p>
                     <!-- Quando a página estiver pronta: <a href="treinos.html" class="btn-secondary">Ver completo</a> -->
                 </div>
                 <div class="card reveal">
                     <span class="badge">Em breve</span>
                     <h3>A dieta que eu segui</h3>
-                    <p><mark class="ph">[PREENCHER: resumo da dieta: tipo, refeições]</mark></p>
+                    <p>Eu segui uma dieta de 4 refeições e com proteina alta</p>
                     <p class="muted">Foi isso que funcionou comigo e é o ponto de partida do parceiro.</p>
                     <!-- Quando a página estiver pronta: <a href="dieta.html" class="btn-secondary">Ver completo</a> -->
                 </div>
@@ -284,7 +290,7 @@
        
         <section class="section closing" aria-labelledby="fechamento-titulo">
             <div class="card reveal">
-                <h2 id="fechamento-titulo"><mark class="ph">[PREENCHER: frase final da apresentação]</mark></h2>
+                <h2 id="fechamento-titulo">Venha que eu te ajudo a evoluir ser o parceiro que você nunca teve</h2>
                 <a href="cadastro.html" class="btn-primary">Fazer parte</a>
             </div>
         </section>
