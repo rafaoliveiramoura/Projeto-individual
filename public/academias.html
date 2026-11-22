@@ -43,7 +43,7 @@
                     </a>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="#" class="nav-item" id="btn-logout">
+                    <a href="#" class="nav-item" id="btn-logout" onclick="sair(); return false;">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         <span>Sair</span>
                     </a>
@@ -81,14 +81,19 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // ===== AS MINHAS ACADEMIAS (fixas no site, não vêm do banco) =====
-        // Para achar lat/lng: no Google Maps, clique com o botão direito no local e clique nos números que aparecem (copia as coordenadas).
-        // nota: de 0 a 5 (pode ser 4.5). foto: arquivo dentro de public/img/ (opcional).
-        const ACADEMIAS = [
+        // ===== 1. Quem está logado? =====
+        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
+
+        // ===== 2. As minhas academias (fixas no site, não vêm do banco) =====
+        // É um VETOR de OBJETOS. Cada objeto é uma academia.
+        // Para achar lat/lng: no Google Maps, clique com o botão direito no local e clique nos números que aparecem.
+        // nota: de 0 a 5 (pode ser 4.5). foto: arquivo dentro de public/img/
+        let ACADEMIAS = [
             {
                 nome: 'Academia Golfinhos',
                 bairro: 'Av. Arquiteto Vilanova Artigas, 373 · Conj. Hab. Teotônio Vilela, São Paulo',
-                lat: -23.6150, lng: -46.4990,   // APROXIMADA: confirme no Google Maps (botão direito no local)
+                lat: -23.6150,
+                lng: -46.4990,   // APROXIMADA: confirme no Google Maps (botão direito no local)
                 nota: 3.5,
                 descricao: 'Ela é boa para iniciar, mas depois que você evolui a carga, ela não atende mais a necessidade.',
                 foto: 'img/golfinhos.jpg'
@@ -96,7 +101,8 @@
             {
                 nome: 'Smart Fit Sapopemba',
                 bairro: 'Av. Sapopemba, 8671 · Jardim Adutora, São Paulo',
-                lat: -23.5987, lng: -46.5174,
+                lat: -23.5987,
+                lng: -46.5174,
                 nota: 4,
                 descricao: 'Ela é muito boa de maquinário, mas é muito lotada.',
                 foto: 'img/smartfit.jpg'
@@ -104,120 +110,150 @@
             {
                 nome: 'Panobianco Carapicuíba',
                 bairro: 'Av. Inocêncio Seráfico, 1420 · Vila Silva Ribeiro, Carapicuíba',
-                lat: -23.5290, lng: -46.8390,   // APROXIMADA: confirme no Google Maps (botão direito no local)
+                lat: -23.5290,
+                lng: -46.8390,   // APROXIMADA: confirme no Google Maps (botão direito no local)
                 nota: 5,
                 descricao: 'Maquinário incrível. É a melhor academia que eu já treinei: a recepção é incrível e as pessoas de lá também.',
                 foto: 'img/panobiano.jpg'
             }
         ];
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null');
-            if (!sessao || !sessao.id) { window.location.href = 'login.html'; return; }
+        let mapa = null;   // o mapa do Leaflet (criado em iniciar)
 
-            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
-            document.getElementById('btn-logout').addEventListener('click', function (e) {
-                e.preventDefault();
-                if (confirm('Deseja realmente sair?')) { localStorage.clear(); window.location.href = 'login.html'; }
-            });
-
-            const fmtNota = (n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-            const el = (tag, cls, txt) => { const n = document.createElement(tag); if (cls) n.className = cls; if (txt !== undefined) n.textContent = txt; return n; };
-
-            function estrelas(nota) {
-                const box = el('span', 'ac-stars');
-                box.setAttribute('role', 'img');
-                box.setAttribute('aria-label', 'Nota ' + fmtNota(nota) + ' de 5');
-                const cheio = el('span', 'ac-stars-fill', '★★★★★');
-                cheio.style.width = Math.max(0, Math.min(5, nota)) / 5 * 100 + '%';
-                box.append(el('span', 'ac-stars-base', '★★★★★'), cheio);
-                return box;
+        // ===== 3. Funções =====
+        function sair() {
+            let certeza = confirm('Deseja realmente sair?');
+            if (certeza) {
+                localStorage.clear();
+                window.location.href = 'login.html';
             }
+        }
 
-            // ---------- Mapa ----------
-            const mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-23.5505, -46.6333], 10);
+        // Cria um elemento (tag) com uma classe e um texto
+        function criarElemento(tag, classe, texto) {
+            let elemento = document.createElement(tag);
+            elemento.className = classe;
+            if (texto != undefined) {
+                elemento.textContent = texto;
+            }
+            return elemento;
+        }
+
+        // 3.5 vira "3,5"
+        function formatarNota(nota) {
+            return Number(nota).toFixed(1).replace('.', ',');
+        }
+
+        // Cinco estrelas cinzas com cinco estrelas amarelas por cima.
+        // A largura das amarelas é a nota dividida por 5 (ex.: 3,5 de 5 = 70%).
+        function criarEstrelas(nota) {
+            let caixa = criarElemento('span', 'ac-stars');
+            caixa.setAttribute('role', 'img');
+            caixa.setAttribute('aria-label', 'Nota ' + formatarNota(nota) + ' de 5');
+
+            let cinza = criarElemento('span', 'ac-stars-base', '★★★★★');
+            let amarela = criarElemento('span', 'ac-stars-fill', '★★★★★');
+            amarela.style.width = (nota / 5) * 100 + '%';
+
+            caixa.appendChild(cinza);
+            caixa.appendChild(amarela);
+            return caixa;
+        }
+
+        // Botão "Ver no mapa": centraliza o mapa na academia de posição i do vetor
+        function verNoMapa(i) {
+            let academia = ACADEMIAS[i];
+            document.getElementById('mapa').scrollIntoView();
+            mapa.setView([academia.lat, academia.lng], 15);
+        }
+
+        // Monta o cartão de UMA academia (recebe o objeto e a posição dele no vetor)
+        function criarCartao(academia, i) {
+            let cartao = criarElemento('article', 'base-card ac-card');
+
+            // foto + número
+            let moldura = criarElemento('div', 'ac-foto-box');
+            let foto = criarElemento('img', 'ac-foto');
+            foto.src = academia.foto;
+            foto.alt = 'Foto da academia ' + academia.nome;
+            // se a foto não for encontrada, tira a imagem quebrada
+            foto.onerror = function () {
+                moldura.classList.add('ac-foto-box--vazia');
+                foto.remove();
+            };
+            moldura.appendChild(foto);
+            moldura.appendChild(criarElemento('span', 'ac-num', String(i + 1)));
+            cartao.appendChild(moldura);
+
+            // texto
+            let corpo = criarElemento('div', 'ac-corpo');
+            corpo.appendChild(criarElemento('h2', 'ac-nome', academia.nome));
+            corpo.appendChild(criarElemento('p', 'ac-bairro', academia.bairro));
+
+            corpo.appendChild(criarElemento('p', 'ac-rotulo', 'Minha avaliação'));
+            let linhaNota = criarElemento('div', 'ac-nota');
+            linhaNota.appendChild(criarEstrelas(academia.nota));
+            linhaNota.appendChild(criarElemento('strong', '', formatarNota(academia.nota) + ' / 5'));
+            corpo.appendChild(linhaNota);
+
+            corpo.appendChild(criarElemento('p', 'ac-rotulo', 'O que eu achei'));
+            corpo.appendChild(criarElemento('p', 'ac-desc', academia.descricao));
+
+            let botao = criarElemento('button', 'ac-btn-mapa', 'Ver no mapa');
+            botao.type = 'button';
+            botao.setAttribute('onclick', 'verNoMapa(' + i + ')');
+            corpo.appendChild(botao);
+
+            cartao.appendChild(corpo);
+            return cartao;
+        }
+
+        function iniciar() {
+            let nome = sessao.nome;
+            if (nome == undefined || nome == '') {
+                nome = 'Atleta';
+            }
+            document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
+
+            // cria o mapa (Leaflet) e coloca o fundo do mapa (tiles)
+            mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-23.5505, -46.6333], 10);
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 maxZoom: 19,
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                attribution: '&copy; OpenStreetMap &copy; CARTO'
             }).addTo(mapa);
 
-            const cartoes = [];
-            const marcadores = [];
+            let area = document.getElementById('ac-cards');
+            let pontos = [];   // vetor com as coordenadas, para enquadrar o mapa
 
-            function destacar(i) {
-                cartoes.forEach((c, k) => c.classList.toggle('ac-card--ativo', k === i));
-                marcadores.forEach((m, k) => { const e = m.getElement(); if (e) e.classList.toggle('ac-pin--ativo', k === i); });
+            // um for passa por todas as academias: cria o cartão e o pino no mapa
+            for (let i = 0; i < ACADEMIAS.length; i++) {
+                let academia = ACADEMIAS[i];
+
+                area.appendChild(criarCartao(academia, i));
+
+                let icone = L.divIcon({
+                    className: 'ac-pin',
+                    html: '<span><b>' + (i + 1) + '</b></span>',
+                    iconSize: [34, 34],
+                    iconAnchor: [17, 34]
+                });
+                let pino = L.marker([academia.lat, academia.lng], { icon: icone, title: academia.nome });
+                pino.addTo(mapa);
+                pino.bindPopup(academia.nome);
+
+                pontos.push([academia.lat, academia.lng]);
             }
 
-            // ---------- Cartões lado a lado ----------
-            const area = document.getElementById('ac-cards');
-            if (!ACADEMIAS.length) area.appendChild(el('p', 'ex-empty', 'Nenhuma academia cadastrada ainda.'));
+            // enquadra o mapa para mostrar todas as academias de uma vez
+            mapa.fitBounds(pontos, { padding: [40, 40], maxZoom: 15 });
+        }
 
-            ACADEMIAS.forEach(function (a, i) {
-                const card = el('article', 'base-card ac-card');
-
-                const moldura = el('div', 'ac-foto-box');
-                if (a.foto) {
-                    const img = el('img', 'ac-foto');
-                    img.src = a.foto;
-                    img.alt = 'Foto da academia ' + a.nome;
-                    img.loading = 'lazy';
-                    img.addEventListener('error', function () { moldura.classList.add('ac-foto-box--vazia'); img.remove(); });
-                    moldura.appendChild(img);
-                } else {
-                    moldura.classList.add('ac-foto-box--vazia');
-                }
-                moldura.appendChild(el('span', 'ac-num', String(i + 1)));
-                card.appendChild(moldura);
-
-                const corpo = el('div', 'ac-corpo');
-                corpo.appendChild(el('h2', 'ac-nome', a.nome));
-                if (a.bairro) corpo.appendChild(el('p', 'ac-bairro', a.bairro));
-
-                corpo.appendChild(el('p', 'ac-rotulo', 'Minha avaliação'));
-                const linha = el('div', 'ac-nota');
-                linha.appendChild(estrelas(a.nota));
-                linha.appendChild(el('strong', null, fmtNota(a.nota) + ' / 5'));
-                corpo.appendChild(linha);
-
-                corpo.appendChild(el('p', 'ac-rotulo', 'O que eu achei'));
-                corpo.appendChild(el('p', 'ac-desc', a.descricao));
-
-                const btn = el('button', 'ac-btn-mapa', 'Ver no mapa');
-                btn.type = 'button';
-                btn.addEventListener('click', function () {
-                    document.getElementById('mapa').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    mapa.flyTo([a.lat, a.lng], 15, { duration: .8 });
-                    destacar(i);
-                });
-                corpo.appendChild(btn);
-
-                card.appendChild(corpo);
-                area.appendChild(card);
-                cartoes.push(card);
-
-                // pino numerado no mapa; clicar nele destaca o cartão
-                const icon = L.divIcon({ className: 'ac-pin', html: '<span><b>' + (i + 1) + '</b></span>', iconSize: [34, 34], iconAnchor: [17, 34] });
-                const m = L.marker([a.lat, a.lng], { icon: icon, title: a.nome, alt: a.nome }).addTo(mapa);
-                m.on('click', function () {
-                    destacar(i);
-                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                });
-                marcadores.push(m);
-            });
-
-            if (ACADEMIAS.length > 1) {
-                mapa.fitBounds(L.latLngBounds(ACADEMIAS.map(a => [a.lat, a.lng])), { padding: [40, 40], maxZoom: 15 });
-            } else if (ACADEMIAS.length === 1) {
-                mapa.setView([ACADEMIAS[0].lat, ACADEMIAS[0].lng], 14);
-            }
-
-            setTimeout(function () { mapa.invalidateSize(); }, 150);
-            window.addEventListener('resize', function () { mapa.invalidateSize(); });
-            // rolar a página não dá zoom sem querer: ativa só depois de clicar no mapa
-            mapa.on('click', function () { mapa.scrollWheelZoom.enable(); });
-            mapa.on('mouseout', function () { mapa.scrollWheelZoom.disable(); });
-        });
+        // ===== 4. Começo da tela =====
+        if (sessao == null) {
+            window.location.href = 'login.html';
+        } else {
+            iniciar();
+        }
     </script>
 </body>
 </html>

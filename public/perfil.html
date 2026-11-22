@@ -63,7 +63,7 @@
                     </a>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="#" class="nav-item" id="btn-logout">
+                    <a href="#" class="nav-item" id="btn-logout" onclick="sair(); return false;">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         <span>Sair</span>
                     </a>
@@ -113,7 +113,7 @@
     <h2 id="pp-titulo">Atualizar meu peso</h2>
     <p>Pesou de novo? Atualize aqui e o gráfico de evolução do dashboard mostra a mudança.</p>
     <div class="pp-atual" id="pp-atual"></div>
-    <form class="pp-form" id="pp-form" novalidate>
+    <form class="pp-form" id="pp-form" novalidate onsubmit="return enviarPeso()">
         <label for="pp-peso">Novo peso (kg)</label>
         <input type="text" id="pp-peso" inputmode="decimal" maxlength="6" placeholder="Ex.: 78" autocomplete="off">
         <button type="submit" class="pp-btn" id="pp-btn">Atualizar peso</button>
@@ -134,121 +134,282 @@
     </div>
     <script src="app.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const userData = JSON.parse(localStorage.getItem('gymbrothers_user_data') || '{}');
-            document.getElementById('prof-weight').textContent = (userData.weightCurrent || '--') + ' kg';
-            document.getElementById('prof-height').textContent = (userData.height || '--') + ' cm';
-            document.getElementById('prof-goal').textContent = (userData.weightGoal || '--') + ' kg';
-            document.getElementById('prof-exp').textContent = userData.experience || '--';
-            document.getElementById('prof-freq').textContent = userData.frequency || '--';
-            document.getElementById('prof-focus').textContent = userData.focus || '--';
-        });
-    </script>
-    <script>
-        // Peso: o ponto inicial é o do quiz; cada atualização vira uma pesagem em registro_peso
-        document.addEventListener('DOMContentLoaded', function () {
-            let sessao = null;
-            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
-            if (!sessao || !sessao.id) return;   // sem sessão: o app.js / login cuidam disso
+        // ===== 1. Quem está logado? =====
+        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-            const el = (id) => document.getElementById(id);
-            const fmt = (n) => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-            const msg = (txt, tipo) => { const m = el('pp-msg'); m.className = 'pp-msg ' + (tipo || ''); m.textContent = txt; return m; };
+        // ===== 2. Variáveis da tela =====
+        let pesoInicial = 0;   // peso que a pessoa informou no quiz
+        let pesagens = [];     // vetor de objetos: { peso: 80, data: Date }
 
-            let pesoInicial = null;
+        // Objetos usados para trocar o código do quiz por um texto bonito
+        let EXPERIENCIA = {
+            'none': 'Ainda não treino',
+            '3m': 'Menos de 3 meses',
+            '3-12m': 'De 3 a 12 meses',
+            '1-3y': 'De 1 a 3 anos',
+            '3y+': 'Mais de 3 anos'
+        };
+        let FOCO = {
+            'peito': 'Peito',
+            'costas': 'Costas',
+            'ombros': 'Ombros',
+            'biceps': 'Bíceps',
+            'triceps': 'Tríceps',
+            'pernas': 'Pernas',
+            'gluteos': 'Glúteos',
+            'abdomen': 'Abdômen',
+            'corpo-todo': 'Corpo todo'
+        };
 
-            function desenhar(pesagens) {
-                const atual = pesagens.length ? pesagens[pesagens.length - 1].peso : pesoInicial;
-                const box = el('pp-atual');
-                box.replaceChildren();
-                if (atual !== null) {
-                    const s = document.createElement('strong');
-                    s.textContent = fmt(atual) + ' kg';
-                    box.append('Peso atual: ', s);
-                    el('prof-weight').textContent = fmt(atual) + ' kg';   // card de dados lá em cima
+        // ===== 3. Funções =====
+        function sair() {
+            let certeza = confirm('Deseja realmente sair?');
+            if (certeza) {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        // 78 vira "78,0"
+        function formatarKg(numero) {
+            return Number(numero).toFixed(1).replace('.', ',');
+        }
+
+        function formatarData(texto) {
+            let data = new Date(texto);
+            let dia = data.getDate();
+            let mes = data.getMonth() + 1;
+            if (dia < 10) {
+                dia = '0' + dia;
+            }
+            if (mes < 10) {
+                mes = '0' + mes;
+            }
+            return dia + '/' + mes + '/' + data.getFullYear();
+        }
+
+        // Mostra experiência, frequência e foco (o quiz guardou isso no navegador)
+        function mostrarDadosDoQuiz() {
+            let dados = JSON.parse(localStorage.getItem('gymbrothers_user_data'));
+            if (dados == null) {
+                return;
+            }
+
+            if (dados.experience != undefined) {
+                if (EXPERIENCIA[dados.experience]) {
+                    document.getElementById('prof-exp').textContent = EXPERIENCIA[dados.experience];
+                } else {
+                    document.getElementById('prof-exp').textContent = dados.experience;
+                }
+            }
+            if (dados.frequency != undefined) {
+                document.getElementById('prof-freq').textContent = dados.frequency + ' dias por semana';
+            }
+            if (dados.focus != undefined) {
+                if (FOCO[dados.focus]) {
+                    document.getElementById('prof-focus').textContent = FOCO[dados.focus];
+                } else {
+                    document.getElementById('prof-focus').textContent = dados.focus;
+                }
+            }
+        }
+
+        // Escreve a mensagem embaixo do formulário de peso. tipo: 'ok', 'erro' ou ''
+        function mensagem(texto, tipo) {
+            let caixa = document.getElementById('pp-msg');
+            caixa.className = 'pp-msg ' + tipo;
+            caixa.textContent = texto;
+        }
+
+        // Desenha o peso atual e a lista "Minhas atualizações"
+        function desenharPesos() {
+            // peso atual = última pesagem (se não tiver nenhuma, é o peso do quiz)
+            let atual = pesoInicial;
+            if (pesagens.length > 0) {
+                atual = pesagens[pesagens.length - 1].peso;
+            }
+
+            if (atual > 0) {
+                let forte = document.createElement('strong');
+                forte.textContent = formatarKg(atual) + ' kg';
+                let caixaAtual = document.getElementById('pp-atual');
+                caixaAtual.textContent = 'Peso atual: ';
+                caixaAtual.appendChild(forte);
+                document.getElementById('prof-weight').textContent = formatarKg(atual) + ' kg';
+            }
+
+            let lista = document.getElementById('pp-hist');
+            lista.textContent = '';
+
+            if (pesagens.length == 0) {
+                let item = document.createElement('li');
+                item.textContent = 'Você ainda não atualizou o peso.';
+                lista.appendChild(item);
+                return;
+            }
+
+            // do mais recente para o mais antigo (for de trás para frente)
+            for (let i = pesagens.length - 1; i >= 0; i--) {
+                let item = document.createElement('li');
+
+                let esquerda = document.createElement('span');
+                esquerda.textContent = formatarData(pesagens[i].data) + ' · ' + formatarKg(pesagens[i].peso) + ' kg';
+                item.appendChild(esquerda);
+
+                // peso da pesagem anterior (ou o do quiz, se for a primeira)
+                let antes = pesoInicial;
+                if (i > 0) {
+                    antes = pesagens[i - 1].peso;
                 }
 
-                const ul = el('pp-hist');
-                ul.replaceChildren();
-                if (!pesagens.length) {
-                    const li = document.createElement('li');
-                    li.textContent = 'Você ainda não atualizou o peso.';
-                    ul.appendChild(li);
-                    return;
-                }
-                // mais recente primeiro; variação em relação à pesagem anterior (ou ao peso do quiz)
-                for (let i = pesagens.length - 1; i >= 0; i--) {
-                    const antes = i === 0 ? pesoInicial : pesagens[i - 1].peso;
-                    const li = document.createElement('li');
-                    const esq = document.createElement('span');
-                    esq.textContent = pesagens[i].data.toLocaleDateString('pt-BR') + ' · ' + fmt(pesagens[i].peso) + ' kg';
-                    li.appendChild(esq);
-                    if (antes !== null) {
-                        const d = pesagens[i].peso - antes;
-                        const dd = document.createElement('span');
-                        dd.className = 'pp-delta' + (d < 0 ? ' desce' : '');
-                        dd.textContent = Math.abs(d) < 0.05 ? 'igual' : (d < 0 ? '↓ ' : '↑ ') + fmt(Math.abs(d)) + ' kg';
-                        li.appendChild(dd);
+                if (antes > 0) {
+                    let diferenca = pesagens[i].peso - antes;
+                    let variacao = document.createElement('span');
+                    variacao.className = 'pp-delta';
+
+                    if (Math.abs(diferenca) < 0.05) {
+                        variacao.textContent = 'igual';
+                    } else if (diferenca < 0) {
+                        variacao.textContent = '↓ ' + formatarKg(Math.abs(diferenca)) + ' kg';
+                        variacao.className = 'pp-delta desce';
+                    } else {
+                        variacao.textContent = '↑ ' + formatarKg(diferenca) + ' kg';
                     }
-                    ul.appendChild(li);
+                    item.appendChild(variacao);
                 }
-            }
 
-            function buscar() {
-                return fetch('/users/' + sessao.id + '/pesos')
-                    .then(r => { if (!r.ok) throw new Error('pesagens ' + r.status); return r.json(); })
-                    .then(lista => lista.map(p => ({ peso: Number(p.peso), data: new Date(p.dt_registro) })));
+                lista.appendChild(item);
             }
+        }
 
-            // Dados do quiz vindos do banco: peso inicial, meta e altura
+        // Busca as pesagens na API e guarda no vetor "pesagens"
+        function carregarPesos() {
+            fetch('/users/' + sessao.id + '/pesos')
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (lista) {
+                            pesagens = [];
+                            for (let i = 0; i < lista.length; i++) {
+                                let pesagem = {
+                                    peso: Number(lista[i].peso),
+                                    data: new Date(lista[i].dt_registro)
+                                };
+                                pesagens.push(pesagem);
+                            }
+                            desenharPesos();
+                        });
+                    } else {
+                        mensagem('Não foi possível carregar suas atualizações agora.', 'erro');
+                    }
+                })
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                    mensagem('Não foi possível carregar suas atualizações agora.', 'erro');
+                });
+        }
+
+        // Busca os dados do quiz (peso inicial, meta e altura) e depois as pesagens
+        function carregarDadosDoQuiz() {
             fetch('/users/' + sessao.id + '/dashboard')
-                .then(r => r.ok ? r.json() : null)
-                .then(function (d) {
-                    if (d) {
-                        pesoInicial = Number(d.pesoAtual);
-                        const alt = Number(d.altura);
-                        if (alt > 0) el('prof-height').textContent = Math.round(alt > 3 ? alt : alt * 100) + ' cm';
-                        if (Number(d.pesoObjetivo) > 0) el('prof-goal').textContent = fmt(d.pesoObjetivo) + ' kg';
-                    }
-                    return buscar();
-                })
-                .then(desenhar)
-                .catch(function (e) { console.log('#ERRO: ' + e); msg('Não foi possível carregar suas atualizações agora.', 'erro'); });
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (dados) {
+                            pesoInicial = Number(dados.pesoAtual);
 
-            el('pp-form').addEventListener('submit', function (e) {
-                e.preventDefault();
-                const peso = Number(String(el('pp-peso').value).replace(',', '.'));
-                if (isNaN(peso) || peso < 20 || peso > 400) { msg('Informe um peso válido, entre 20 e 400 kg.', 'erro'); return; }
-                const btn = el('pp-btn');
-                btn.disabled = true;
-                msg('Salvando...');
-                fetch('/pesos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: sessao.id, peso: peso })
+                            let altura = Number(dados.altura);
+                            if (altura > 0) {
+                                if (altura > 3) {
+                                    document.getElementById('prof-height').textContent = Math.round(altura) + ' cm';
+                                } else {
+                                    document.getElementById('prof-height').textContent = Math.round(altura * 100) + ' cm';
+                                }
+                            }
+                            if (Number(dados.pesoObjetivo) > 0) {
+                                document.getElementById('prof-goal').textContent = formatarKg(dados.pesoObjetivo) + ' kg';
+                            }
+                            carregarPesos();
+                        });
+                    } else {
+                        carregarPesos();
+                    }
                 })
-                    .then(function (r) {
-                        if (!r.ok) {
-                            // rota não ligada no servidor devolve uma página HTML de erro
-                            if ((r.headers.get('content-type') || '').includes('text/html')) throw new Error('A rota /pesos não está ligada no servidor (veja o app.js).');
-                            return r.text().then(t => { throw new Error(t.replace(/^"|"$/g, '') || 'Erro ao salvar'); });
-                        }
-                        return r.json();
-                    })
-                    .then(buscar)
-                    .then(function (pesagens) {
-                        desenhar(pesagens);
-                        el('pp-peso').value = '';
-                        const m = msg('Peso atualizado! ', 'ok');
-                        const a = document.createElement('a');
-                        a.href = 'dashboard.html';
-                        a.textContent = 'Ver no dashboard';
-                        m.appendChild(a);
-                    })
-                    .catch(function (erro) { console.log('#ERRO: ' + erro); msg(erro.message || 'Não foi possível salvar agora.', 'erro'); })
-                    .then(function () { btn.disabled = false; });
-            });
-        });
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                    mensagem('Não foi possível carregar seus dados agora.', 'erro');
+                });
+        }
+
+        // Chamada quando clica em "Atualizar peso" (onsubmit do formulário)
+        function enviarPeso() {
+            let texto = document.getElementById('pp-peso').value;
+            let peso = Number(texto.replace(',', '.'));   // aceita 78,5 e 78.5
+
+            if (texto == '' || isNaN(peso) || peso < 20 || peso > 400) {
+                mensagem('Informe um peso válido, entre 20 e 400 kg.', 'erro');
+                return false;
+            }
+
+            document.getElementById('pp-btn').disabled = true;
+            mensagem('Salvando...', '');
+
+            let dados = { userId: sessao.id, peso: peso };
+
+            fetch('/pesos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        document.getElementById('pp-peso').value = '';
+                        carregarPesos();
+
+                        // mensagem com um link para o dashboard
+                        mensagem('Peso atualizado! ', 'ok');
+                        let link = document.createElement('a');
+                        link.href = 'dashboard.html';
+                        link.textContent = 'Ver no dashboard';
+                        document.getElementById('pp-msg').appendChild(link);
+                    } else {
+                        resposta.text().then(function (erro) {
+                            erro = erro.replaceAll('"', '').trim();
+                            if (erro.charAt(0) == '<') {
+                                erro = 'A rota /pesos não está ligada no servidor (veja o app.js).';
+                            }
+                            if (erro == '') {
+                                erro = 'Erro ao salvar';
+                            }
+                            mensagem(erro, 'erro');
+                        });
+                    }
+                    document.getElementById('pp-btn').disabled = false;
+                })
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                    mensagem('Não foi possível salvar agora.', 'erro');
+                    document.getElementById('pp-btn').disabled = false;
+                });
+
+            return false;   // false = não recarrega a página
+        }
+
+        function iniciar() {
+            let nome = sessao.nome;
+            if (nome == undefined || nome == '') {
+                nome = 'Atleta';
+            }
+            document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
+
+            mostrarDadosDoQuiz();
+            carregarDadosDoQuiz();
+        }
+
+        // ===== 4. Começo da tela =====
+        if (sessao == null) {
+            window.location.href = 'login.html';
+        } else {
+            iniciar();
+        }
     </script>
 </body>
 </html>

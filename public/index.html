@@ -25,7 +25,7 @@
     <nav class="landing-nav" id="mainNav" aria-label="Principal">
         <div class="nav-container">
             <a href="#topo" class="nav-logo"><img src="img/logo.png" alt="GYMBROTHERS" width="120" height="34"></a>
-            <button class="nav-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
+            <button class="nav-toggle" id="navToggle" onclick="alternarMenu()" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu">
                 <svg class="hamburger" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 <svg class="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
             </button>
@@ -165,78 +165,89 @@
     </footer>
 
     <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const nav = document.getElementById('mainNav');
-    const toggle = document.querySelector('.nav-toggle');
-    const menu = document.getElementById('navMenu');
-    const reduzir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        // ===== Menu do celular =====
+        function definirMenu(aberto) {
+            let nav = document.getElementById('mainNav');
+            let menu = document.getElementById('navMenu');
+            let botao = document.getElementById('navToggle');
 
-    /* ---------- Scroll: navbar + barra de progresso ---------- */
-    let ticking = false;
-    function onScroll() {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(function () {
-            const y = window.scrollY || 0;
-            const max = document.documentElement.scrollHeight - window.innerHeight;
-            const p = max > 0 ? Math.min(1, y / max) : 0;
-            nav.classList.toggle('scrolled', y > 10);
-            nav.style.setProperty('--p', p.toFixed(4));
-            ticking = false;
-        });
-    }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    onScroll();
+            if (aberto) {
+                menu.classList.add('open');
+                nav.classList.add('menu-open');
+                document.body.classList.add('menu-open');
+                botao.setAttribute('aria-expanded', 'true');
+                botao.setAttribute('aria-label', 'Fechar menu');
+            } else {
+                menu.classList.remove('open');
+                nav.classList.remove('menu-open');
+                document.body.classList.remove('menu-open');
+                botao.setAttribute('aria-expanded', 'false');
+                botao.setAttribute('aria-label', 'Abrir menu');
+            }
+        }
 
-    /* ---------- Menu mobile ---------- */
-    function setMenu(aberto, devolverFoco) {
-        menu.classList.toggle('open', aberto);
-        nav.classList.toggle('menu-open', aberto);
-        document.body.classList.toggle('menu-open', aberto);
-        toggle.setAttribute('aria-expanded', String(aberto));
-        toggle.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
-        if (!aberto && devolverFoco) toggle.focus();
-    }
-    toggle.addEventListener('click', function (e) {
-        e.stopPropagation();
-        setMenu(!menu.classList.contains('open'));
-    });
-    menu.querySelectorAll('a').forEach(function (a) {
-        a.addEventListener('click', function () { setMenu(false); });
-    });
-    const logo = document.querySelector('.nav-logo');
-    if (logo) logo.addEventListener('click', function () { setMenu(false); });
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && menu.classList.contains('open')) setMenu(false, true);
-    });
-    document.addEventListener('click', function (e) {
-        if (menu.classList.contains('open') && !nav.contains(e.target)) setMenu(false);
-    });
-    window.addEventListener('resize', function () { if (window.innerWidth >= 900) setMenu(false); });
+        // Chamada quando clica no botão do menu (os três tracinhos)
+        function alternarMenu() {
+            let menu = document.getElementById('navMenu');
+            if (menu.classList.contains('open')) {
+                definirMenu(false);
+            } else {
+                definirMenu(true);
+            }
+        }
 
-    /* ---------- Reveal ao rolar (cascata por irmãos) ---------- */
-    const reveals = document.querySelectorAll('.reveal');
-    if ('IntersectionObserver' in window && !reduzir) {
-        const io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (en) {
-                if (en.isIntersecting) {
-                    en.target.classList.add('active');
-                    io.unobserve(en.target);
+        // Fecha o menu quando clica em um dos links
+        function fecharMenu() {
+            definirMenu(false);
+        }
+
+        // ===== Efeito de aparecer ao rolar =====
+        // Todo elemento com a classe "reveal" ganha a classe "active" quando chega na tela
+        function mostrarElementosVisiveis() {
+            let itens = document.getElementsByClassName('reveal');
+            for (let i = 0; i < itens.length; i++) {
+                let topo = itens[i].getBoundingClientRect().top;
+                if (topo < window.innerHeight - 40) {
+                    itens[i].classList.add('active');
                 }
-            });
-        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-        reveals.forEach(function (el) {
-            const irmaos = Array.prototype.filter.call(el.parentNode.children, function (n) {
-                return n.classList.contains('reveal');
-            });
-            el.style.setProperty('--i', Math.min(irmaos.indexOf(el), 5));
-            io.observe(el);
-        });
-    } else {
-        reveals.forEach(function (el) { el.classList.add('active'); });
-    }
-});
+            }
+        }
+
+        // ===== Ao rolar a página =====
+        function aoRolar() {
+            let nav = document.getElementById('mainNav');
+            let rolagem = window.scrollY;
+
+            // barra de progresso no topo: quanto da página já foi rolada (de 0 a 1)
+            let max = document.documentElement.scrollHeight - window.innerHeight;
+            let progresso = 0;
+            if (max > 0) {
+                progresso = rolagem / max;
+                if (progresso > 1) {
+                    progresso = 1;
+                }
+            }
+            nav.style.setProperty('--p', progresso.toFixed(4));
+
+            // barra de navegação ganha fundo depois de rolar um pouco
+            if (rolagem > 10) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+
+            mostrarElementosVisiveis();
+        }
+
+        // ===== Começo da tela =====
+        let linksDoMenu = document.getElementById('navMenu').getElementsByTagName('a');
+        for (let i = 0; i < linksDoMenu.length; i++) {
+            linksDoMenu[i].onclick = fecharMenu;
+        }
+
+        window.onscroll = aoRolar;
+        window.onresize = aoRolar;
+        aoRolar();
     </script>
 </body>
 </html>
