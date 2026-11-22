@@ -41,7 +41,7 @@
                     </a>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="#" class="nav-item" id="btn-logout">
+                    <a href="#" class="nav-item" id="btn-logout" onclick="sair(); return false;">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         <span>Sair</span>
                     </a>
@@ -89,111 +89,155 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Sessão gravada no login
-            let sessao = null;
-            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
-            if (!sessao || !sessao.id) {
+        // ===== 1. Quem está logado? =====
+        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
+
+        // ===== 2. Dados fixos =====
+        // A dieta do autor fica aqui no site (não vem do banco): é um VETOR de OBJETOS.
+        // Para mudar a dieta, é só editar este vetor.
+        let DIETA_DO_AUTOR = [
+            { refeicao: 'Manhã',      alimento: 'Pão de forma',    peso: 2,   unidade: 'fatia' },
+            { refeicao: 'Manhã',      alimento: 'Ovo',             peso: 2,   unidade: 'unidade' },
+            { refeicao: 'Manhã',      alimento: 'Café',            peso: 1,   unidade: 'copo' },
+            { refeicao: 'Almoço',     alimento: 'Arroz',           peso: 150, unidade: 'g' },
+            { refeicao: 'Almoço',     alimento: 'Frango ou carne', peso: 200, unidade: 'g' },
+            { refeicao: 'Pré-treino', alimento: 'Tapioca com ovo', peso: 1,   unidade: 'unidade' },
+            { refeicao: 'Janta',      alimento: 'Arroz',           peso: 150, unidade: 'g' },
+            { refeicao: 'Janta',      alimento: 'Frango ou carne', peso: 200, unidade: 'g' }
+        ];
+
+        // Ordem em que as refeições aparecem na tela
+        let ORDEM = ['Manhã', 'Almoço', 'Lanche', 'Pré-treino', 'Pós-treino', 'Janta', 'Ceia'];
+
+        // Objeto que guarda o plural de cada unidade (usado quando a quantidade não é 1)
+        let PLURAL = {
+            'unidade': 'unidades',
+            'fatia': 'fatias',
+            'copo': 'copos',
+            'colher': 'colheres',
+            'xícara': 'xícaras',
+            'porção': 'porções'
+        };
+
+        // ===== 3. Funções =====
+        function sair() {
+            let certeza = confirm('Deseja realmente sair?');
+            if (certeza) {
+                localStorage.clear();
                 window.location.href = 'login.html';
-                return;
             }
+        }
 
-            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
-            document.getElementById('btn-logout').addEventListener('click', (e) => {
-                e.preventDefault();
-                if (confirm('Deseja realmente sair?')) {
-                    localStorage.clear();
-                    window.location.href = 'login.html';
-                }
-            });
+        // Ex.: (2, 'fatia') vira "2 fatias"; (150, 'g') vira "150 g"
+        function formatarQuantidade(quantidade, unidade) {
+            let numero = Number(quantidade);
+            let texto = String(numero).replace('.', ',');
 
-            // ===== MINHA DIETA (fixa no site, não vem do banco) =====
-            // Para mudar, edite aqui. Unidades: g, ml, unidade, fatia, copo, colher, xícara, porção
-            const DIETA_DO_AUTOR = [
-                { refeicao: 'Manhã',      alimento: 'Pão de forma',      peso: 2,   unidade: 'fatia' },
-                { refeicao: 'Manhã',      alimento: 'Ovo',               peso: 2,   unidade: 'unidade' },
-                { refeicao: 'Manhã',      alimento: 'Café',              peso: 1,   unidade: 'copo' },
-                { refeicao: 'Almoço',     alimento: 'Arroz',             peso: 150, unidade: 'g' },
-                { refeicao: 'Almoço',     alimento: 'Frango ou carne',   peso: 200, unidade: 'g' },
-                { refeicao: 'Pré-treino', alimento: 'Tapioca com ovo',   peso: 1,   unidade: 'unidade' },
-                { refeicao: 'Janta',      alimento: 'Arroz',             peso: 150, unidade: 'g' },
-                { refeicao: 'Janta',      alimento: 'Frango ou carne',   peso: 200, unidade: 'g' }
-            ];
-
-            const ORDEM = ['Manhã', 'Almoço', 'Lanche', 'Pré-treino', 'Pós-treino', 'Janta', 'Ceia'];
-            const PLURAL = { 'unidade': 'unidades', 'fatia': 'fatias', 'copo': 'copos', 'colher': 'colheres', 'xícara': 'xícaras', 'porção': 'porções' };
-
-            function formatarQtd(q, u) {
-                const n = Number(q);
-                const txt = n.toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-                if (u === 'g' || u === 'ml') return txt + ' ' + u;
-                return txt + ' ' + (n === 1 ? u : (PLURAL[u] || u));
+            if (unidade == 'g' || unidade == 'ml') {
+                return texto + ' ' + unidade;
             }
-
-            // textContent (nunca innerHTML): o nome digitado pelo usuário não vira HTML
-            function criarItem(al) {
-                const li = document.createElement('li');
-                li.className = 'ex-item';
-                const nome = document.createElement('div');
-                nome.className = 'ex-name';
-                nome.textContent = al.alimento;
-                const qtd = document.createElement('div');
-                qtd.className = 'ex-load';
-                qtd.textContent = formatarQtd(al.peso, al.unidade);
-                li.appendChild(nome);
-                li.appendChild(qtd);
-                return li;
+            if (numero == 1) {
+                return texto + ' ' + unidade;
             }
-
-            // Agrupa por refeição, na ordem do dia
-            function agruparPorRefeicao(lista) {
-                const mapa = new Map();
-                lista.forEach(al => {
-                    if (!mapa.has(al.refeicao)) mapa.set(al.refeicao, []);
-                    mapa.get(al.refeicao).push(al);
-                });
-                const pos = (r) => { const i = ORDEM.indexOf(r); return i === -1 ? ORDEM.length : i; };
-                return [...mapa.entries()].sort((a, b) => pos(a[0]) - pos(b[0]));
+            if (PLURAL[unidade]) {
+                return texto + ' ' + PLURAL[unidade];
             }
+            return texto + ' ' + unidade;
+        }
 
-            function aviso(box, txt) {
-                const p = document.createElement('p');
-                p.className = 'ex-empty';
-                p.textContent = txt;
-                box.replaceChildren(p);
-            }
+        function criarDiv(classe, texto) {
+            let div = document.createElement('div');
+            div.className = classe;
+            div.textContent = texto;
+            return div;
+        }
 
-            function desenhar(box, lista, vazio) {
-                if (!lista.length) { aviso(box, vazio); return; }
-                const frag = document.createDocumentFragment();
-                agruparPorRefeicao(lista).forEach(([refeicao, itens]) => {
-                    const h = document.createElement('h3');
-                    h.className = 'ex-group-title';
-                    h.textContent = refeicao;
-                    const ul = document.createElement('ul');
+        function criarItem(alimento) {
+            let item = document.createElement('li');
+            item.className = 'ex-item';
+            item.appendChild(criarDiv('ex-name', alimento.alimento));
+            item.appendChild(criarDiv('ex-load', formatarQuantidade(alimento.peso, alimento.unidade)));
+            return item;
+        }
+
+        function mostrarAviso(caixa, mensagem) {
+            let aviso = document.createElement('p');
+            aviso.className = 'ex-empty';
+            aviso.textContent = mensagem;
+            caixa.textContent = '';
+            caixa.appendChild(aviso);
+        }
+
+        // Desenha a lista agrupada por refeição.
+        // Para cada refeição da ORDEM (for), procura (outro for) os alimentos dela.
+        function mostrarDieta(caixa, lista, mensagemVazia) {
+            caixa.textContent = '';
+
+            if (lista.length == 0) {
+                mostrarAviso(caixa, mensagemVazia);
+            } else {
+                for (let i = 0; i < ORDEM.length; i++) {
+                    let refeicao = ORDEM[i];
+                    let ul = document.createElement('ul');
                     ul.className = 'ex-list';
-                    itens.forEach(al => ul.appendChild(criarItem(al)));
-                    frag.appendChild(h);
-                    frag.appendChild(ul);
+                    let achouAlgum = false;
+
+                    for (let j = 0; j < lista.length; j++) {
+                        if (lista[j].refeicao == refeicao) {
+                            ul.appendChild(criarItem(lista[j]));
+                            achouAlgum = true;
+                        }
+                    }
+
+                    // só mostra a refeição se tiver pelo menos um alimento nela
+                    if (achouAlgum) {
+                        let titulo = document.createElement('h3');
+                        titulo.className = 'ex-group-title';
+                        titulo.textContent = refeicao;
+                        caixa.appendChild(titulo);
+                        caixa.appendChild(ul);
+                    }
+                }
+            }
+        }
+
+        // Só a dieta do usuário vem do banco
+        function carregarMinhaDieta() {
+            let caixa = document.getElementById('lista-meus');
+
+            fetch('/users/' + sessao.id + '/alimentos')
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (lista) {
+                            mostrarDieta(caixa, lista, 'Você ainda não cadastrou nenhum alimento. Clique em “+ Cadastrar alimento”.');
+                        });
+                    } else {
+                        mostrarAviso(caixa, 'Não foi possível carregar agora.');
+                    }
+                })
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                    mostrarAviso(caixa, 'Não foi possível carregar agora.');
                 });
-                box.replaceChildren(frag);
-            }
+        }
 
-            // Só a dieta do usuário vem do banco
-            function carregarMinhaDieta() {
-                const box = document.getElementById('lista-meus');
-                fetch('/users/' + sessao.id + '/alimentos')
-                    .then(r => { if (!r.ok) throw new Error('Erro ao buscar dados'); return r.json(); })
-                    .then(lista => desenhar(box, lista, 'Você ainda não cadastrou nenhum alimento. Clique em “+ Cadastrar alimento”.'))
-                    .catch(erro => {
-                        console.log('#ERRO: ' + erro);
-                        aviso(box, 'Não foi possível carregar agora.');
-                    });
+        function iniciar() {
+            let nome = sessao.nome;
+            if (nome == undefined || nome == '') {
+                nome = 'Atleta';
             }
+            document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
 
-            desenhar(document.getElementById('lista-autor'), DIETA_DO_AUTOR, '');
+            mostrarDieta(document.getElementById('lista-autor'), DIETA_DO_AUTOR, '');
             carregarMinhaDieta();
-        });
+        }
+
+        // ===== 4. Começo da tela =====
+        if (sessao == null) {
+            window.location.href = 'login.html';
+        } else {
+            iniciar();
+        }
     </script>
 </body>
 </html>

@@ -44,7 +44,7 @@
                     </a>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="#" class="nav-item" id="btn-logout">
+                    <a href="#" class="nav-item" id="btn-logout" onclick="sair(); return false;">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         <span>Sair</span>
                     </a>
@@ -67,10 +67,10 @@
                     <div class="base-card ex-card">
                         <h2>Novo registro</h2>
                         <p>A data é registrada automaticamente.</p>
-                        <form id="exForm" novalidate>
+                        <form id="exForm" novalidate onsubmit="return salvar()">
                             <div class="input-group">
                                 <label for="sel_ex">Exercício</label>
-                                <select id="sel_ex" class="form-select">
+                                <select id="sel_ex" class="form-select" onchange="trocarExercicio()">
                                     <option value="">Carregando...</option>
                                 </select>
                             </div>
@@ -122,124 +122,190 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Sessão gravada no login (cada endereço do navegador tem a sua; veja a observação sobre localhost)
-            let sessao = null;
-            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
-            if (!sessao || !sessao.id) {
+        // ===== 1. Quem está logado? =====
+        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
+
+        // ===== 2. Funções =====
+        function sair() {
+            let certeza = confirm('Deseja realmente sair?');
+            if (certeza) {
+                localStorage.clear();
                 window.location.href = 'login.html';
-                return;
             }
+        }
 
-            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
-            document.getElementById('btn-logout').addEventListener('click', (e) => {
-                e.preventDefault();
-                if (confirm('Deseja realmente sair?')) {
-                    localStorage.clear();
-                    window.location.href = 'login.html';
+        // Mostra uma mensagem embaixo do formulário. tipo: 'ok', 'erro' ou '' (limpar)
+        function mostrar(mensagem, tipo) {
+            let feedback = document.getElementById('feedback');
+            feedback.textContent = mensagem;
+            feedback.className = 'form-feedback ' + tipo;
+        }
+
+        // Quando a API responde com erro, lê o texto do erro e mostra na tela
+        function mostrarErroDaResposta(resposta, mensagemPadrao) {
+            resposta.text().then(function (texto) {
+                texto = texto.replaceAll('"', '').trim();
+
+                if (texto.charAt(0) == '<') {
+                    // veio uma página de erro do Express: a rota não existe
+                    mostrar('O servidor não encontrou essa rota. Confira se o ex.routes.js está ligado no app.js.', 'erro');
+                } else if (texto == '') {
+                    mostrar(mensagemPadrao, 'erro');
+                } else {
+                    mostrar(texto, 'erro');
                 }
+                document.getElementById('btnSalvar').disabled = false;
             });
+        }
 
-            const sel = document.getElementById('sel_ex');
-            const grpNovo = document.getElementById('grp_novo');
-            const iptNovo = document.getElementById('ipt_novo');
-            const feedback = document.getElementById('feedback');
-            const btn = document.getElementById('btnSalvar');
-            const NOVO = '__novo__';
+        function mostrarErroDeConexao(erro) {
+            console.log('#ERRO: ' + erro);
+            mostrar('Não foi possível falar com o servidor.', 'erro');
+            document.getElementById('btnSalvar').disabled = false;
+        }
 
-            function mostrar(msg, tipo) {
-                feedback.textContent = msg;
-                feedback.className = 'form-feedback ' + (tipo || '');
+        function adicionarOpcao(valor, texto) {
+            let opcao = document.createElement('option');
+            opcao.value = valor;
+            opcao.textContent = texto;
+            document.getElementById('sel_ex').appendChild(opcao);
+        }
+
+        // Preenche o <select> com os exercícios que vieram da API (um for no vetor)
+        function montarOpcoes(lista) {
+            document.getElementById('sel_ex').textContent = '';
+            adicionarOpcao('', 'Selecione um exercício');
+            for (let i = 0; i < lista.length; i++) {
+                adicionarOpcao(String(lista[i].idexercicio), lista[i].nome);
             }
+            adicionarOpcao('novo', '+ Outro exercício (criar novo)');
+        }
 
-            // O servidor responde o motivo em texto (ou como string JSON)
-            async function lerErro(resposta, padrao) {
-                try {
-                    const txt = (await resposta.text()).replace(/^"|"$/g, '').trim();
-                    // Página de erro do Express (HTML): a rota não existe no servidor
-                    if (txt.charAt(0) === '<') {
-                        return resposta.status === 404
-                            ? 'O servidor não encontrou essa rota. Confira se o ex.routes.js está ligado no arquivo principal do servidor.'
-                            : padrao;
-                    }
-                    return txt || padrao;
-                } catch (e) { return padrao; }
-            }
-
-            function montarOpcoes(lista) {
-                sel.replaceChildren();
-                const add = (valor, texto) => {
-                    const o = document.createElement('option');
-                    o.value = valor; o.textContent = texto; sel.appendChild(o);
-                };
-                add('', 'Selecione um exercício');
-                lista.forEach(ex => add(String(ex.idexercicio), ex.nome));
-                add(NOVO, '+ Outro exercício (criar novo)');
-            }
-
+        function carregarExercicios() {
             fetch('/exercicios')
-                .then(r => { if (!r.ok) throw new Error('Erro ao buscar exercícios'); return r.json(); })
-                .then(montarOpcoes)
-                .catch(erro => {
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(montarOpcoes);
+                    } else {
+                        montarOpcoes([]);
+                        mostrar('Não foi possível carregar a lista. Você ainda pode criar um exercício novo.', 'erro');
+                    }
+                })
+                .catch(function (erro) {
                     console.log('#ERRO: ' + erro);
                     montarOpcoes([]);
                     mostrar('Não foi possível carregar a lista. Você ainda pode criar um exercício novo.', 'erro');
                 });
+        }
 
-            sel.addEventListener('change', () => {
-                const novo = sel.value === NOVO;
-                grpNovo.hidden = !novo;
-                if (novo) iptNovo.focus();
-            });
+        // Chamada quando muda a opção do <select>: mostra o campo "nome do novo exercício" só se escolheu "novo"
+        function trocarExercicio() {
+            let escolha = document.getElementById('sel_ex').value;
+            if (escolha == 'novo') {
+                document.getElementById('grp_novo').hidden = false;
+                document.getElementById('ipt_novo').focus();
+            } else {
+                document.getElementById('grp_novo').hidden = true;
+            }
+        }
 
-            // Cria o nome (se for novo) e devolve o id do exercício
-            async function obterIdExercicio() {
-                if (sel.value !== NOVO) return Number(sel.value);
-                const resposta = await fetch('/exercicios', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome: iptNovo.value.trim() })
-                });
-                if (!resposta.ok) throw new Error(await lerErro(resposta, 'Erro ao criar o exercício'));
-                return (await resposta.json()).id;
+        // Manda o registro (carga, séries e repetições) para a API
+        function salvarRegistro(idExercicio) {
+            let registro = {
+                userId: sessao.id,
+                fkexercicio: idExercicio,
+                carga: Number(document.getElementById('ipt_carga').value),
+                series: Number(document.getElementById('ipt_series').value),
+                repeticoes: Number(document.getElementById('ipt_repeticoes').value)
+            };
+
+            fetch('/registros', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(registro)
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        mostrar('Exercício salvo! Voltando para Treinos...', 'ok');
+                        setTimeout(function () {
+                            window.location.href = 'treinos.html';
+                        }, 900);
+                    } else {
+                        mostrarErroDaResposta(resposta, 'Erro ao salvar o exercício');
+                    }
+                })
+                .catch(mostrarErroDeConexao);
+        }
+
+        // Se o exercício é novo: cria primeiro, pega o id que a API devolve e só depois salva o registro
+        function criarExercicioESalvar() {
+            let novo = { nome: document.getElementById('ipt_novo').value.trim() };
+
+            fetch('/exercicios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(novo)
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (dados) {
+                            salvarRegistro(dados.id);
+                        });
+                    } else {
+                        mostrarErroDaResposta(resposta, 'Erro ao criar o exercício');
+                    }
+                })
+                .catch(mostrarErroDeConexao);
+        }
+
+        // Chamada quando clica em "Salvar exercício" (onsubmit do formulário)
+        function salvar() {
+            mostrar('', '');
+
+            let escolha = document.getElementById('sel_ex').value;
+            let nomeNovo = document.getElementById('ipt_novo').value.trim();
+            let carga = document.getElementById('ipt_carga').value;
+            let series = document.getElementById('ipt_series').value;
+            let repeticoes = document.getElementById('ipt_repeticoes').value;
+
+            if (escolha == '') {
+                mostrar('Escolha um exercício.', 'erro');
+                return false;
+            }
+            if (escolha == 'novo' && nomeNovo == '') {
+                mostrar('Digite o nome do novo exercício.', 'erro');
+                return false;
+            }
+            if (carga == '' || series == '' || repeticoes == '') {
+                mostrar('Preencha carga, séries e repetições.', 'erro');
+                return false;
             }
 
-            document.getElementById('exForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                mostrar('');
+            document.getElementById('btnSalvar').disabled = true;
 
-                const carga = document.getElementById('ipt_carga').value;
-                const series = document.getElementById('ipt_series').value;
-                const repeticoes = document.getElementById('ipt_repeticoes').value;
+            if (escolha == 'novo') {
+                criarExercicioESalvar();
+            } else {
+                salvarRegistro(Number(escolha));
+            }
+            return false;   // false = não recarrega a página
+        }
 
-                if (!sel.value) { mostrar('Escolha um exercício.', 'erro'); return; }
-                if (sel.value === NOVO && !iptNovo.value.trim()) { mostrar('Digite o nome do novo exercício.', 'erro'); return; }
-                if (carga === '' || series === '' || repeticoes === '') { mostrar('Preencha carga, séries e repetições.', 'erro'); return; }
+        function iniciar() {
+            let nome = sessao.nome;
+            if (nome == undefined || nome == '') {
+                nome = 'Atleta';
+            }
+            document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
+            carregarExercicios();
+        }
 
-                btn.disabled = true;
-                try {
-                    const exercicioId = await obterIdExercicio();
-                    const resposta = await fetch('/registros', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            userId: sessao.id,
-                            fkexercicio: exercicioId,
-                            carga: Number(carga),
-                            series: Number(series),
-                            repeticoes: Number(repeticoes)
-                        })
-                    });
-                    if (!resposta.ok) throw new Error(await lerErro(resposta, 'Erro ao salvar o exercício'));
-
-                    mostrar('Exercício salvo! Voltando para Treinos...', 'ok');
-                    setTimeout(() => { window.location.href = 'treinos.html'; }, 900);
-                } catch (erro) {
-                    mostrar(erro.message || 'Erro ao salvar o exercício', 'erro');
-                    btn.disabled = false;
-                }
-            });
-        });
+        // ===== 3. Começo da tela =====
+        if (sessao == null) {
+            window.location.href = 'login.html';
+        } else {
+            iniciar();
+        }
     </script>
 </body>
 </html>

@@ -41,7 +41,7 @@
                     </a>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="#" class="nav-item" id="btn-logout">
+                    <a href="#" class="nav-item" id="btn-logout" onclick="sair(); return false;">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         <span>Sair</span>
                     </a>
@@ -64,7 +64,7 @@
                     <div class="base-card ex-card">
                         <h2>Novo alimento</h2>
                         <p>Você pode adicionar quantos quiser, um de cada vez.</p>
-                        <form id="aliForm" novalidate>
+                        <form id="aliForm" novalidate onsubmit="return salvarAlimento()">
                             <div class="input-group" id="grp_tipo" hidden>
                                 <label for="sel_tipo">Objetivo da dieta (opcional)</label>
                                 <select id="sel_tipo" class="form-select">
@@ -128,97 +128,148 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Sessão gravada no login
-            let sessao = null;
-            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
-            if (!sessao || !sessao.id) {
+        // ===== 1. Quem está logado? =====
+        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
+
+        let adicionados = 0;   // quantos alimentos já foram salvos nesta visita
+
+        // ===== 2. Funções =====
+        function sair() {
+            let certeza = confirm('Deseja realmente sair?');
+            if (certeza) {
+                localStorage.clear();
                 window.location.href = 'login.html';
-                return;
             }
+        }
 
-            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
-            document.getElementById('btn-logout').addEventListener('click', (e) => {
-                e.preventDefault();
-                if (confirm('Deseja realmente sair?')) {
-                    localStorage.clear();
-                    window.location.href = 'login.html';
+        function mostrar(mensagem, tipo) {
+            let feedback = document.getElementById('feedback');
+            feedback.textContent = mensagem;
+            feedback.className = 'form-feedback ' + tipo;
+        }
+
+        function mostrarErroDaResposta(resposta, mensagemPadrao) {
+            resposta.text().then(function (texto) {
+                texto = texto.replaceAll('"', '').trim();
+
+                if (texto.charAt(0) == '<') {
+                    mostrar('O servidor não encontrou essa rota. Confira se o dieta.routes.js está ligado no app.js.', 'erro');
+                } else if (texto == '') {
+                    mostrar(mensagemPadrao, 'erro');
+                } else {
+                    mostrar(texto, 'erro');
                 }
+                document.getElementById('btnSalvar').disabled = false;
             });
+        }
 
-            const feedback = document.getElementById('feedback');
-            const btn = document.getElementById('btnSalvar');
-            const selRefeicao = document.getElementById('sel_refeicao');
-            const iptAlimento = document.getElementById('ipt_alimento');
-            const iptQtd = document.getElementById('ipt_qtd');
-            const selUnidade = document.getElementById('sel_unidade');
-            const selTipo = document.getElementById('sel_tipo');
-            const grpTipo = document.getElementById('grp_tipo');
-            let adicionados = 0;
-
-            function mostrar(msg, tipo) {
-                feedback.textContent = msg;
-                feedback.className = 'form-feedback ' + (tipo || '');
-            }
-
-            // O servidor responde o motivo em texto (ou como string JSON)
-            async function lerErro(resposta, padrao) {
-                try {
-                    const txt = (await resposta.text()).replace(/^"|"$/g, '').trim();
-                    if (txt.charAt(0) === '<') {
-                        return resposta.status === 404
-                            ? 'O servidor não encontrou essa rota. Confira se o dieta.routes.js está ligado no arquivo principal do servidor.'
-                            : padrao;
-                    }
-                    return txt || padrao;
-                } catch (e) { return padrao; }
-            }
-
-            // O objetivo da dieta só é perguntado na primeira vez (quando o usuário ainda não tem alimentos)
+        // O "objetivo da dieta" só é perguntado na primeira vez (quando o usuário ainda não tem alimentos)
+        function verificarPrimeiraVez() {
             fetch('/users/' + sessao.id + '/alimentos')
-                .then(r => r.ok ? r.json() : [])
-                .then(lista => { grpTipo.hidden = lista.length > 0; })
-                .catch(() => { grpTipo.hidden = true; });
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (lista) {
+                            if (lista.length > 0) {
+                                document.getElementById('grp_tipo').hidden = true;
+                            } else {
+                                document.getElementById('grp_tipo').hidden = false;
+                            }
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                });
+        }
 
-            document.getElementById('aliForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                mostrar('');
+        // Chamada quando clica em "Salvar alimento" (onsubmit do formulário)
+        function salvarAlimento() {
+            mostrar('', '');
 
-                const alimento = iptAlimento.value.trim();
-                if (!selRefeicao.value) { mostrar('Escolha a refeição.', 'erro'); return; }
-                if (!alimento) { mostrar('Digite o nome do alimento.', 'erro'); return; }
-                if (iptQtd.value === '' || Number(iptQtd.value) <= 0) { mostrar('Informe a quantidade.', 'erro'); return; }
+            let refeicao = document.getElementById('sel_refeicao').value;
+            let alimento = document.getElementById('ipt_alimento').value.trim();
+            let quantidade = document.getElementById('ipt_qtd').value;
+            let unidade = document.getElementById('sel_unidade').value;
+            let tipo = '';
 
-                btn.disabled = true;
-                try {
-                    const resposta = await fetch('/alimentos', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            userId: sessao.id,
-                            refeicao: selRefeicao.value,
-                            alimento: alimento,
-                            quantidade: Number(iptQtd.value),
-                            unidade: selUnidade.value,
-                            tipo: grpTipo.hidden ? '' : selTipo.value
-                        })
-                    });
-                    if (!resposta.ok) throw new Error(await lerErro(resposta, 'Erro ao salvar o alimento'));
+            if (document.getElementById('grp_tipo').hidden == false) {
+                tipo = document.getElementById('sel_tipo').value;
+            }
 
-                    adicionados++;
-                    grpTipo.hidden = true; // a dieta já foi criada
-                    mostrar('Salvo! ' + adicionados + (adicionados === 1 ? ' alimento adicionado' : ' alimentos adicionados') + '. Adicione outro ou volte para a Dieta.', 'ok');
-                    // Mantém a refeição escolhida para adicionar o próximo alimento rápido
-                    iptAlimento.value = '';
-                    iptQtd.value = '';
-                    iptAlimento.focus();
-                } catch (erro) {
-                    mostrar(erro.message || 'Erro ao salvar o alimento', 'erro');
-                } finally {
-                    btn.disabled = false;
-                }
-            });
-        });
+            if (refeicao == '') {
+                mostrar('Escolha a refeição.', 'erro');
+                return false;
+            }
+            if (alimento == '') {
+                mostrar('Digite o nome do alimento.', 'erro');
+                return false;
+            }
+            if (quantidade == '' || Number(quantidade) <= 0) {
+                mostrar('Informe a quantidade.', 'erro');
+                return false;
+            }
+
+            // o objeto que vai virar JSON e ser enviado para a API
+            let dados = {
+                userId: sessao.id,
+                refeicao: refeicao,
+                alimento: alimento,
+                quantidade: Number(quantidade),
+                unidade: unidade,
+                tipo: tipo
+            };
+
+            document.getElementById('btnSalvar').disabled = true;
+
+            fetch('/alimentos', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dados)
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        adicionados = adicionados + 1;
+                        document.getElementById('grp_tipo').hidden = true;   // a dieta já foi criada
+
+                        let texto = ' alimentos adicionados';
+                        if (adicionados == 1) {
+                            texto = ' alimento adicionado';
+                        }
+                        mostrar('Salvo! ' + adicionados + texto + '. Adicione outro ou volte para a Dieta.', 'ok');
+
+                        // limpa os campos para o próximo (mantém a refeição escolhida)
+                        document.getElementById('ipt_alimento').value = '';
+                        document.getElementById('ipt_qtd').value = '';
+                        document.getElementById('ipt_alimento').focus();
+                        document.getElementById('btnSalvar').disabled = false;
+                    } else {
+                        mostrarErroDaResposta(resposta, 'Erro ao salvar o alimento');
+                    }
+                })
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                    mostrar('Não foi possível falar com o servidor.', 'erro');
+                    document.getElementById('btnSalvar').disabled = false;
+                });
+
+            return false;   // false = não recarrega a página
+        }
+
+        function iniciar() {
+            let nome = sessao.nome;
+            if (nome == undefined || nome == '') {
+                nome = 'Atleta';
+            }
+            document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
+            verificarPrimeiraVez();
+        }
+
+        // ===== 3. Começo da tela =====
+        if (sessao == null) {
+            window.location.href = 'login.html';
+        } else {
+            iniciar();
+        }
     </script>
 </body>
 </html>
