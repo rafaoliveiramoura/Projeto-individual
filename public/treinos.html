@@ -42,7 +42,7 @@
                     </a>
                 </nav>
                 <div class="sidebar-footer">
-                    <a href="#" class="nav-item" id="btn-logout">
+                    <a href="#" class="nav-item" id="btn-logout" onclick="sair(); return false;">
                         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
                         <span>Sair</span>
                     </a>
@@ -87,89 +87,123 @@
         </nav>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Sessão gravada no login
-            let sessao = null;
-            try { sessao = JSON.parse(localStorage.getItem('gymbrothers_session') || 'null'); } catch (e) { sessao = null; }
-            if (!sessao || !sessao.id) {
+        // ===== 1. Quem está logado? (o login guardou isso no navegador) =====
+        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
+
+        // ===== 2. Funções =====
+        function sair() {
+            let certeza = confirm('Deseja realmente sair?');
+            if (certeza) {
+                localStorage.clear();
                 window.location.href = 'login.html';
-                return;
             }
+        }
 
-            document.getElementById('user-avatar').textContent = (sessao.nome || 'Atleta').charAt(0).toUpperCase();
+        // Transforma a data que vem do banco em dd/mm/aaaa
+        function formatarData(texto) {
+            let data = new Date(texto);
+            let dia = data.getDate();
+            let mes = data.getMonth() + 1;
+            if (dia < 10) {
+                dia = '0' + dia;
+            }
+            if (mes < 10) {
+                mes = '0' + mes;
+            }
+            return dia + '/' + mes + '/' + data.getFullYear();
+        }
 
-            const currentPath = window.location.pathname.split('/').pop() || 'treinos.html';
-            document.querySelectorAll('.nav-item').forEach(item => {
-                if (item.getAttribute('href') === currentPath) {
-                    item.classList.add('active');
-                    item.setAttribute('aria-current', 'page');
-                } else {
-                    item.classList.remove('active');
-                    item.removeAttribute('aria-current');
+        // Cria uma <div> com uma classe e um texto
+        // (textContent coloca o texto "puro": se o usuário digitar HTML, ele não vira código)
+        function criarDiv(classe, texto) {
+            let div = document.createElement('div');
+            div.className = classe;
+            div.textContent = texto;
+            return div;
+        }
+
+        // Monta um item da lista (<li>) com os dados de UM exercício (um objeto)
+        function criarItem(registro) {
+            let item = document.createElement('li');
+            item.className = 'ex-item';
+
+            let lado = document.createElement('div');
+            lado.appendChild(criarDiv('ex-name', registro.nome));
+
+            let detalhe = registro.series + ' séries x ' + registro.repeticoes + ' repetições';
+            if (registro.data_registro) {
+                detalhe = detalhe + ' · ' + formatarData(registro.data_registro);
+            }
+            lado.appendChild(criarDiv('ex-meta', detalhe));
+
+            let carga = String(Number(registro.carga)).replace('.', ',');
+            item.appendChild(lado);
+            item.appendChild(criarDiv('ex-load', carga + ' kg'));
+            return item;
+        }
+
+        // Mostra um aviso dentro de uma caixa (ex.: "Carregando..." ou "lista vazia")
+        function mostrarAviso(caixa, mensagem) {
+            let aviso = document.createElement('p');
+            aviso.className = 'ex-empty';
+            aviso.textContent = mensagem;
+            caixa.textContent = '';
+            caixa.appendChild(aviso);
+        }
+
+        // Recebe a lista (vetor) que veio da API e desenha na tela com um for
+        function mostrarLista(caixa, lista, mensagemVazia) {
+            if (lista.length == 0) {
+                mostrarAviso(caixa, mensagemVazia);
+            } else {
+                let ul = document.createElement('ul');
+                ul.className = 'ex-list';
+                for (let i = 0; i < lista.length; i++) {
+                    ul.appendChild(criarItem(lista[i]));
                 }
-            });
-
-            document.getElementById('btn-logout').addEventListener('click', (e) => {
-                e.preventDefault();
-                if (confirm('Deseja realmente sair?')) {
-                    localStorage.clear();
-                    window.location.href = 'login.html';
-                }
-            });
-
-            const fmtKg = (n) => Number(n).toLocaleString('pt-BR', { maximumFractionDigits: 2 });
-
-            // textContent (nunca innerHTML): o nome digitado pelo usuário não vira HTML
-            function criarItem(reg) {
-                const li = document.createElement('li');
-                li.className = 'ex-item';
-
-                const esq = document.createElement('div');
-                const nome = document.createElement('div');
-                nome.className = 'ex-name';
-                nome.textContent = reg.nome;
-                const meta = document.createElement('div');
-                meta.className = 'ex-meta';
-                const data = reg.data_registro ? new Date(reg.data_registro).toLocaleDateString('pt-BR') : '';
-                meta.textContent = reg.series + ' séries x ' + reg.repeticoes + ' repetições' + (data ? ' · ' + data : '');
-                esq.appendChild(nome);
-                esq.appendChild(meta);
-
-                const carga = document.createElement('div');
-                carga.className = 'ex-load';
-                carga.textContent = fmtKg(reg.carga) + ' kg';
-
-                li.appendChild(esq);
-                li.appendChild(carga);
-                return li;
+                caixa.textContent = '';
+                caixa.appendChild(ul);
             }
+        }
 
-            function preencher(idLista, url, vazio) {
-                const box = document.getElementById(idLista);
-                const aviso = (txt) => {
-                    const p = document.createElement('p');
-                    p.className = 'ex-empty';
-                    p.textContent = txt;
-                    box.replaceChildren(p);
-                };
-                fetch(url)
-                    .then(r => { if (!r.ok) throw new Error('Erro ao buscar dados'); return r.json(); })
-                    .then(lista => {
-                        if (!lista.length) { aviso(vazio); return; }
-                        const ul = document.createElement('ul');
-                        ul.className = 'ex-list';
-                        lista.forEach(reg => ul.appendChild(criarItem(reg)));
-                        box.replaceChildren(ul);
-                    })
-                    .catch(erro => {
-                        console.log('#ERRO: ' + erro);
-                        aviso('Não foi possível carregar agora.');
-                    });
+        // Busca a lista na API e manda desenhar
+        function carregarLista(idDaCaixa, url, mensagemVazia) {
+            let caixa = document.getElementById(idDaCaixa);
+
+            fetch(url)
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json().then(function (lista) {
+                            mostrarLista(caixa, lista, mensagemVazia);
+                        });
+                    } else {
+                        mostrarAviso(caixa, 'Não foi possível carregar agora.');
+                    }
+                })
+                .catch(function (erro) {
+                    console.log('#ERRO: ' + erro);
+                    mostrarAviso(caixa, 'Não foi possível carregar agora.');
+                });
+        }
+
+        function iniciar() {
+            // letra do avatar = primeira letra do nome
+            let nome = sessao.nome;
+            if (nome == undefined || nome == '') {
+                nome = 'Atleta';
             }
+            document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
 
-            preencher('lista-autor', '/autor/registros', 'O treino do autor ainda não foi cadastrado.');
-            preencher('lista-meus', '/users/' + sessao.id + '/registros', 'Você ainda não cadastrou nenhum exercício. Clique em “+ Cadastrar exercício”.');
-        });
+            carregarLista('lista-autor', '/autor/registros', 'O treino do autor ainda não foi cadastrado.');
+            carregarLista('lista-meus', '/users/' + sessao.id + '/registros', 'Você ainda não cadastrou nenhum exercício. Clique em “+ Cadastrar exercício”.');
+        }
+
+        // ===== 3. Começo da tela =====
+        if (sessao == null) {
+            window.location.href = 'login.html';
+        } else {
+            iniciar();
+        }
     </script>
 </body>
 </html>

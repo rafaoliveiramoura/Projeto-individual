@@ -7,14 +7,21 @@ function cadastrar(nome, sobrenome, dtnascimento, email, senha, objetivo) {
 }
 
 function autenticar(email, senha) {
-    let sql = `SELECT id, nome, email FROM users WHERE email = ? AND senha = ?`
+    // quizfeito precisa estar no SELECT para o login saber para onde redirecionar
+    let sql = `SELECT id, nome, email, quizfeito FROM users WHERE email = ? AND senha = ?`
     return database.executar(sql, [email, senha])
 }
 
 function cadastraquiz(peso, altura, pesoobjetivo, tempotreino, foco, frequencia, imc, userId) {
-    let sql = `INSERT INTO infopeso (peso_atual, altura, peso_objetivo, tempotreino, frequencia, muscolofoco, imc, fkuser)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    return database.executar(sql, [peso, altura, pesoobjetivo, tempotreino, frequencia, foco, imc, userId])
+    let sqlQuiz = `INSERT INTO infopeso (peso_atual, altura, peso_objetivo, tempotreino, frequencia, muscolofoco, imc, fkuser)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+
+    return database.executar(sqlQuiz, [peso, altura, pesoobjetivo, tempotreino, frequencia, foco, imc, userId])
+        .then(resultadoInsert => {
+            // só chega aqui se o INSERT deu certo: marca o quiz como feito
+            let sqlFeito = `UPDATE users SET quizfeito = 1 WHERE id = ?`
+            return database.executar(sqlFeito, [userId]).then(() => resultadoInsert)
+        })
 }
 
 function dashboard(userId) {

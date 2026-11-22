@@ -105,11 +105,12 @@
                     localStorage.setItem('gymbrothers_session', JSON.stringify({
                         id: user.id,
                         nome: user.nome,
-                        email: user.email
+                        email: user.email,
+                        quizfeito: user.quizfeito
                     }));
                     alert("Login realizado com sucesso! Redirecionando...");
                     setTimeout(() => {
-                        window.location = "quiz.html";
+                        window.location.href = user.quizfeito === 1 ? "dashboard.html" : "quiz.html";
                     }, 2000);
                 });
             } else {
