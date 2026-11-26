@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="app-layout.css">
     <link rel="stylesheet" href="cadastrarex.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="academias.css">
+    <link rel="stylesheet" href="academia.css">
 </head>
 <body>
     <div class="app-wrapper">
@@ -63,9 +63,17 @@
 
                 <section class="ac-cards" id="ac-cards" aria-label="Academias que eu já treinei"></section>
 
-                <section class="base-card ex-card ac-mapcard" aria-labelledby="ac-mapa-titulo">
-                    <h2 id="ac-mapa-titulo" class="ac-mapa-titulo">Onde ficam</h2>
-                    <div id="mapa" role="region" aria-label="Mapa das academias"></div>
+                <section class="base-card ex-card ac-onde" aria-labelledby="ac-mapa-titulo">
+                    <div>
+                        <h2 id="ac-mapa-titulo">Onde ficam</h2>
+                        <p>Os pinos numerados são as mesmas academias dos cartões acima.</p>
+                        <div id="mapa" role="region" aria-label="Mapa das academias"></div>
+                    </div>
+                    <div>
+                        <h2>Endereços</h2>
+                        <p>Clique em “Abrir no Google Maps” para traçar a rota até lá.</p>
+                        <ul class="ac-lista" id="ac-lista"></ul>
+                    </div>
                 </section>
             </main>
         </div>
@@ -81,26 +89,25 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // ===== 1. Quem está logado? =====
+       
         let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        // ===== 2. As minhas academias (fixas no site, não vêm do banco) =====
-        // É um VETOR de OBJETOS. Cada objeto é uma academia.
-        // Para achar lat/lng: no Google Maps, clique com o botão direito no local e clique nos números que aparecem.
-        // nota: de 0 a 5 (pode ser 4.5). foto: arquivo dentro de public/img/
+       
         let ACADEMIAS = [
             {
                 nome: 'Academia Golfinhos',
-                bairro: 'Av. Arquiteto Vilanova Artigas, 373 · Conj. Hab. Teotônio Vilela, São Paulo',
+                endereco: 'Av. Arquiteto Vilanova Artigas, 373',
+                bairro: 'Conj. Hab. Teotônio Vilela, São Paulo - SP',
                 lat: -23.6150,
-                lng: -46.4990,   // APROXIMADA: confirme no Google Maps (botão direito no local)
+                lng: -46.4990,   
                 nota: 3.5,
                 descricao: 'Ela é boa para iniciar, mas depois que você evolui a carga, ela não atende mais a necessidade.',
                 foto: 'img/golfinhos.jpg'
             },
             {
                 nome: 'Smart Fit Sapopemba',
-                bairro: 'Av. Sapopemba, 8671 · Jardim Adutora, São Paulo',
+                endereco: 'Av. Sapopemba, 8671',
+                bairro: 'Jardim Adutora, São Paulo - SP',
                 lat: -23.5987,
                 lng: -46.5174,
                 nota: 4,
@@ -109,18 +116,19 @@
             },
             {
                 nome: 'Panobianco Carapicuíba',
-                bairro: 'Av. Inocêncio Seráfico, 1420 · Vila Silva Ribeiro, Carapicuíba',
+                endereco: 'Av. Inocêncio Seráfico, 1420',
+                bairro: 'Vila Silva Ribeiro, Carapicuíba - SP',
                 lat: -23.5290,
-                lng: -46.8390,   // APROXIMADA: confirme no Google Maps (botão direito no local)
+                lng: -46.8390,
                 nota: 5,
                 descricao: 'Maquinário incrível. É a melhor academia que eu já treinei: a recepção é incrível e as pessoas de lá também.',
                 foto: 'img/panobiano.jpg'
             }
         ];
 
-        let mapa = null;   // o mapa do Leaflet (criado em iniciar)
+        let mapa = null;   
+let pontos = [];  
 
-        // ===== 3. Funções =====
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -129,7 +137,7 @@
             }
         }
 
-        // Cria um elemento (tag) com uma classe e um texto
+
         function criarElemento(tag, classe, texto) {
             let elemento = document.createElement(tag);
             elemento.className = classe;
@@ -139,44 +147,65 @@
             return elemento;
         }
 
-        // 3.5 vira "3,5"
         function formatarNota(nota) {
             return Number(nota).toFixed(1).replace('.', ',');
         }
 
-        // Cinco estrelas cinzas com cinco estrelas amarelas por cima.
-        // A largura das amarelas é a nota dividida por 5 (ex.: 3,5 de 5 = 70%).
+        
         function criarEstrelas(nota) {
             let caixa = criarElemento('span', 'ac-stars');
             caixa.setAttribute('role', 'img');
             caixa.setAttribute('aria-label', 'Nota ' + formatarNota(nota) + ' de 5');
 
-            let cinza = criarElemento('span', 'ac-stars-base', '★★★★★');
-            let amarela = criarElemento('span', 'ac-stars-fill', '★★★★★');
-            amarela.style.width = (nota / 5) * 100 + '%';
+            for (let k = 1; k <= 5; k++) {
+                let estrela = criarElemento('span', 'ac-star', '★');
+                let enchimento = criarElemento('span', 'ac-star-fill', '★');
 
-            caixa.appendChild(cinza);
-            caixa.appendChild(amarela);
+                let largura = 0;
+                if (nota >= k) {
+                    largura = 100;
+                } else if (nota >= k - 0.5) {
+                    largura = 50;
+                }
+                enchimento.style.width = largura + '%';
+
+                estrela.appendChild(enchimento);
+                caixa.appendChild(estrela);
+            }
             return caixa;
         }
 
-        // Botão "Ver no mapa": centraliza o mapa na academia de posição i do vetor
+        
+        function enderecoCompleto(academia) {
+            return academia.endereco + ', ' + academia.bairro;
+        }
+
+        
+        function criarLinkMapa(academia) {
+            let link = criarElemento('a', '', 'Abrir no Google Maps ↗');
+            link.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(enderecoCompleto(academia));
+            link.target = '_blank';
+            link.rel = 'noopener';
+            return link;
+        }
+
+       
         function verNoMapa(i) {
             let academia = ACADEMIAS[i];
             document.getElementById('mapa').scrollIntoView();
             mapa.setView([academia.lat, academia.lng], 15);
         }
 
-        // Monta o cartão de UMA academia (recebe o objeto e a posição dele no vetor)
+
         function criarCartao(academia, i) {
             let cartao = criarElemento('article', 'base-card ac-card');
 
-            // foto + número
+            
             let moldura = criarElemento('div', 'ac-foto-box');
             let foto = criarElemento('img', 'ac-foto');
             foto.src = academia.foto;
             foto.alt = 'Foto da academia ' + academia.nome;
-            // se a foto não for encontrada, tira a imagem quebrada
+            
             foto.onerror = function () {
                 moldura.classList.add('ac-foto-box--vazia');
                 foto.remove();
@@ -185,12 +214,10 @@
             moldura.appendChild(criarElemento('span', 'ac-num', String(i + 1)));
             cartao.appendChild(moldura);
 
-            // texto
+            
             let corpo = criarElemento('div', 'ac-corpo');
             corpo.appendChild(criarElemento('h2', 'ac-nome', academia.nome));
-            corpo.appendChild(criarElemento('p', 'ac-bairro', academia.bairro));
 
-            corpo.appendChild(criarElemento('p', 'ac-rotulo', 'Minha avaliação'));
             let linhaNota = criarElemento('div', 'ac-nota');
             linhaNota.appendChild(criarEstrelas(academia.nota));
             linhaNota.appendChild(criarElemento('strong', '', formatarNota(academia.nota) + ' / 5'));
@@ -198,6 +225,11 @@
 
             corpo.appendChild(criarElemento('p', 'ac-rotulo', 'O que eu achei'));
             corpo.appendChild(criarElemento('p', 'ac-desc', academia.descricao));
+
+            corpo.appendChild(criarElemento('p', 'ac-rotulo', 'Onde fica'));
+            let caixaEndereco = criarElemento('p', 'ac-endereco', academia.endereco);
+            caixaEndereco.appendChild(criarElemento('span', '', academia.bairro));
+            corpo.appendChild(caixaEndereco);
 
             let botao = criarElemento('button', 'ac-btn-mapa', 'Ver no mapa');
             botao.type = 'button';
@@ -208,6 +240,27 @@
             return cartao;
         }
 
+        
+        function criarItemEndereco(academia, i) {
+            let item = document.createElement('li');
+            item.appendChild(criarElemento('span', 'ac-num', String(i + 1)));
+
+            let texto = criarElemento('div', 'ac-lista-texto');
+            texto.appendChild(criarElemento('div', 'ac-lista-nome', academia.nome));
+            texto.appendChild(criarElemento('div', 'ac-lista-end', enderecoCompleto(academia)));
+            texto.appendChild(criarLinkMapa(academia));
+            item.appendChild(texto);
+            return item;
+        }
+
+        
+        function criarPopup(academia) {
+            let caixa = document.createElement('div');
+            caixa.appendChild(criarElemento('div', 'ac-popup-nome', academia.nome));
+            caixa.appendChild(criarElemento('div', 'ac-popup-end', enderecoCompleto(academia)));
+            return caixa;
+        }
+
         function iniciar() {
             let nome = sessao.nome;
             if (nome == undefined || nome == '') {
@@ -215,21 +268,23 @@
             }
             document.getElementById('user-avatar').textContent = nome.charAt(0).toUpperCase();
 
-            // cria o mapa (Leaflet) e coloca o fundo do mapa (tiles)
+            
             mapa = L.map('mapa', { scrollWheelZoom: false }).setView([-23.5505, -46.6333], 10);
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '&copy; OpenStreetMap &copy; CARTO'
+                attribution: '&copy; OpenStreetMap'
             }).addTo(mapa);
 
             let area = document.getElementById('ac-cards');
-            let pontos = [];   // vetor com as coordenadas, para enquadrar o mapa
+            let lista = document.getElementById('ac-lista');
 
-            // um for passa por todas as academias: cria o cartão e o pino no mapa
+            
             for (let i = 0; i < ACADEMIAS.length; i++) {
                 let academia = ACADEMIAS[i];
 
                 area.appendChild(criarCartao(academia, i));
+                lista.appendChild(criarItemEndereco(academia, i));
 
                 let icone = L.divIcon({
                     className: 'ac-pin',
@@ -239,16 +294,25 @@
                 });
                 let pino = L.marker([academia.lat, academia.lng], { icon: icone, title: academia.nome });
                 pino.addTo(mapa);
-                pino.bindPopup(academia.nome);
+                pino.bindPopup(criarPopup(academia));
 
                 pontos.push([academia.lat, academia.lng]);
             }
 
-            // enquadra o mapa para mostrar todas as academias de uma vez
-            mapa.fitBounds(pontos, { padding: [40, 40], maxZoom: 15 });
+            ajustarMapa();
+            
+            window.onload = ajustarMapa;
+            window.onresize = ajustarMapa;
         }
 
-        // ===== 4. Começo da tela =====
+       
+        function ajustarMapa() {
+            if (mapa != null) {
+                mapa.invalidateSize();
+                mapa.fitBounds(pontos, { padding: [40, 40], maxZoom: 15 });
+            }
+        }
+
         if (sessao == null) {
             window.location.href = 'login.html';
         } else {

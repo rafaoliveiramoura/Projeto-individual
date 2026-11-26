@@ -122,10 +122,10 @@
     </div>
 
     <script>
-        // ===== 1. Quem está logado? =====
+        
         let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        // ===== 2. Funções =====
+        
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -134,20 +134,19 @@
             }
         }
 
-        // Mostra uma mensagem embaixo do formulário. tipo: 'ok', 'erro' ou '' (limpar)
         function mostrar(mensagem, tipo) {
             let feedback = document.getElementById('feedback');
             feedback.textContent = mensagem;
             feedback.className = 'form-feedback ' + tipo;
         }
 
-        // Quando a API responde com erro, lê o texto do erro e mostra na tela
+        
         function mostrarErroDaResposta(resposta, mensagemPadrao) {
             resposta.text().then(function (texto) {
                 texto = texto.replaceAll('"', '').trim();
 
                 if (texto.charAt(0) == '<') {
-                    // veio uma página de erro do Express: a rota não existe
+                    
                     mostrar('O servidor não encontrou essa rota. Confira se o ex.routes.js está ligado no app.js.', 'erro');
                 } else if (texto == '') {
                     mostrar(mensagemPadrao, 'erro');
@@ -171,7 +170,7 @@
             document.getElementById('sel_ex').appendChild(opcao);
         }
 
-        // Preenche o <select> com os exercícios que vieram da API (um for no vetor)
+        
         function montarOpcoes(lista) {
             document.getElementById('sel_ex').textContent = '';
             adicionarOpcao('', 'Selecione um exercício');
@@ -198,8 +197,7 @@
                 });
         }
 
-        // Chamada quando muda a opção do <select>: mostra o campo "nome do novo exercício" só se escolheu "novo"
-        function trocarExercicio() {
+                function trocarExercicio() {
             let escolha = document.getElementById('sel_ex').value;
             if (escolha == 'novo') {
                 document.getElementById('grp_novo').hidden = false;
@@ -209,7 +207,7 @@
             }
         }
 
-        // Manda o registro (carga, séries e repetições) para a API
+        
         function salvarRegistro(idExercicio) {
             let registro = {
                 userId: sessao.id,
@@ -237,8 +235,7 @@
                 .catch(mostrarErroDeConexao);
         }
 
-        // Se o exercício é novo: cria primeiro, pega o id que a API devolve e só depois salva o registro
-        function criarExercicioESalvar() {
+               function criarExercicioESalvar() {
             let novo = { nome: document.getElementById('ipt_novo').value.trim() };
 
             fetch('/exercicios', {
@@ -258,7 +255,7 @@
                 .catch(mostrarErroDeConexao);
         }
 
-        // Chamada quando clica em "Salvar exercício" (onsubmit do formulário)
+        
         function salvar() {
             mostrar('', '');
 
@@ -288,7 +285,7 @@
             } else {
                 salvarRegistro(Number(escolha));
             }
-            return false;   // false = não recarrega a página
+            return false;   
         }
 
         function iniciar() {
@@ -300,7 +297,7 @@
             carregarExercicios();
         }
 
-        // ===== 3. Começo da tela =====
+        
         if (sessao == null) {
             window.location.href = 'login.html';
         } else {

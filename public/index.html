@@ -39,7 +39,7 @@
     </nav>
 
     <main id="conteudo">
-        <!-- ============ HERO ============ -->
+        
         <section class="hero" aria-labelledby="hero-titulo">
             <div class="hero-content reveal">
                 <span class="pill">Projeto individual · SPTech · 2026</span>
@@ -71,7 +71,7 @@
             </div>
         </section>
 
-        <!-- ============ PROPÓSITO ============ -->
+        
         <section id="proposito" class="section" aria-labelledby="proposito-titulo">
             <div class="pain card reveal">
                 <span class="eyebrow">Por que este site existe</span>
@@ -82,7 +82,7 @@
             </div>
         </section>
 
-        <!-- ============ O PARCEIRO ============ -->
+        
         <section id="parceiro" class="section" aria-labelledby="parceiro-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">O parceiro</span>
@@ -113,7 +113,7 @@
             </div>
         </section>
 
-        <!-- ============ QUEM FEZ ============ -->
+        
         <section id="quem" class="section" aria-labelledby="quem-titulo">
             <div class="teaser card reveal">
                 <figure class="photo teaser-photo">
@@ -131,7 +131,7 @@
             </div>
         </section>
 
-        <!-- ============ CONVITE ============ -->
+        
         <section class="section closing" aria-labelledby="convite-titulo">
             <div class="card reveal">
                 <h2 id="convite-titulo">Você não precisa começar sozinho.</h2>
@@ -165,7 +165,7 @@
     </footer>
 
     <script>
-        // ===== Menu do celular =====
+        
         function definirMenu(aberto) {
             let nav = document.getElementById('mainNav');
             let menu = document.getElementById('navMenu');
@@ -186,7 +186,7 @@
             }
         }
 
-        // Chamada quando clica no botão do menu (os três tracinhos)
+        
         function alternarMenu() {
             let menu = document.getElementById('navMenu');
             if (menu.classList.contains('open')) {
@@ -196,13 +196,12 @@
             }
         }
 
-        // Fecha o menu quando clica em um dos links
+        
         function fecharMenu() {
             definirMenu(false);
         }
 
-        // ===== Efeito de aparecer ao rolar =====
-        // Todo elemento com a classe "reveal" ganha a classe "active" quando chega na tela
+        
         function mostrarElementosVisiveis() {
             let itens = document.getElementsByClassName('reveal');
             for (let i = 0; i < itens.length; i++) {
@@ -213,12 +212,12 @@
             }
         }
 
-        // ===== Ao rolar a página =====
+        
         function aoRolar() {
             let nav = document.getElementById('mainNav');
             let rolagem = window.scrollY;
 
-            // barra de progresso no topo: quanto da página já foi rolada (de 0 a 1)
+        
             let max = document.documentElement.scrollHeight - window.innerHeight;
             let progresso = 0;
             if (max > 0) {
@@ -229,7 +228,7 @@
             }
             nav.style.setProperty('--p', progresso.toFixed(4));
 
-            // barra de navegação ganha fundo depois de rolar um pouco
+        
             if (rolagem > 10) {
                 nav.classList.add('scrolled');
             } else {
@@ -239,7 +238,7 @@
             mostrarElementosVisiveis();
         }
 
-        // ===== Começo da tela =====
+        
         let linksDoMenu = document.getElementById('navMenu').getElementsByTagName('a');
         for (let i = 0; i < linksDoMenu.length; i++) {
             linksDoMenu[i].onclick = fecharMenu;

@@ -1,4 +1,4 @@
-/* Gymbrothers - Auth Pages Styles (Login & Register) */
+
 
 .login-body {
     background-color: var(--color-bg-dark);
@@ -8,7 +8,7 @@
     box-sizing: border-box;
 }
 
-/* Fundo Neon Difuso */
+
 .page-wrapper {
     min-height: 100dvh;
     min-height: 100vh;
@@ -35,7 +35,7 @@
     pointer-events: none;
 }
 
-/* Grid sutil decorativo */
+
 .page-wrapper::after {
     content: "";
     position: fixed;
@@ -49,7 +49,7 @@
     pointer-events: none;
 }
 
-/* 1. Logo e Títulos */
+
 .top-bar {
     position: relative !important;
     top: 0 !important;
@@ -90,7 +90,7 @@
     line-height: 1.5;
 }
 
-/* 2. Formulário e Espaçamento */
+
 #loginForm, #registerForm {
     width: 100%;
     display: flex;
@@ -105,7 +105,7 @@
     padding: 0 16px;
 }
 
-/* Correções para input date e select */
+
 input[type="date"], .form-select {
     -webkit-appearance: none;
     appearance: none;
@@ -176,7 +176,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-family: inherit;
 }
 
-/* 3. Painel Direito e Imagem de Fundo */
+
 .panel-right {
     background-image: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('img/721279696609066042.jpg');
     background-size: cover;
@@ -215,7 +215,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     font-size: 20px;
 }
 
-/* 4. Responsividade */
+
 .main-container {
     width: min(100% - 2rem, 1000px);
     max-width: 1000px;

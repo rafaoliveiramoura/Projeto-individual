@@ -1,4 +1,3 @@
-/* Página de exercícios (cadastrarex.html). Usa as variáveis do style.css e as classes do app-layout.css */
 .ex-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 20px; align-items: start; }
 .ex-card { padding: 24px; }
 .ex-card h2 { font-size: var(--fs-h2); margin-bottom: 4px; }
@@ -20,7 +19,6 @@
 
 @media (max-width: 1099px) { .ex-grid { grid-template-columns: 1fr; } }
 
-/* ===== Ligação Treinos <-> Cadastrar exercício ===== */
 [hidden] { display: none !important; }
 .ex-grid--iguais { grid-template-columns: 1fr 1fr; }
 .ex-form-wrap { max-width: 560px; }

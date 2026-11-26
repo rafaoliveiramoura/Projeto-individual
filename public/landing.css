@@ -23,7 +23,7 @@ body.menu-open { overflow: hidden; }
 .ph { background: none; color: inherit; padding: 0; border-radius: 0; border: none; }
 a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
 
-/* ===== Navbar ===== */
+
 .landing-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: background .3s, box-shadow .3s, backdrop-filter .3s; }
 .landing-nav.scrolled, .landing-nav.menu-open { background: rgba(10,10,10,.82); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 1px 0 rgba(255,255,255,.08); }
 .landing-nav.menu-open { background: rgba(10,10,10,.97); }
@@ -58,14 +58,14 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
     .nav-btn-primary { margin-top: 16px; min-height: 48px; width: 100%; }
 }
 
-/* ===== Botões ===== */
+
 .btn-primary, .btn-secondary { display: inline-flex; align-items: center; justify-content: center; text-align: center; min-height: 48px; padding: 12px 28px; border-radius: 999px; font-weight: 800; text-decoration: none; transition: transform .2s, box-shadow .2s, background .2s, border-color .2s, color .2s; }
 .btn-primary { background: var(--color-primary); color: #000; }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(var(--color-primary-rgb), .35); }
 .btn-secondary { border: 1.5px solid rgba(255,255,255,.3); color: #fff; }
 .btn-secondary:hover { border-color: var(--color-primary); color: var(--color-primary); }
 
-/* ===== Hero ===== */
+
 .hero { max-width: 1180px; margin: 0 auto; padding: 150px 24px 80px; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
 .pill { display: inline-block; padding: 6px 14px; border: 1px solid rgba(var(--color-primary-rgb), .5); color: var(--color-primary); border-radius: 999px; font-size: .85rem; font-weight: 700; margin-bottom: 20px; }
 .hero h1 { font-size: clamp(2.4rem, 6vw, 4.4rem); line-height: 1.05; font-weight: 900; margin: 0 0 18px; }
@@ -74,7 +74,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
 .hero-btns.center { justify-content: center; margin-top: 36px; }
 
-/* ===== Fotos ===== */
+
 .photo { position: relative; margin: 0; border-radius: 20px; overflow: hidden; aspect-ratio: 4/5; background: #141414; border: 1px solid rgba(255,255,255,.08); }
 .photo--wide { aspect-ratio: 16/9; margin-top: 14px; }
 .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -84,12 +84,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .photo-tag { position: absolute; left: 14px; bottom: 14px; background: var(--color-primary); color: #000; font-weight: 800; padding: 4px 12px; border-radius: 999px; font-size: .85rem; }
 .photo-meta { margin: 12px 0 0; color: #c2c2c2; }
 
-/* Fotos em pé na seção "Quem esteve comigo" */
+
 #gratidao .card { display: flex; flex-direction: column; }
 #gratidao .gratidao-photo { aspect-ratio: 3 / 4; margin-bottom: 16px; }
 #gratidao .gratidao-photo img { object-position: center top; }
 
-/* ===== Seções ===== */
+
 .section { max-width: 1080px; margin: 0 auto; padding: 80px 24px; }
 .section-header { margin-bottom: 40px; }
 .section-header h2, .closing h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; margin: 6px 0 10px; line-height: 1.15; }
@@ -112,7 +112,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .stat strong { display: block; font-size: 1.6rem; color: var(--color-primary); }
 .stat span { color: #bbb; }
 
-/* ===== Timeline ===== */
+
 .timeline { list-style: none; margin: 0; padding: 0; position: relative; display: grid; gap: 24px; }
 .tl-item { position: relative; padding-left: 36px; }
 .timeline::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--color-primary), rgba(var(--color-primary-rgb), .1)); box-shadow: 0 0 12px rgba(var(--color-primary-rgb), .4); }
@@ -129,13 +129,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
     .tl-item:nth-child(even) .tl-dot { left: -8px; }
 }
 
-/* ===== Dor ===== */
+
 .pain { text-align: center; padding: 56px 32px; background: linear-gradient(135deg, rgba(var(--color-primary-rgb), .12), rgba(255,255,255,.03)); border-color: rgba(var(--color-primary-rgb), .4); }
 .pain blockquote { margin: 16px auto; max-width: 780px; font-size: clamp(1.4rem, 3.2vw, 2.1rem); font-weight: 800; line-height: 1.3; }
 .pain-detail { max-width: 680px; margin: 0 auto 16px !important; }
 .pain-sub { color: var(--color-primary) !important; font-weight: 800; font-size: 1.15rem; }
 
-/* ===== Evolução ===== */
+
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
 .evo-card { margin-top: 0; }
 .evo-svg { width: 100%; height: auto; display: block; }
@@ -149,7 +149,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 @keyframes draw { to { stroke-dashoffset: 0; } }
 .evo-empty { padding: 24px 0 8px; text-align: center; }
 
-/* ===== Parceiro ===== */
+
 .partner { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; align-items: start; }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
 .step-n { display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); color: #000; font-weight: 900; margin-bottom: 10px; }
@@ -167,7 +167,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .closing .card > * { position: relative; }
 .closing .btn-primary { margin-top: 20px; }
 
-/* ===== Footer ===== */
+
 .footer { border-top: 1px solid rgba(255,255,255,.08); padding: 40px 24px; margin-top: 40px; }
 .footer-container { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; }
 .footer-logo { height: 30px; width: auto; margin-bottom: 10px; }
@@ -177,12 +177,12 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .footer-links a { color: #cfcfcf; text-decoration: none; display: inline-flex; align-items: center; min-height: 32px; }
 .footer-links a:hover { color: var(--color-primary); }
 
-/* ===== Reveal ===== */
+
 .js .reveal { opacity: 0; }
 .js .reveal.active { opacity: 1; animation: reveal-in .7s cubic-bezier(.2,.7,.2,1) backwards; animation-delay: calc(var(--i, 0) * 80ms); }
 @keyframes reveal-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 
-/* ===== Responsivo ===== */
+
 @media (max-width: 999px) { .hero { grid-template-columns: 1fr; padding-top: 120px; } .hero-photo { max-width: 420px; } .about-grid, .partner { grid-template-columns: 1fr; } }
 @media (max-width: 767px) { .grid-3, .grid-4, .duo { grid-template-columns: 1fr; } .section { padding: 56px 20px; } .footer-container { grid-template-columns: 1fr; } .pain { padding: 40px 20px; } }
 @media (max-width: 480px) { .steps, .compare { grid-template-columns: 1fr; } .hero-btns { flex-direction: column; } .hero-btns a { width: 100%; } .nav-container { padding: 10px 16px; } }
@@ -193,13 +193,13 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
     .js .evo-card .evo-line { stroke-dashoffset: 0; }
 }
 
-/* Gráfico legível no celular: rola na horizontal dentro do card */
+
 @media (max-width: 599px) {
     .evo-chart { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .evo-svg { min-width: 480px; }
 }
 
-/* ===== Home: contraste "quando eu comecei" x "o parceiro que criei" ===== */
+
 .contrast { display: grid; gap: 10px; }
 .contrast-col { border-radius: 18px; padding: 22px; border: 1px solid rgba(255,255,255,.09); }
 .contrast-before { background: rgba(255,255,255,.03); }
@@ -213,7 +213,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .contrast-after li::before { content: "✓"; content: "✓" / ""; color: var(--color-primary); }
 .contrast-arrow { text-align: center; color: var(--color-primary); font-size: 1.4rem; line-height: 1; }
 
-/* ===== Home: chamada para a história ===== */
+
 .teaser { display: grid; grid-template-columns: .8fr 1.2fr; gap: 32px; align-items: center; padding: 28px; }
 .teaser:hover { transform: none; }
 .teaser-photo { aspect-ratio: 4/5; max-height: 420px; width: 100%; }
@@ -225,6 +225,6 @@ a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px soli
 .nasceu p { max-width: 640px; margin: 0 auto; color: #c8c8c8; line-height: 1.7; }
 @media (max-width: 767px) { .teaser { grid-template-columns: 1fr; padding: 20px; } .teaser-photo { max-width: 320px; max-height: none; } }
 
-/* Botões do convite alinhados lado a lado */
+
 .closing .hero-btns { margin-top: 24px; }
 .closing .hero-btns .btn-primary { margin-top: 0; }

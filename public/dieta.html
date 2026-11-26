@@ -89,12 +89,9 @@
     </div>
 
     <script>
-        // ===== 1. Quem está logado? =====
-        let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
+               let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        // ===== 2. Dados fixos =====
-        // A dieta do autor fica aqui no site (não vem do banco): é um VETOR de OBJETOS.
-        // Para mudar a dieta, é só editar este vetor.
+       
         let DIETA_DO_AUTOR = [
             { refeicao: 'Manhã',      alimento: 'Pão de forma',    peso: 2,   unidade: 'fatia' },
             { refeicao: 'Manhã',      alimento: 'Ovo',             peso: 2,   unidade: 'unidade' },
@@ -106,10 +103,10 @@
             { refeicao: 'Janta',      alimento: 'Frango ou carne', peso: 200, unidade: 'g' }
         ];
 
-        // Ordem em que as refeições aparecem na tela
+       
         let ORDEM = ['Manhã', 'Almoço', 'Lanche', 'Pré-treino', 'Pós-treino', 'Janta', 'Ceia'];
 
-        // Objeto que guarda o plural de cada unidade (usado quando a quantidade não é 1)
+       
         let PLURAL = {
             'unidade': 'unidades',
             'fatia': 'fatias',
@@ -119,7 +116,7 @@
             'porção': 'porções'
         };
 
-        // ===== 3. Funções =====
+       
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -128,7 +125,7 @@
             }
         }
 
-        // Ex.: (2, 'fatia') vira "2 fatias"; (150, 'g') vira "150 g"
+       
         function formatarQuantidade(quantidade, unidade) {
             let numero = Number(quantidade);
             let texto = String(numero).replace('.', ',');
@@ -168,8 +165,7 @@
             caixa.appendChild(aviso);
         }
 
-        // Desenha a lista agrupada por refeição.
-        // Para cada refeição da ORDEM (for), procura (outro for) os alimentos dela.
+       
         function mostrarDieta(caixa, lista, mensagemVazia) {
             caixa.textContent = '';
 
@@ -189,7 +185,7 @@
                         }
                     }
 
-                    // só mostra a refeição se tiver pelo menos um alimento nela
+       
                     if (achouAlgum) {
                         let titulo = document.createElement('h3');
                         titulo.className = 'ex-group-title';
@@ -201,7 +197,7 @@
             }
         }
 
-        // Só a dieta do usuário vem do banco
+       
         function carregarMinhaDieta() {
             let caixa = document.getElementById('lista-meus');
 
@@ -232,7 +228,7 @@
             carregarMinhaDieta();
         }
 
-        // ===== 4. Começo da tela =====
+       
         if (sessao == null) {
             window.location.href = 'login.html';
         } else {

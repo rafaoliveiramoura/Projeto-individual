@@ -134,14 +134,14 @@
     </div>
     <script src="app.js"></script>
     <script>
-        // ===== 1. Quem está logado? =====
+        
         let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        // ===== 2. Variáveis da tela =====
-        let pesoInicial = 0;   // peso que a pessoa informou no quiz
-        let pesagens = [];     // vetor de objetos: { peso: 80, data: Date }
+        
+        let pesoInicial = 0;   
+        let pesagens = [];     
 
-        // Objetos usados para trocar o código do quiz por um texto bonito
+        
         let EXPERIENCIA = {
             'none': 'Ainda não treino',
             '3m': 'Menos de 3 meses',
@@ -161,7 +161,7 @@
             'corpo-todo': 'Corpo todo'
         };
 
-        // ===== 3. Funções =====
+        
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -170,7 +170,7 @@
             }
         }
 
-        // 78 vira "78,0"
+        
         function formatarKg(numero) {
             return Number(numero).toFixed(1).replace('.', ',');
         }
@@ -188,7 +188,7 @@
             return dia + '/' + mes + '/' + data.getFullYear();
         }
 
-        // Mostra experiência, frequência e foco (o quiz guardou isso no navegador)
+        
         function mostrarDadosDoQuiz() {
             let dados = JSON.parse(localStorage.getItem('gymbrothers_user_data'));
             if (dados == null) {
@@ -214,16 +214,16 @@
             }
         }
 
-        // Escreve a mensagem embaixo do formulário de peso. tipo: 'ok', 'erro' ou ''
+        
         function mensagem(texto, tipo) {
             let caixa = document.getElementById('pp-msg');
             caixa.className = 'pp-msg ' + tipo;
             caixa.textContent = texto;
         }
 
-        // Desenha o peso atual e a lista "Minhas atualizações"
+        
         function desenharPesos() {
-            // peso atual = última pesagem (se não tiver nenhuma, é o peso do quiz)
+        
             let atual = pesoInicial;
             if (pesagens.length > 0) {
                 atual = pesagens[pesagens.length - 1].peso;
@@ -248,7 +248,7 @@
                 return;
             }
 
-            // do mais recente para o mais antigo (for de trás para frente)
+        
             for (let i = pesagens.length - 1; i >= 0; i--) {
                 let item = document.createElement('li');
 
@@ -256,7 +256,7 @@
                 esquerda.textContent = formatarData(pesagens[i].data) + ' · ' + formatarKg(pesagens[i].peso) + ' kg';
                 item.appendChild(esquerda);
 
-                // peso da pesagem anterior (ou o do quiz, se for a primeira)
+        
                 let antes = pesoInicial;
                 if (i > 0) {
                     antes = pesagens[i - 1].peso;
@@ -282,7 +282,7 @@
             }
         }
 
-        // Busca as pesagens na API e guarda no vetor "pesagens"
+        
         function carregarPesos() {
             fetch('/users/' + sessao.id + '/pesos')
                 .then(function (resposta) {
@@ -308,7 +308,7 @@
                 });
         }
 
-        // Busca os dados do quiz (peso inicial, meta e altura) e depois as pesagens
+        
         function carregarDadosDoQuiz() {
             fetch('/users/' + sessao.id + '/dashboard')
                 .then(function (resposta) {
@@ -339,7 +339,7 @@
                 });
         }
 
-        // Chamada quando clica em "Atualizar peso" (onsubmit do formulário)
+        
         function enviarPeso() {
             let texto = document.getElementById('pp-peso').value;
             let peso = Number(texto.replace(',', '.'));   // aceita 78,5 e 78.5
@@ -364,7 +364,7 @@
                         document.getElementById('pp-peso').value = '';
                         carregarPesos();
 
-                        // mensagem com um link para o dashboard
+        
                         mensagem('Peso atualizado! ', 'ok');
                         let link = document.createElement('a');
                         link.href = 'dashboard.html';
@@ -390,7 +390,7 @@
                     document.getElementById('pp-btn').disabled = false;
                 });
 
-            return false;   // false = não recarrega a página
+            return false;   
         }
 
         function iniciar() {

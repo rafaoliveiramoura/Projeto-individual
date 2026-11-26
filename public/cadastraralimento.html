@@ -128,12 +128,12 @@
     </div>
 
     <script>
-        // ===== 1. Quem está logado? =====
+        
         let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        let adicionados = 0;   // quantos alimentos já foram salvos nesta visita
+        let adicionados = 0;   
 
-        // ===== 2. Funções =====
+        
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -163,8 +163,7 @@
             });
         }
 
-        // O "objetivo da dieta" só é perguntado na primeira vez (quando o usuário ainda não tem alimentos)
-        function verificarPrimeiraVez() {
+               function verificarPrimeiraVez() {
             fetch('/users/' + sessao.id + '/alimentos')
                 .then(function (resposta) {
                     if (resposta.ok) {
@@ -182,7 +181,7 @@
                 });
         }
 
-        // Chamada quando clica em "Salvar alimento" (onsubmit do formulário)
+        
         function salvarAlimento() {
             mostrar('', '');
 
@@ -209,7 +208,7 @@
                 return false;
             }
 
-            // o objeto que vai virar JSON e ser enviado para a API
+            
             let dados = {
                 userId: sessao.id,
                 refeicao: refeicao,
@@ -229,7 +228,7 @@
                 .then(function (resposta) {
                     if (resposta.ok) {
                         adicionados = adicionados + 1;
-                        document.getElementById('grp_tipo').hidden = true;   // a dieta já foi criada
+                        document.getElementById('grp_tipo').hidden = true;   
 
                         let texto = ' alimentos adicionados';
                         if (adicionados == 1) {
@@ -237,7 +236,7 @@
                         }
                         mostrar('Salvo! ' + adicionados + texto + '. Adicione outro ou volte para a Dieta.', 'ok');
 
-                        // limpa os campos para o próximo (mantém a refeição escolhida)
+                        
                         document.getElementById('ipt_alimento').value = '';
                         document.getElementById('ipt_qtd').value = '';
                         document.getElementById('ipt_alimento').focus();
@@ -252,7 +251,7 @@
                     document.getElementById('btnSalvar').disabled = false;
                 });
 
-            return false;   // false = não recarrega a página
+            return false;   
         }
 
         function iniciar() {

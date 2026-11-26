@@ -18,12 +18,12 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="landing.css">
     <style>
-        /* Fotos da linha do tempo: aparecem inteiras, no formato original (selfie em pé, paisagem deitada), sem cortar */
+        
         .timeline .photo--natural { aspect-ratio: auto; margin-top: 16px; background: #0d0d0d; }
         .timeline .photo--natural img { width: 100%; height: auto; max-height: 640px; object-fit: contain; }
-        /* vídeo no mesmo estilo das fotos: inteiro, sem cortar */
+        
         .timeline .photo--natural video { display: block; width: 100%; height: auto; max-height: 640px; background: #000; }
-        /* enquanto a foto/vídeo não existe, a caixa de aviso precisa de altura */
+        
         .timeline .photo--natural.photo--missing { aspect-ratio: 4 / 3; }
         .timeline .photo--natural.photo--missing video { display: none; }
     </style>
@@ -51,7 +51,7 @@
     </nav>
 
     <main id="conteudo">
-        <!-- ============ HERO ============ -->
+        
         <section class="hero" aria-labelledby="hero-titulo">
             <div class="hero-content reveal">
                 <span class="pill">Projeto individual · SPTech · 2026</span>
@@ -69,7 +69,7 @@
             </figure>
         </section>
 
-        <!-- ============ SOBRE MIM ============ -->
+        
         <section id="sobre" class="section" data-spy="sobre" aria-labelledby="sobre-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">Sobre mim</span>
@@ -89,7 +89,7 @@
             </div>
         </section>
 
-        <!-- ============ MINHA HISTÓRIA (linha da vida) ============ -->
+        
         <section id="historia" class="section" data-spy="historia" aria-labelledby="historia-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">Linha da vida</span>
@@ -159,12 +159,10 @@
                         </figure>
                     </div>
                 </li>
-                <!-- Para colocar uma foto em um marco, adicione dentro do <div class="card">:
-                     <figure class="photo photo--natural"><img src="img/marco-1.jpg" alt="Descreva a foto" onerror="this.parentElement.classList.add('photo--missing')"><figcaption class="photo-fallback"><mark class="ph">[PREENCHER: foto]</mark></figcaption></figure> -->
-            </ol>
+                    </ol>
         </section>
 
-        <!-- ============ A DOR ============ -->
+        
         <section id="dor" class="section" data-spy="historia" aria-labelledby="dor-titulo">
             <div class="pain card reveal">
                 <span class="eyebrow">O que eu mais precisava</span>
@@ -177,7 +175,7 @@
             </div>
         </section>
 
-        <!-- ============ VALORES ============ -->
+        
         <section id="valores" class="section" data-spy="historia" aria-labelledby="valores-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">Valores</span>
@@ -191,7 +189,7 @@
             </div>
         </section>
 
-        <!-- ============ DIFICULDADE E SUPERAÇÃO ============ -->
+        
         <section id="desafios" class="section" data-spy="historia" aria-labelledby="desafios-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">Dificuldade e superação</span>
@@ -213,7 +211,7 @@
             </div>
         </section>
 
-        <!-- ============ EVOLUÇÃO ============ -->
+        
         <section id="evolucao" class="section" data-spy="evolucao" aria-labelledby="evolucao-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">Evolução</span>
@@ -245,7 +243,7 @@
            
         </section>
 
-        <!-- ============ GRATIDÃO ============ -->
+        
        <section id="gratidao" class="section" aria-labelledby="gratidao-titulo">
             <div class="section-header reveal">
                 <span class="eyebrow">Gratidão</span>
@@ -280,7 +278,7 @@
             <p class="thanks reveal"><mark class="ph">Todos eles tem um papel muito importante na minha vida e me ajudaram a chegar aqui, se estou aqui hoje e por causa deles</mark></p>
         </section>
 
-        <!-- ============ O QUE NASCEU DISSO ============ -->
+        
         <section id="parceiro-link" class="section" aria-labelledby="parceiro-titulo">
             <div class="card nasceu reveal">
                 <span class="eyebrow">O que nasceu disso</span>
@@ -325,7 +323,7 @@
     </footer>
 
     <script>
-        // ===== Menu do celular =====
+        
         function definirMenu(aberto) {
             let nav = document.getElementById('mainNav');
             let menu = document.getElementById('navMenu');
@@ -346,7 +344,7 @@
             }
         }
 
-        // Chamada quando clica no botão do menu (os três tracinhos)
+        
         function alternarMenu() {
             let menu = document.getElementById('navMenu');
             if (menu.classList.contains('open')) {
@@ -356,13 +354,12 @@
             }
         }
 
-        // Fecha o menu quando clica em um dos links
+        
         function fecharMenu() {
             definirMenu(false);
         }
 
-        // ===== Efeito de aparecer ao rolar =====
-        // Todo elemento com a classe "reveal" ganha a classe "active" quando chega na tela
+        
         function mostrarElementosVisiveis() {
             let itens = document.getElementsByClassName('reveal');
             for (let i = 0; i < itens.length; i++) {
@@ -374,12 +371,12 @@
         }
 
 
-        // ===== Destaca no menu a seção que está na tela =====
+        
         function destacarMenu() {
             let secoes = document.getElementsByTagName('section');
             let atual = '';
 
-            // procura qual seção está no meio da tela
+        
             for (let i = 0; i < secoes.length; i++) {
                 let nome = secoes[i].getAttribute('data-spy');
                 if (nome != null) {
@@ -390,7 +387,7 @@
                 }
             }
 
-            // marca o link do menu que aponta para ela (ex.: href="#sobre")
+        
             let links = document.getElementById('navMenu').getElementsByClassName('nav-link');
             for (let j = 0; j < links.length; j++) {
                 if (links[j].getAttribute('href') == '#' + atual) {
@@ -403,12 +400,11 @@
             }
         }
 
-        // ===== Ao rolar a página =====
-        function aoRolar() {
+                function aoRolar() {
             let nav = document.getElementById('mainNav');
             let rolagem = window.scrollY;
 
-            // barra de progresso no topo: quanto da página já foi rolada (de 0 a 1)
+        
             let max = document.documentElement.scrollHeight - window.innerHeight;
             let progresso = 0;
             if (max > 0) {
@@ -419,7 +415,7 @@
             }
             nav.style.setProperty('--p', progresso.toFixed(4));
 
-            // barra de navegação ganha fundo depois de rolar um pouco
+        
             if (rolagem > 10) {
                 nav.classList.add('scrolled');
             } else {
@@ -430,7 +426,7 @@
             destacarMenu();
         }
 
-        // ===== Começo da tela =====
+        
         let linksDoMenu = document.getElementById('navMenu').getElementsByTagName('a');
         for (let i = 0; i < linksDoMenu.length; i++) {
             linksDoMenu[i].onclick = fecharMenu;

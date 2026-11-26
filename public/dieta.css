@@ -5,19 +5,19 @@
     --diet-btn-selected-bg: rgba(var(--color-primary-rgb), 0.25);
 }
 
-/* --- Page Specific --- */
+
 .page-dieta .header-actions {
     display: none;
 }
 
-/* Mobile: keep avatar for navigation */
+
 @media (max-width: 767px) {
     .page-dieta .header-actions {
         display: flex;
     }
 }
 
-/* --- Diet Plans Grid --- */
+
 .diet-plans-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -98,7 +98,6 @@
     color: var(--color-text-main);
 }
 
-/* --- Tip Bar --- */
 .diet-tip-bar {
     display: flex;
     align-items: center;
@@ -127,7 +126,7 @@
     font-weight: 800;
 }
 
-/* --- Responsividade --- */
+
 
 @media (max-width: 1099px) {
     .diet-plans-grid {

@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="dashboard.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* KPIs: Peso x Meta (larga) e Previsão para a meta */
+        
         .metrics-grid {
             grid-template-columns: 2fr 1fr 1fr;
         }
@@ -94,7 +94,7 @@
 <body>
     <div class="app-wrapper">
         <div class="app-container">
-            <!-- Sidebar -->
+            
             <aside class="app-sidebar">
                 <div class="sidebar-logo">
                     <a href="dashboard.html">
@@ -146,7 +146,7 @@
                 </header>
 
                 <section class="metrics-grid">
-                    <!-- KPI 1: Peso atual x Meta x Quanto falta -->
+                    
                     <div class="base-card metric-card">
                         <span class="metric-label">Peso e Meta</span>
                         <div class="weight-stats">
@@ -175,7 +175,7 @@
                         </div>
                     </div>
 
-                    <!-- KPI 2: Previsão para a meta -->
+                    
                     <div class="base-card metric-card rate-card">
                         <span class="metric-label">Previsão para a Meta</span>
                         <div class="metric-value-wrapper">
@@ -185,7 +185,7 @@
                         <span class="stat-hint" id="metric-rate-hint">Estimativa com base no seu ritmo real</span>
                     </div>
 
-                    <!-- KPI 3: IMC -->
+                    
                     <div class="base-card metric-card imc-card">
                         <span class="metric-label">Seu IMC</span>
                         <div class="metric-value-wrapper">
@@ -197,7 +197,7 @@
                 </section>
 
                 <section class="bottom-row">
-                    <!-- Gráfico 1: Projeção até a meta -->
+                    
                     <div class="base-card chart-card">
                         <div class="chart-header">
                             <span class="chart-title">Minha evolução</span>
@@ -208,7 +208,7 @@
                         </div>
                     </div>
 
-                    <!-- Gráfico 2: IMC -->
+                    
                     <div class="base-card chart-card">
                         <div class="chart-header">
                             <span class="chart-title">Seu IMC: início, hoje e na meta</span>
@@ -222,7 +222,7 @@
             </main>
         </div>
 
-        <!-- Mobile Bottom Nav -->
+        
         <nav class="bottom-nav">
             <a href="dashboard.html" class="nav-item active">
                 <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
@@ -245,22 +245,21 @@
     </div>
 
     <script>
-        // ===== 1. Quem está logado? =====
+        
         let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        // ===== 2. Variáveis da tela =====
-        // Tudo que vem do banco fica guardado neste objeto
+        
         let estado = {
-            inicio: 0,       // peso que a pessoa informou no quiz
-            meta: 0,         // peso objetivo
+            inicio: 0,       
+            meta: 0,         
             altura: 0,
-            pesagens: []     // vetor de objetos: { peso: 80, data: Date }
+            pesagens: []     
         };
 
-        let graficoPeso = null;   // os dois gráficos (Chart.js)
+        let graficoPeso = null;   
         let graficoImc = null;
 
-        // Cor de cada faixa de IMC (objeto: a chave é o nome da cor)
+        
         let CORES = {
             'azul': '#50a0ff',
             'verde': '#50c878',
@@ -268,12 +267,12 @@
             'vermelho': '#ff5050'
         };
 
-        // Deixa os gráficos com cores de tema escuro
+        
         Chart.defaults.color = '#a0a0a0';
         Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
         Chart.defaults.font.family = "'Lato', sans-serif";
 
-        // ===== 3. Funções pequenas =====
+
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -282,12 +281,12 @@
             }
         }
 
-        // formatar(78.456, 1) vira "78,5"
+        
         function formatar(numero, casas) {
             return Number(numero).toFixed(casas).replace('.', ',');
         }
 
-        // Recebe um objeto Date e devolve dd/mm/aa
+        
         function formatarData(data) {
             let dia = data.getDate();
             let mes = data.getMonth() + 1;
@@ -305,7 +304,7 @@
             document.getElementById(id).textContent = texto;
         }
 
-        // Peso atual = última pesagem. Se não houver pesagem, é o peso do quiz.
+
         function pesoAtual() {
             if (estado.pesagens.length > 0) {
                 return estado.pesagens[estado.pesagens.length - 1].peso;
@@ -313,7 +312,7 @@
             return estado.inicio;
         }
 
-        // A altura pode estar guardada em cm (175) ou em metros (1,75)
+        
         function alturaEmMetros() {
             if (estado.altura <= 0) {
                 return 0;
@@ -324,12 +323,12 @@
             return estado.altura;
         }
 
-        // IMC = peso dividido pela altura ao quadrado
+        
         function calcularImc(peso, altura) {
             return peso / (altura * altura);
         }
 
-        // Devolve um objeto com o texto e a cor da faixa do IMC
+        
         function classificarImc(imc) {
             if (imc < 18.5) {
                 return { texto: 'abaixo do peso', cor: 'azul' };
@@ -346,9 +345,9 @@
             }
         }
 
-        // ===== 4. Cartões de cima =====
+        
 
-        // Peso atual, meta e quanto falta
+        
         function preencherPesoMeta() {
             let atual = pesoAtual();
             let meta = estado.meta;
@@ -356,7 +355,7 @@
             escrever('metric-weight-current', formatar(atual, 1));
             escrever('metric-weight-goal', formatar(meta, 1));
 
-            // quanto mudou desde o início
+            
             let variacao = atual - estado.inicio;
             let campo = document.getElementById('metric-weight-delta');
             campo.className = 'stat-hint stat-delta';
@@ -372,13 +371,13 @@
                     seta = '↓';
                 }
                 campo.textContent = seta + ' ' + formatar(Math.abs(variacao), 1) + ' kg desde o início';
-                // verde quando está indo na direção da meta
+                
                 if ((meta - estado.inicio) * variacao > 0) {
                     campo.classList.add('bom');
                 }
             }
 
-            // quanto falta para a meta
+            
             let falta = atual - meta;
             if (Math.abs(falta) < 0.05) {
                 escrever('metric-remaining', '0%');
@@ -394,8 +393,7 @@
             }
         }
 
-        // Calcula o ritmo real (kg por semana), usando só as pesagens do usuário.
-        // Devolve 0 quando ainda não dá para calcular.
+        
         function calcularRitmo() {
             let lista = estado.pesagens;
             if (lista.length < 2) {
@@ -405,15 +403,15 @@
             let primeira = lista[0];
             let ultima = lista[lista.length - 1];
 
-            let umaSemana = 7 * 24 * 60 * 60 * 1000;   // uma semana em milissegundos
+            let umaSemana = 7 * 24 * 60 * 60 * 1000;   
             let semanas = (ultima.data.getTime() - primeira.data.getTime()) / umaSemana;
             if (semanas < 1) {
                 return 0;
             }
 
-            let ritmo = (primeira.peso - ultima.peso) / semanas;   // positivo = perdendo peso
+            let ritmo = (primeira.peso - ultima.peso) / semanas;
             if (estado.meta > ultima.peso) {
-                ritmo = -ritmo;   // a meta é ganhar peso: positivo = ganhando
+                ritmo = -ritmo;   
             }
 
             if (ritmo >= 0.05) {
@@ -422,7 +420,7 @@
             return 0;
         }
 
-        // Previsão de quando chega na meta (só aparece se existir ritmo real)
+        
         function preencherPrevisao() {
             let atual = pesoAtual();
             let falta = Math.abs(estado.meta - atual);
@@ -450,7 +448,7 @@
             }
         }
 
-        // IMC de hoje e a classificação
+        
         function preencherImc() {
             let altura = alturaEmMetros();
             let classe = document.getElementById('metric-imc-class');
@@ -472,11 +470,9 @@
             escrever('metric-imc-hint', 'Na meta: ' + formatar(imcMeta, 1) + ' (' + classificarImc(imcMeta).texto + ')');
         }
 
-        // ===== 5. Gráficos =====
 
-        // Gráfico de linha: peso do quiz + cada pesagem, com a linha da meta
         function desenharGraficoPeso() {
-            // três vetores: nomes do eixo X, pesos e a meta (repetida em cada ponto)
+            
             let rotulos = ['Início'];
             let pesos = [estado.inicio];
             let metas = [estado.meta];
@@ -494,7 +490,7 @@
             }
 
             if (graficoPeso != null) {
-                graficoPeso.destroy();   // apaga o gráfico antigo antes de criar outro
+                graficoPeso.destroy();   
             }
 
             graficoPeso = new Chart(document.getElementById('weightChart'), {
@@ -530,7 +526,7 @@
             });
         }
 
-        // Gráfico de barras: IMC no início, hoje e na meta (cada barra com a cor da sua faixa)
+        
         function desenharGraficoImc() {
             if (graficoImc != null) {
                 graficoImc.destroy();
@@ -546,7 +542,7 @@
             let imcHoje = calcularImc(pesoAtual(), altura);
             let imcMeta = calcularImc(estado.meta, altura);
 
-            // sem pesagens, "início" e "hoje" são iguais: mostra só hoje e meta
+            
             let nomes = [];
             let valores = [];
             if (estado.pesagens.length > 0) {
@@ -557,7 +553,7 @@
                 valores = [imcHoje, imcMeta];
             }
 
-            // um for para escolher a cor de cada barra e arredondar o valor
+            
             let cores = [];
             let numeros = [];
             for (let i = 0; i < valores.length; i++) {
@@ -598,7 +594,7 @@
                 'O IMC não separa músculo de gordura.');
         }
 
-        // Atualiza tudo que aparece na tela
+        
         function atualizarTela() {
             preencherPesoMeta();
             preencherPrevisao();
@@ -607,9 +603,9 @@
             desenharGraficoImc();
         }
 
-        // ===== 6. Buscar os dados na API =====
+        
 
-        // Guarda as pesagens no vetor estado.pesagens (um for transforma cada linha em objeto)
+        
         function guardarPesagens(lista) {
             estado.pesagens = [];
             for (let i = 0; i < lista.length; i++) {
@@ -630,7 +626,7 @@
                             atualizarTela();
                         });
                     } else {
-                        atualizarTela();   // sem pesagens, mostra só o peso do quiz
+                        atualizarTela();   
                     }
                 })
                 .catch(function (erro) {
@@ -643,7 +639,7 @@
             fetch('/users/' + sessao.id + '/dashboard')
                 .then(function (resposta) {
                     if (resposta.status == 404) {
-                        // ainda não respondeu o quiz
+                        
                         window.location.href = 'quiz.html';
                     } else if (resposta.ok) {
                         resposta.json().then(function (dados) {
@@ -672,7 +668,7 @@
             carregarDados();
         }
 
-        // ===== 7. Começo da tela =====
+        
         if (sessao == null) {
             window.location.href = 'login.html';
         } else {

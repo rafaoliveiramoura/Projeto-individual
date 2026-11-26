@@ -14,13 +14,13 @@
 
     --chart-height: clamp(300px, 40vh, 450px);
 
-    /* Dashboard specific colors */
+    
     --color-card-dark: rgba(18, 18, 18, 0.8);
     --color-card-border: rgba(255, 255, 255, 0.1);
     --color-card-hover: rgba(204, 255, 0, 0.05);
 }
 
-/* --- Global App Layout --- */
+
 .app-wrapper {
     min-height: 100dvh;
     width: 100%;
@@ -33,7 +33,7 @@
     box-sizing: border-box;
 }
 
-/* Neon Background Effect (Reused from project style) */
+
 .app-wrapper::before {
     content: "";
     position: absolute;
@@ -58,7 +58,7 @@
     min-height: 100dvh;
 }
 
-/* --- Sidebar --- */
+
 .app-sidebar {
     display: flex;
     flex-direction: column;
@@ -97,7 +97,7 @@
     padding-right: 4px;
 }
 
-/* Hide scrollbar for app-nav but keep functionality */
+
 .app-nav::-webkit-scrollbar {
     width: 0;
 }
@@ -145,7 +145,7 @@
     flex-shrink: 0;
 }
 
-/* --- Main Content Area --- */
+
 .app-content {
     display: flex;
     flex-direction: column;
@@ -155,11 +155,10 @@
     box-sizing: border-box;
 }
 
-/* Inner content wrapper to limit width for readability on ultra-wide screens */
 .app-content > * {
     width: 100%;
     max-width: 1280px;
-    margin-left: 0; /* Aligned to the left, near the sidebar */
+    margin-left: 0; 
 }
 
 .app-header {
@@ -214,7 +213,7 @@
     border: 2px solid var(--color-card-border);
 }
 
-/* --- Base Cards --- */
+
 .base-card {
     background: var(--color-card-dark);
     border: 1px solid var(--color-card-border);
@@ -227,9 +226,9 @@
     border-color: rgba(var(--color-primary-rgb), 0.3);
 }
 
-/* --- Responsividade --- */
 
-/* Tablet */
+
+
 @media (max-width: 1099px) {
     .app-container {
         grid-template-columns: var(--sidebar-collapsed-width) 1fr;
@@ -251,7 +250,7 @@
     }
 }
 
-/* Mobile */
+
 @media (max-width: 767px) {
     .app-container {
         grid-template-columns: 1fr;
@@ -297,7 +296,7 @@
     }
 }
 
-/* Height based adjustment */
+
 @media (max-height: 800px) {
     :root {
         --space-section: 1rem;
@@ -308,7 +307,7 @@
     }
 }
 
-/* accessibility */
+
 :focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
