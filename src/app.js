@@ -13,28 +13,27 @@ const pesoRoutes = require("./routes/peso.routes")
 const port = process.env.PORT || 3000;
 const app = express();
 
-// Middlewares
-app.use(cors());
-app.use(express.json()); // Para aceitar JSON no corpo da requisição
-app.use(express.urlencoded({ extended: true })); // Para aceitar dados de formulários comuns
 
-// Servir arquivos estáticos (HTML, CSS, JS, Imagens) da pasta public
+app.use(cors());
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
+
+
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Rota principal para abrir a tela de cadastro
+
 app.get('/cadastro', (req, res) => {
     res.sendFile(path.join(__dirname, "../public/cadastro.html"));
 });
 
-// Montagem das rotas de usuário
+
 app.use(userRoutes.expressrouter);
 app.use("/", exRoutes.expressrouter)
 app.use("/", dietaRoutes.expressrouter)
 app.use("/", pesoRoutes.expressrouter)
 
 
-// Rota para processar o cadastro (removida duplicata se existir)
-// app.post('/register', userController.cadastrar);
+
 
 
 app.listen(port, () => {

@@ -1,6 +1,6 @@
 const database = require("../database/db")
 
-// ---------- Catálogo de exercícios (tabela exercicio) ----------
+
 function listarex() {
     let sql = `SELECT idexercicio, nome FROM exercicio ORDER BY nome`
     return database.executar(sql, [])

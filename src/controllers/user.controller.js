@@ -75,9 +75,7 @@ function cadastraquiz (req, res){
         return res.status(400).send("Não foi possível calcular o IMC com esses valores.");
     }
 
-    // ATENÇÃO: a ordem precisa ser a mesma da função cadastraquiz do model
-    // (peso, altura, pesoobjetivo, tempotreino, foco, frequencia, imc, userId)
-    usarioModel.cadastraquiz(nPeso, nAltura, nPesoObj, experiencia, foco, frequencia, nImc, userId)
+  usarioModel.cadastraquiz(nPeso, nAltura, nPesoObj, experiencia, foco, frequencia, nImc, userId)
         .then(resultado => res.json(resultado))
         .catch(erro => {
             console.error("Erro ao salvar quiz:", erro);

@@ -15,9 +15,9 @@ function registrarpeso(req, res) {
         .then(resultado => res.json({ id: resultado.insertId }))
         .catch(erro => {
             console.error("Erro ao registrar o peso:", erro)
-            // 1452 = chave estrangeira (usuário não existe)
+            
             if (erro.errno === 1452) return res.status(400).send("Usuário inexistente")
-            // 1146 = tabela que não existe (script não rodou)
+            
             if (erro.errno === 1146) return res.status(500).send("Falta criar a tabela registro_peso. Rode o registro-peso.sql")
             res.status(500).json(erro.sqlMessage || "Erro interno")
         })

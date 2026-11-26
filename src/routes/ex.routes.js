@@ -3,11 +3,11 @@ const expressrouter = express.Router()
 
 const { listarex, cadastronomeex, cadastrarex, listarregistros, registrosautor } = require("../controllers/ex.controllers")
 
-expressrouter.get("/exercicios", listarex)                      // catálogo (nomes)
-expressrouter.post("/exercicios", cadastronomeex)               // cria um exercício novo
-expressrouter.post("/registros", cadastrarex)                   // registra carga/séries/repetições
-expressrouter.get("/users/:id/registros", listarregistros)      // treino do usuário
-expressrouter.get("/autor/registros", registrosautor)           // treino do autor (referência)
+expressrouter.get("/exercicios", listarex)                      
+expressrouter.post("/exercicios", cadastronomeex)               
+expressrouter.post("/registros", cadastrarex)                   
+expressrouter.get("/users/:id/registros", listarregistros)      
+expressrouter.get("/autor/registros", registrosautor)           
 
 
 module.exports = { expressrouter }

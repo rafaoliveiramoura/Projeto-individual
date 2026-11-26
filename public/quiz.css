@@ -1,4 +1,4 @@
-/* Gymbrothers - Quiz Onboarding Styles */
+
 
 .quiz-wrapper {
     min-height: 100dvh;
@@ -26,7 +26,7 @@
     box-sizing: border-box;
 }
 
-/* Progress Bar */
+
 .progress-header {
     margin-bottom: 32px;
     text-align: center;
@@ -57,7 +57,7 @@
     letter-spacing: 1px;
 }
 
-/* Quiz Steps */
+
 .quiz-step {
     display: none;
     animation: fadeIn 0.4s ease-out;
@@ -84,7 +84,7 @@
     text-align: center;
 }
 
-/* Input Fields */
+
 .quiz-input-group {
     display: flex;
     align-items: center;
@@ -107,7 +107,7 @@
     border: 2px solid var(--color-input-border);
     border-radius: var(--radius-input);
     padding: 0 16px;
-    font-size: 16px; /* Para evitar zoom no iOS */
+    font-size: 16px; 
     font-weight: 700;
     color: var(--color-text-main);
     text-align: center;
@@ -115,7 +115,7 @@
     transition: border-color var(--transition-fast);
 }
 
-/* Remove spinners de inputs number */
+
 .quiz-input::-webkit-outer-spin-button,
 .quiz-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -136,7 +136,7 @@
     margin-left: 8px;
 }
 
-/* Option Cards */
+
 .options-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -220,10 +220,10 @@
     transform: translateY(-2px);
 }
 
-/* Intro & Success Screens */
+
 .screen-center {
     text-align: center;
-    display: none; /* Alterado de flex para none */
+    display: none; 
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -273,7 +273,7 @@
     display: none !important;
 }
 
-/* Responsividade */
+
 @media (max-width: 768px) {
     .quiz-wrapper {
         padding: 20px 15px;
@@ -316,12 +316,12 @@
     }
 
     .btn-next {
-        order: 1; /* Continuar em cima */
+        order: 1;
     }
 
     .btn-back {
         min-width: unset;
-        order: 2; /* Voltar embaixo */
+        order: 2; 
     }
 
     .screen-center h1 {

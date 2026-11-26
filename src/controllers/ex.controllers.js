@@ -1,7 +1,6 @@
 const exmodels = require("../models/ex.models")
 
-// id do AUTOR na tabela users (o treino dele aparece para todos como referência).
-// Troque pelo seu id: SELECT id FROM users WHERE email = 'seu-email';
+
 const ID_AUTOR = 1
 
 function listarex(req, res) {
@@ -13,7 +12,8 @@ function listarex(req, res) {
         })
 }
 
-// Cadastra o NOME de um exercício novo (ou devolve o que já existe)
+
+
 function cadastronomeex(req, res) {
     const nome = String(req.body.nome || "").trim()
 
@@ -38,7 +38,7 @@ function cadastronomeex(req, res) {
         })
 }
 
-// Cadastra um REGISTRO do treino: carga, séries e repetições de um exercício
+
 function cadastrarex(req, res) {
     const userId = Number(req.body.userId)
     const exercicioId = Number(req.body.fkexercicio)
@@ -66,7 +66,7 @@ function cadastrarex(req, res) {
         .then(resultado => res.json({ id: resultado.insertId }))
         .catch(erro => {
             console.error("Erro ao cadastrar o registro:", erro)
-            // 1452 = chave estrangeira: usuário ou exercício não existe
+            
             if (erro.errno === 1452) {
                 return res.status(400).send("Usuário ou exercício inexistente")
             }

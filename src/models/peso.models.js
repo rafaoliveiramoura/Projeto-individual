@@ -5,7 +5,7 @@ function registrarpeso(peso, userId) {
     return database.executar(sql, [peso, userId])
 }
 
-// Mais antigas primeiro, para o gráfico seguir a ordem do tempo
+
 function listarpesos(userId) {
     let sql = `SELECT idregistro, peso, dt_registro
                FROM registro_peso

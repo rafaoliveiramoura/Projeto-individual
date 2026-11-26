@@ -1,8 +1,8 @@
 :root {
-    /* Gymbrothers Visual Identity - High Energy Neon */
+
     --color-bg-dark: #0a0a0a;
     --color-bg-card: #121212;
-    --color-primary: #ccff00; /* Neon Green/Yellow */
+    --color-primary: #ccff00; 
     --color-primary-rgb: 204, 255, 0;
     --color-primary-hover: #b3dd00;
     --color-text-main: #ffffff;
@@ -12,17 +12,17 @@
     --color-error: #ff4444;
     --color-white: #ffffff;
 
-    /* Shadows & Radius */
+
     --shadow-main: 0 20px 50px rgba(0, 0, 0, 0.5);
     --radius-container: 24px;
     --radius-input: 8px;
     --radius-button: 8px;
     --radius-glass: 20px;
 
-    /* Transitions */
+
     --transition-fast: 200ms ease;
 
-    /* --- Escala Fluida (Tokens de Design) --- */
+
     --fs-h1: clamp(1.5rem, 1.2rem + 1vw, 2rem);
     --fs-h2: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
     --fs-body: clamp(0.875rem, 0.8rem + 0.2vw, 1rem);
@@ -51,7 +51,7 @@ body {
     overflow-y: auto;
 }
 
-/* --- Layout Geral --- */
+
 .page-wrapper {
     min-height: 100vh;
     width: 100vw;
@@ -77,7 +77,7 @@ body {
     overflow: hidden;
 }
 
-/* --- Painel Esquerdo --- */
+
 .panel-left {
     background-color: var(--color-bg-card);
     padding: 48px;
@@ -127,7 +127,7 @@ body {
 .logo-gym { color: var(--color-white); }
 .logo-brothers { color: var(--color-primary); }
 
-/* --- Títulos --- */
+
 .welcome-section {
     text-align: center;
     margin-top: 20px;
@@ -149,7 +149,7 @@ body {
     line-height: 1.5;
 }
 
-/* --- Formulário --- */
+
 #loginForm, #registerForm {
     width: 100%;
     max-width: 100%;
@@ -211,7 +211,7 @@ body {
     align-items: center;
 }
 
-/* Custom Select Styling */
+
 .form-select {
     height: 40px;
     width: 100%;
@@ -324,7 +324,7 @@ body {
     cursor: not-allowed;
 }
 
-/* --- Autenticação Footer --- */
+
 .auth-footer {
     text-align: center;
     margin-top: 24px;
@@ -342,7 +342,7 @@ body {
     text-decoration: underline;
 }
 
-/* --- Suporte --- */
+
 .support-section {
     text-align: center;
     margin-top: 32px;
@@ -367,7 +367,7 @@ body {
     color: var(--color-primary-hover);
 }
 
-/* --- Rodapé --- */
+
 .panel-footer {
     text-align: center;
     font-size: 11px;
@@ -376,7 +376,7 @@ body {
     opacity: 0.6;
 }
 
-/* --- Painel Direito --- */
+
 .panel-right {
     background-image: url('/img/721279696609066042.jpg');
     background-color: #1a1a1a;
@@ -439,7 +439,7 @@ body {
     color: rgba(255, 255, 255, 0.8);
 }
 
-/* --- Utilidades --- */
+
 .sr-only {
     position: absolute;
     width: 1px;
@@ -463,7 +463,7 @@ body {
     display: none;
 }
 
-/* Spinner */
+
 .spinner {
     width: 18px;
     height: 18px;
@@ -478,7 +478,7 @@ body {
     to { transform: rotate(360deg); }
 }
 
-/* --- Responsividade --- */
+
 @media (max-width: 900px) {
     .main-container {
         grid-template-columns: 1fr;

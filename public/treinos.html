@@ -87,10 +87,10 @@
         </nav>
     </div>
     <script>
-        // ===== 1. Quem está logado? (o login guardou isso no navegador) =====
+       
         let sessao = JSON.parse(localStorage.getItem('gymbrothers_session'));
 
-        // ===== 2. Funções =====
+       
         function sair() {
             let certeza = confirm('Deseja realmente sair?');
             if (certeza) {
@@ -99,7 +99,7 @@
             }
         }
 
-        // Transforma a data que vem do banco em dd/mm/aaaa
+       
         function formatarData(texto) {
             let data = new Date(texto);
             let dia = data.getDate();
@@ -113,8 +113,7 @@
             return dia + '/' + mes + '/' + data.getFullYear();
         }
 
-        // Cria uma <div> com uma classe e um texto
-        // (textContent coloca o texto "puro": se o usuário digitar HTML, ele não vira código)
+       
         function criarDiv(classe, texto) {
             let div = document.createElement('div');
             div.className = classe;
@@ -122,7 +121,7 @@
             return div;
         }
 
-        // Monta um item da lista (<li>) com os dados de UM exercício (um objeto)
+       
         function criarItem(registro) {
             let item = document.createElement('li');
             item.className = 'ex-item';
@@ -142,7 +141,7 @@
             return item;
         }
 
-        // Mostra um aviso dentro de uma caixa (ex.: "Carregando..." ou "lista vazia")
+       
         function mostrarAviso(caixa, mensagem) {
             let aviso = document.createElement('p');
             aviso.className = 'ex-empty';
@@ -151,7 +150,7 @@
             caixa.appendChild(aviso);
         }
 
-        // Recebe a lista (vetor) que veio da API e desenha na tela com um for
+       
         function mostrarLista(caixa, lista, mensagemVazia) {
             if (lista.length == 0) {
                 mostrarAviso(caixa, mensagemVazia);
@@ -166,8 +165,7 @@
             }
         }
 
-        // Busca a lista na API e manda desenhar
-        function carregarLista(idDaCaixa, url, mensagemVazia) {
+               function carregarLista(idDaCaixa, url, mensagemVazia) {
             let caixa = document.getElementById(idDaCaixa);
 
             fetch(url)
@@ -187,7 +185,7 @@
         }
 
         function iniciar() {
-            // letra do avatar = primeira letra do nome
+       
             let nome = sessao.nome;
             if (nome == undefined || nome == '') {
                 nome = 'Atleta';
@@ -198,7 +196,7 @@
             carregarLista('lista-meus', '/users/' + sessao.id + '/registros', 'Você ainda não cadastrou nenhum exercício. Clique em “+ Cadastrar exercício”.');
         }
 
-        // ===== 3. Começo da tela =====
+       
         if (sessao == null) {
             window.location.href = 'login.html';
         } else {

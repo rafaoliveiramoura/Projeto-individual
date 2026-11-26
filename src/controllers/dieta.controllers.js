@@ -2,7 +2,7 @@ const dietamodels = require("../models/dieta.models")
 
 const REFEICOES = ["Manhã", "Almoço", "Lanche", "Pré-treino", "Pós-treino", "Janta", "Ceia"]
 const UNIDADES = ["g", "ml", "unidade", "fatia", "copo", "colher", "xícara", "porção"]
-// Precisam ser iguais aos valores do CHECK da tabela dieta (veja dieta-migracao.sql)
+
 const TIPOS = ["Emagrecimento", "Hipertrofia", "Manutenção"]
 
 function cadastrarali(req, res) {
@@ -35,7 +35,7 @@ function cadastrarali(req, res) {
         return res.status(400).send("Objetivo da dieta inválido")
     }
 
-    // Usa a dieta do usuário; se ainda não existir, cria na primeira vez
+    
     dietamodels.buscardieta(userId)
         .then(existente => {
             if (existente.length > 0) return existente[0].iddieta
@@ -45,11 +45,11 @@ function cadastrarali(req, res) {
         .then(resultado => res.json({ id: resultado.insertId }))
         .catch(erro => {
             console.error("Erro ao cadastrar o alimento:", erro)
-            // 1452 = chave estrangeira (usuário não existe)
+            
             if (erro.errno === 1452) return res.status(400).send("Usuário inexistente")
-            // 3819 = CHECK da coluna tipo (valores antigos do banco)
+            
             if (erro.errno === 3819) return res.status(400).send("Objetivo não aceito pelo banco. Rode o dieta-migracao.sql")
-            // 1054 = coluna que não existe (migração não rodou)
+            
             if (erro.errno === 1054) return res.status(500).send("Faltam as colunas novas no banco. Rode o dieta-migracao.sql")
             res.status(500).json(erro.sqlMessage || "Erro interno")
         })
